@@ -1,1 +1,1 @@
-# StraviaTEC Project 2
+# StraviaTEC
