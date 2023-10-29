@@ -1,0 +1,74 @@
+Sportman {
+	Username varchar(20) pk
+	Name varchar(20) null
+	LastName1 varchar(20) null
+	LastName2 varchar(20) null
+	BirthDate date
+	PhotoPath varchar null
+	Password varchar(20)
+	Nationality varchar(20)
+}
+
+Friend {
+	Username varchar(20) pk *>* Sportman.Username
+	FriendUsername varchar(20) pk *>* Sportman.Username
+}
+
+GroupManager {
+	Username varchar(20) pk *>* Sportman.Username
+	GroupName varchar(20) pk *>* Group_.Name
+}
+
+Group_ {
+	Name varchar(20) pk
+}
+
+SportmanGroup {
+	Username varchar(20) pk *>* Sportman.Username
+	GroupName varchar(20) pk *>* Group_.Name
+}
+
+Activity {
+	Id int pk
+	Kilometers numeric(10,3)
+	Duration time
+	Date datetime
+	RoutePath varchar
+	Username varchar(20) null *> Sportman.Username
+	RaceName varchar(20) null
+	ChallengeName varchar(20) null *> Challenge.Name
+	Type tinyint null *> ActivityType.Id
+}
+
+ActivityType {
+	Id tinyint pk
+	Type varchar(20)
+}
+
+ChallengeGroup {
+	ChallengeName varchar(20) pk *>* Challenge.Name
+	GroupName varchar(20) pk *>* Group_.Name
+}
+
+Challenge {
+	Name varchar(20) pk
+	Goal numeric(12,3)
+	Private boolean
+	StartDate datetime
+	EndDate datetime
+	Deep boolean
+	Type tinyint *>* ActivityType.Id
+}
+
+Sponsor {
+	TradeName varchar(20) pk
+	LegalRepresentant varchar(20)
+	Phone numeric(8,0)
+	LogoPath varchar
+}
+
+ChallengeSponsor {
+	SponsorTradeName varchar(20) pk *>* Sponsor.TradeName
+	ChallengeName varchar(20) pk *>* Challenge.Name
+}
+
