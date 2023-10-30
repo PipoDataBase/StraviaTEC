@@ -1,7 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using StraviaTEC_API.Services;
 using StraviaTEC_API.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDB"));
+builder.Services.AddSingleton<MongoDBService>();
 
 // Add services to the container.
 

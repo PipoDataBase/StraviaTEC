@@ -47,7 +47,7 @@ CREATE TABLE Activity (
 );
 
 CREATE TABLE ActivityType (
-	Id tinyint NOT NULL,
+	Id tinyint IDENTITY(1,1),
 	Type varchar(20) NOT NULL,
 	PRIMARY KEY (Id)
 );
@@ -100,7 +100,7 @@ CREATE TABLE RaceSportman (
 );
 
 CREATE TABLE Bill (
-	Id INT NOT NULL,
+	Id INT IDENTITY(1,1),
 	PhotoPath varchar,
 	Accepted bit NOT NULL,
 	Username varchar(20) NOT NULL,
@@ -115,7 +115,7 @@ CREATE TABLE RaceCategory (
 );
 
 CREATE TABLE Category (
-	Id tinyint NOT NULL,
+	Id tinyint IDENTITY(1,1),
 	MinimumAge tinyint NOT NULL,
 	MaximumAge tinyint NOT NULL,
 	Category varchar(20) NOT NULL,

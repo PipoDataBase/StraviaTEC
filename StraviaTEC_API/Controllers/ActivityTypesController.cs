@@ -28,7 +28,7 @@ namespace StraviaTEC_API.Controllers
           {
               return NotFound();
           }
-            return await _context.ActivityTypes.ToListAsync();
+            return await _context.ActivityTypes.FromSqlRaw("spGetActivityTypes").ToListAsync();
         }
 
         // GET: api/ActivityTypes/5
@@ -39,14 +39,8 @@ namespace StraviaTEC_API.Controllers
           {
               return NotFound();
           }
-            var activityType = await _context.ActivityTypes.FindAsync(id);
-
-            if (activityType == null)
-            {
-                return NotFound();
-            }
-
-            return activityType;
+          var result = await _context.ActivityTypes.FromSqlRaw($"spGetActivityType {id}").ToListAsync();
+          return Ok(result);
         }
 
         // PUT: api/ActivityTypes/5
@@ -79,36 +73,28 @@ namespace StraviaTEC_API.Controllers
 
             return NoContent();
         }
-
+/*
         // POST: api/ActivityTypes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ActivityType>> PostActivityType(ActivityType activityType)
+        public async Task<ActionResult<ActivityType>> PostActivityType(string activityType)
         {
           if (_context.ActivityTypes == null)
           {
               return Problem("Entity set 'StraviaTecContext.ActivityTypes'  is null.");
           }
-            _context.ActivityTypes.Add(activityType);
             try
             {
-                await _context.SaveChangesAsync();
+                var result = await _context.ActivityTypes.FromSqlRaw($"spInsertActivityType {activityType}").ToListAsync();
+                //return result;
+                return true;
             }
             catch (DbUpdateException)
             {
-                if (ActivityTypeExists(activityType.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                false;
             }
-
-            return CreatedAtAction("GetActivityType", new { id = activityType.Id }, activityType);
         }
-
+*/
         // DELETE: api/ActivityTypes/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteActivityType(byte id)
