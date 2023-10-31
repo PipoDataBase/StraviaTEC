@@ -28,6 +28,10 @@ namespace StraviaTEC_API.Services
         {
             return await _CommentCollection.Find(new BsonDocument()).ToListAsync();
         }
+        public async Task<List<Comment>> GetCommentsFromActivity(string activityId)
+        {
+            return await _CommentCollection.Find(Builders<Comment>.Filter.Eq("activityId",activityId)).ToListAsync();
+        }
 
         public async Task DeleteComment (string id) 
         {

@@ -16,12 +16,37 @@ namespace StraviaTEC_API.Controllers;
         }
         [HttpGet]
         public async Task<List<Comment>> GetComment() {
-            var comment = await _mongoDBService.GetComment();
-        Console.WriteLine(comment[0].email + "\n" + comment[0].text + "\n" + comment[0]._id +"\n" + comment[0].date);
-        return comment  ;
+            var comments = await _mongoDBService.GetComment();
+        //Console.WriteLine("Comments retrieved");
+        return comments  ;
         }
 
-        [HttpPost]
+
+    [HttpGet("{Id}")]
+    public async Task<List<Comment>> GetCommentsByActivity(string activityId)
+    {
+        var comments = await _mongoDBService.GetComment();
+        //Console.WriteLine("activityId= " + activityId);
+        //Console.WriteLine("amount of comments:" + comments.Count);
+
+         List<Comment> filteredComments = new List<Comment>();
+
+        for (int i = 0; i < comments.Count; i++)
+        {
+            if (comments[i].activityId == activityId)
+            {
+                filteredComments.Add(comments[i]);
+            }
+            else
+            {
+                // :)
+            }
+        }
+
+        return filteredComments;
+    }
+
+    [HttpPost]
         public async Task<IActionResult> PostComment([FromBody] Comment comment)
         {
 
