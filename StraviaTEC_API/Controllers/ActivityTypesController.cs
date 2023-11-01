@@ -53,11 +53,10 @@ namespace StraviaTEC_API.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(activityType).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                var result = await _context.ActivityTypes.FromSqlRaw($"spUpdateActivityType {id}, {activityType.Type}").ToListAsync();
+                return Ok(result);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -73,7 +72,7 @@ namespace StraviaTEC_API.Controllers
 
             return NoContent();
         }
-/*
+
         // POST: api/ActivityTypes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -87,14 +86,14 @@ namespace StraviaTEC_API.Controllers
             {
                 var result = await _context.ActivityTypes.FromSqlRaw($"spInsertActivityType {activityType}").ToListAsync();
                 //return result;
-                return true;
+                return Ok(result);
             }
             catch (DbUpdateException)
             {
-                false;
+                throw;
             }
         }
-*/
+
         // DELETE: api/ActivityTypes/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteActivityType(byte id)
@@ -109,8 +108,7 @@ namespace StraviaTEC_API.Controllers
                 return NotFound();
             }
 
-            _context.ActivityTypes.Remove(activityType);
-            await _context.SaveChangesAsync();
+            var result = await _context.ActivityTypes.FromSqlRaw($"spDeleteActivityType {id}").ToListAsync();
 
             return NoContent();
         }

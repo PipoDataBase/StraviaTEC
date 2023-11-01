@@ -28,46 +28,42 @@ namespace StraviaTEC_API.Controllers
           {
               return NotFound();
           }
-            return await _context.Challenges.ToListAsync();
+            return await _context.Challenges.FromSqlRaw("spGetChallenges").ToListAsync();
         }
 
         // GET: api/Challenges/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Challenge>> GetChallenge(string id)
+        public async Task<ActionResult<Challenge>> GetChallenge(string name)
         {
           if (_context.Challenges == null)
           {
               return NotFound();
           }
-            var challenge = await _context.Challenges.FindAsync(id);
+            var result = await _context.Challenges.FromSqlRaw($"spGetChallenge {name}").ToListAsync();
+            return Ok(result);
 
-            if (challenge == null)
-            {
-                return NotFound();
-            }
-
-            return challenge;
         }
 
         // PUT: api/Challenges/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutChallenge(string id, Challenge challenge)
+        public async Task<IActionResult> PutChallenge(string name, Challenge challenge)
         {
-            if (id != challenge.Name)
+            if (name != challenge.Name)
             {
                 return BadRequest();
             }
 
-            _context.Entry(challenge).State = EntityState.Modified;
+           
 
             try
             {
-                await _context.SaveChangesAsync();
+                var result = await _context.Challenges.FromSqlRaw($"spUpdateChallenge {name}, {challenge.Goal}, {challenge.Private}, {challenge.StartDate}, {challenge.EndDate}, {challenge.Deep}, {challenge.Type}").ToListAsync();
+                return Ok(result);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ChallengeExists(id))
+                if (!ChallengeExists(name))
                 {
                     return NotFound();
                 }
@@ -89,10 +85,11 @@ namespace StraviaTEC_API.Controllers
           {
               return Problem("Entity set 'StraviaTecContext.Challenges'  is null.");
           }
-            _context.Challenges.Add(challenge);
+            
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.Challenges.FromSqlRaw($"spInsertChallenge {challenge.Name}, {challenge.Goal}, {challenge.Private}, {challenge.StartDate}, {challenge.EndDate}, {challenge.Deep}, {challenge.Type}").ToListAsync();
+                return challenge;
             }
             catch (DbUpdateException)
             {
@@ -111,20 +108,19 @@ namespace StraviaTEC_API.Controllers
 
         // DELETE: api/Challenges/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteChallenge(string id)
+        public async Task<IActionResult> DeleteChallenge(string name)
         {
             if (_context.Challenges == null)
             {
                 return NotFound();
             }
-            var challenge = await _context.Challenges.FindAsync(id);
+            var challenge = await _context.Challenges.FindAsync(name);
             if (challenge == null)
             {
                 return NotFound();
             }
 
-            _context.Challenges.Remove(challenge);
-            await _context.SaveChangesAsync();
+            var result = await _context.Challenges.FromSqlRaw($"spDeleteChallenge {name}").ToListAsync();
 
             return NoContent();
         }
