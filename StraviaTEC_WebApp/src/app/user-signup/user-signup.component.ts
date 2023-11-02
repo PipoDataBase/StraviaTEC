@@ -14,10 +14,10 @@ export class UserSignupComponent {
 
   constructor(private router: Router) { }
 
-  register(name: string, lname1: string, lname2: string, nationality: string, bDate: string, imgUrl: string, username: string, password: string): void {
+  register(name: string, lastName1: string, lastName2: string, nationality: string, birthDate: string, imgUrl: string, username: string, password: string): void {
     //validate data
-    console.log(name, lname1, lname2, nationality, bDate, imgUrl, username, password);
-    var message = this.verifyData(name, lname1, username, password);
+    console.log(name, lastName1, lastName2, nationality, birthDate, imgUrl, username, password);
+    var message = this.verifyData(name, lastName1, username, password);
     if (!this.valid) {
       alert(message);
       this.valid = true;

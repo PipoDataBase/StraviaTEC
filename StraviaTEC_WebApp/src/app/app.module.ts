@@ -27,6 +27,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 //Primeng components
 import { ButtonModule } from 'primeng/button';
+import { TabMenuModule } from 'primeng/tabmenu';
+import { SkeletonModule } from 'primeng/skeleton';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
@@ -37,6 +39,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         AppRoutingModule,
         AppLayoutModule,
         ButtonModule,
+        TabMenuModule,
+        SkeletonModule,
         BrowserAnimationsModule,
         AngularMaterialModule,
         MatInputModule,

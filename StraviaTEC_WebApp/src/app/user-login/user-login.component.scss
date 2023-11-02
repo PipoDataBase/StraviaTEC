@@ -4,7 +4,12 @@
 }
 
 .bg-image {
-    background-image: url('https://images.unsplash.com/photo-1552209841-d2dc5fd68a30?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1090&q=80');
+    background-image: url('../../assets/straviatec/running.jpg');
     background-size: cover;
     background-position: center center;
+}
+
+.custom-button {
+    background-color: #6366F1 !important;
+    color: white !important;
 }

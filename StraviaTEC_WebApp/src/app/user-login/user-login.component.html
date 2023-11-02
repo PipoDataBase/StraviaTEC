@@ -22,9 +22,8 @@
                                     <input #password type="password" placeholder="Password" required
                                         class="form-control rounded-pill border-0 shadow-sm px-4 text-primary">
                                 </div>
-                                <button mat-flat-button class="text-uppercase mb-2 rounded-pill shadow-sm"
-                                    style="width: 100%;" color="primary"
-                                    (click)="login(username.value, password.value)">log in</button>
+                                <button mat-flat-button class="text-uppercase mb-2 rounded-pill shadow-sm custom-button"
+                                    style="width: 100%;" (click)="login(username.value, password.value)">log in</button>
                                 <div>
                                     <p style="text-align:center; margin-top: 20px;">Don't have an account yet?
                                         <a type="button" (click)="toRegister()" class="font-italic text-muted">

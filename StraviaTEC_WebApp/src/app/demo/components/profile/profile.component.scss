@@ -1,0 +1,26 @@
+.author {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.circle-avatar {
+    width: 97px;
+    height: 97px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.circle-avatar img {
+    width: 100%;
+    height: auto;
+}
+
+.tab-icon {
+    margin-right: 6px;
+}
+
+.custom-button {
+    background-color: #6366F1;
+}

@@ -16,20 +16,20 @@
                                         class="form-control rounded-pill border-0 shadow-sm px-4">
                                 </div>
                                 <div class="form-group mb-3">
-                                    <input #lname1 type="text" placeholder="Lastname1" required
+                                    <input #lastName1 type="text" placeholder="Lastname1" required
                                         class="form-control rounded-pill border-0 shadow-sm px-4">
                                 </div>
                                 <div class="form-group mb-3">
-                                    <input #lname2 type="text" placeholder="Lastname2"
+                                    <input #lastName2 type="text" placeholder="Lastname2"
                                         class="form-control rounded-pill border-0 shadow-sm px-4">
                                 </div>
                                 <div class="form-group mb-3">
-                                    <input #birth_date type="date" placeholder="Birthdate" value="2020-11-09"
+                                    <input #birthDate type="date" placeholder="Birthdate" value="2020-11-09"
                                         min="1950-01-01" max="2021-12-31" required
                                         class="form-control rounded-pill border-0 shadow-sm px-4">
                                 </div>
                                 <div class="form-group mb-3">
-                                    <select #nacionality name="nacionality"
+                                    <select #nationality name="nacionality"
                                         class="form-control rounded-pill border-0 shadow-sm px-4">
                                         <option value="AF">Afganistán</option>
                                         <option value="AL">Albania</option>
@@ -281,12 +281,12 @@
                                         class="form-control rounded-pill border-0 shadow-sm px-4 text-primary">
                                 </div>
 
-                                <button mat-flat-button class="text-uppercase mb-2 rounded-pill shadow-sm"
-                                    style="width: 100%;" color="primary"
-                                    (click)="register(name.value, lname1.value, lname2.value, nacionality.value, birth_date.value, file.value, username.value, password.value)">Register</button>
+                                <button mat-flat-button class="text-uppercase mb-2 rounded-pill shadow-sm custom-button"
+                                    style="width: 100%;"
+                                    (click)="register(name.value, lastName1.value, lastName2.value, nationality.value, birthDate.value, file.value, username.value, password.value)">Register</button>
                                 <div>
                                     <p style="text-align:center; margin-top: 20px;">Do you already have an account?
-                                        <a (click)="toLogin()" class="font-italic text-muted"> <u>LOG IN</u></a>
+                                        <a type="button" (click)="toLogin()" class="font-italic text-muted"> <u>LOG IN</u></a>
                                     </p>
                                 </div>
                             </form>
