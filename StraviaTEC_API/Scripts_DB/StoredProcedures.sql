@@ -8,7 +8,7 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
-
+Go
 CREATE PROCEDURE spGetActivityType
 @Id tinyint
 AS
@@ -17,7 +17,7 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
-
+Go
 CREATE PROCEDURE spInsertActivityType
     @Type varchar(20)
 AS
@@ -27,7 +27,7 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
-
+Go
 CREATE PROCEDURE spUpdateActivityType
     @Id tinyint,
     @Type varchar(20)
@@ -39,7 +39,7 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
-
+Go
 CREATE PROCEDURE spDeleteActivityType
     @Id tinyint
 AS
@@ -48,7 +48,7 @@ BEGIN
     WHERE Id = @Id;
 END;
 
-
+Go
 -- ================================================
 --                  Challenge
 -- ================================================
@@ -59,7 +59,7 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
-
+Go
 CREATE PROCEDURE spGetChallenge
 @Name varchar(20)
 AS
@@ -68,7 +68,7 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
-
+Go
 CREATE PROCEDURE spInsertChallenge
     @Name varchar(20),
     @Goal numeric(12,3),
@@ -84,7 +84,7 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
-
+Go
 CREATE PROCEDURE spUpdateChallenge
     @Name varchar(20),
     @Goal numeric(12,3),
@@ -96,8 +96,7 @@ CREATE PROCEDURE spUpdateChallenge
 AS
 BEGIN
     UPDATE Challenge
-    SET Name = @Name,
-        Goal = @Goal,
+    SET Goal = @Goal,
         Private = @Private,
         StartDate = @StartDate,
         EndDate = @EndDate,
@@ -107,11 +106,84 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
-
+Go
 CREATE PROCEDURE spDeleteChallenge
     @Name varchar(20)
 AS
 BEGIN
     DELETE FROM Challenge
     WHERE Name = @Name;
+END;
+
+
+Go
+-- ================================================
+--                  Sportman
+-- ================================================
+CREATE PROCEDURE spGetSportmen
+AS
+BEGIN
+    SELECT * FROM Sportman;
+END;
+
+Go
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+CREATE PROCEDURE spGetSportman
+@Username varchar(20)
+AS
+BEGIN
+    SELECT * FROM Sportman where Username = @Username;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+
+CREATE PROCEDURE spInsertSportman
+	@Username varchar(20) ,
+	@Name varchar(20),
+	@LastName1 varchar(20),
+	@LastName2 varchar(20),
+	@BirthDate DATE,
+	@PhotoPath varchar,
+	@Password varchar(20) ,
+	@Nationality varchar(20)
+AS
+BEGIN
+    INSERT INTO Sportman (Username, Name, LastName1, LastName2, BirthDate, PhotoPath, Password, Nationality)
+    VALUES (@Username, @Name, @LastName1, @LastName2, @BirthDate, @PhotoPath, @Password, @Nationality);
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spUpdateSportman
+	@Username varchar(20) ,
+	@Name varchar(20),
+	@LastName1 varchar(20),
+	@LastName2 varchar(20),
+	@BirthDate DATE,
+	@PhotoPath varchar,
+	@Password varchar(20) ,
+	@Nationality varchar(20)
+AS
+BEGIN
+    UPDATE Sportman
+    SET Name = @Name,
+        LastName1 = @LastName1,
+        LastName2 = @LastName2,
+        BirthDate = @Birthdate,
+        PhotoPath = @PhotoPath,
+        Password = @Password,
+        Nationality = @Nationality
+    WHERE Username = @Username;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spDeleteSportman
+    @Username varchar(20)
+AS
+BEGIN
+    DELETE FROM Sportman
+    WHERE Username = @Username;
 END;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using StraviaTEC_API.Models;
 
@@ -55,8 +56,12 @@ namespace StraviaTEC_API.Controllers
 
             try
             {
-                var result = await _context.ActivityTypes.FromSqlRaw($"spUpdateActivityType {id}, {activityType.Type}").ToListAsync();
-                return Ok(result);
+                await _context.Database.ExecuteSqlRawAsync(
+                   "EXEC spUpdateActivityType @Id, @Type",
+                   new SqlParameter("@Id", id),
+                   new SqlParameter("@Type", activityType.Type)
+                   );
+                return Ok("ActivityType Updated");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -84,9 +89,13 @@ namespace StraviaTEC_API.Controllers
           }
             try
             {
-                var result = await _context.ActivityTypes.FromSqlRaw($"spInsertActivityType {activityType}").ToListAsync();
-                //return result;
-                return Ok(result);
+                await _context.Database.ExecuteSqlRawAsync(
+                   "EXEC spInsertActivityType @Type",
+                   new SqlParameter("@Type", activityType)
+                   );
+                return Ok("ActivityType Created");
+                
+                
             }
             catch (DbUpdateException)
             {
@@ -108,9 +117,11 @@ namespace StraviaTEC_API.Controllers
                 return NotFound();
             }
 
-            var result = await _context.ActivityTypes.FromSqlRaw($"spDeleteActivityType {id}").ToListAsync();
-
-            return NoContent();
+            await _context.Database.ExecuteSqlRawAsync(
+                   "EXEC spDeleteActivityType @Id",
+                   new SqlParameter("@Id", id)
+                   );
+            return Ok("ActivityType deleted");
         }
 
         private bool ActivityTypeExists(byte id)
