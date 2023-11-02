@@ -23,7 +23,7 @@ export interface MoreInfoTest {
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent {
-  sportman: Sportman = {
+  private _sportman: Sportman = {
     username: 'MarinGE23',
     name: 'Emanuel',
     lastName1: 'Marín',
@@ -32,12 +32,24 @@ export class ProfileComponent {
     photoPath: '../../../../assets/straviatec/default-avatar.png',
     password: 'abc123de',
     nationality: 'Costa Rican'
+  };
+  public getSportman(): Sportman {
+    return this._sportman;
+  }
+  public setSportman(value: Sportman) {
+    this._sportman = value;
   }
 
-  sportmanMoreInfo: MoreInfoTest = {
+  private _sportmanMoreInfo: MoreInfoTest = {
     following: 2,
     followers: 0,
     activities: 3
+  };
+  public getSportmanMoreInfo(): MoreInfoTest {
+    return this._sportmanMoreInfo;
+  }
+  public setSportmanMoreInfo(value: MoreInfoTest) {
+    this._sportmanMoreInfo = value;
   }
 
   updateSportmanInfo(password: string, name: string, lastName1: string, lastName2: string, nationality: string, birthDate: string, file: string): void {
