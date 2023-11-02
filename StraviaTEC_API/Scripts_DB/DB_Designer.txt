@@ -6,7 +6,7 @@ Sportman {
 	BirthDate date
 	PhotoPath varchar null
 	Password varchar(20)
-	Nationality varchar(20)
+	NationalityId tinyint *> Nationality.Id
 }
 
 Friend {
@@ -35,13 +35,13 @@ Activity {
 	Date datetime
 	RoutePath varchar
 	Username varchar(20) null *> Sportman.Username
-	RaceName varchar(20) null
+	RaceName varchar(20) null *> Race.Name
 	ChallengeName varchar(20) null *> Challenge.Name
 	Type tinyint null *> ActivityType.Id
 }
 
 ActivityType {
-	Id tinyint pk
+	Id tinyint pk increments
 	Type varchar(20)
 }
 
@@ -70,5 +70,63 @@ Sponsor {
 ChallengeSponsor {
 	SponsorTradeName varchar(20) pk *>* Sponsor.TradeName
 	ChallengeName varchar(20) pk *>* Challenge.Name
+}
+
+ChallengeSportmanManager {
+	ChallengeName varchar(20) pk *>* Challenge.Name
+	SportmanUsername varchar(20) pk *>* Sportman.Username
+}
+
+ChallengeSportmanParticipant {
+	ChallengeName varchar(20) pk *>* Challenge.Name
+	SportmanUsername varchar(20) pk *>* Sportman.Username
+}
+
+Race {
+	Name varchar(20) pk
+	InscriptionPrice numeric(6,0)
+	Date datetime
+	Private boolean
+	RoutePath varchar
+}
+
+RaceSportman {
+	Username varchar(20) pk *>* Sportman.Username
+	RaceName varchar(20) pk *>* Race.Name
+}
+
+Bill {
+	Id integer pk increments
+	PhotoPath varchar
+	Accepted boolean
+	Username varchar(20) *> Sportman.Username
+	RaceName varchar(20) *> Race.Name
+}
+
+RaceCategory {
+	RaceName varchar(20) pk *>* Race.Name
+	CategoryId tinyint pk *>* Category.Id
+}
+
+Category {
+	Id tinyint pk increments
+	MinimumAge tinyint
+	MaximumAge tinyint
+	Category varchar(20)
+}
+
+BankAccount {
+	RaceName varchar(20) pk *> Race.Name
+	BankAccount varchar(20)
+}
+
+RaceSponsor {
+	SponsorTradeName varchar(20) pk *>* Sponsor.TradeName
+	RaceName varchar(20) pk *>* Race.Name
+}
+
+Nationality {
+	Id tinyint pk increments
+	Nationality varchar(20)
 }
 

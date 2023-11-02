@@ -35,6 +35,9 @@ public partial class StraviaTecContext : DbContext
 
     public virtual DbSet<Sportman> Sportmen { get; set; }
 
+    public virtual DbSet<Nationality> Nationalities { get; set; }
+
+
 
     /*
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -302,6 +305,23 @@ public partial class StraviaTecContext : DbContext
                     });
         });
 
+
+
+        modelBuilder.Entity<Nationality>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__National__3214EC078810DE21");
+
+            entity.ToTable("Nationality");
+
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.Property(e => e.Nationality1)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("Nationality");
+        });
+
+
+
         modelBuilder.Entity<Sportman>(entity =>
         {
             entity.HasKey(e => e.Username).HasName("PK__Sportman__536C85E56AA48353");
@@ -321,15 +341,17 @@ public partial class StraviaTecContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(20)
                 .IsUnicode(false);
-            entity.Property(e => e.Nationality)
-                .HasMaxLength(20)
-                .IsUnicode(false);
             entity.Property(e => e.Password)
                 .HasMaxLength(20)
                 .IsUnicode(false);
             entity.Property(e => e.PhotoPath)
                 .HasMaxLength(1)
                 .IsUnicode(false);
+
+            entity.HasOne(d => d.NationalityNavigation).WithMany(p => p.Sportmen)
+                .HasForeignKey(d => d.Nationality)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Sportman_fk0");
 
             entity.HasMany(d => d.FriendUsernames).WithMany(p => p.Usernames)
                 .UsingEntity<Dictionary<string, object>>(

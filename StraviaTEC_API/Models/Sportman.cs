@@ -19,7 +19,7 @@ public partial class Sportman
 
     public string Password { get; set; } = null!;
 
-    public string Nationality { get; set; } = null!;
+    public byte Nationality { get; set; }
 
     public virtual ICollection<Activity>? Activities { get; set; } = new List<Activity>();
 
@@ -32,4 +32,6 @@ public partial class Sportman
     public virtual ICollection<Race>? RaceNames { get; set; } = new List<Race>();
 
     public virtual ICollection<Sportman>? Usernames { get; set; } = new List<Sportman>();
+
+    public virtual Nationality? NationalityNavigation { get; set; } = null;
 }

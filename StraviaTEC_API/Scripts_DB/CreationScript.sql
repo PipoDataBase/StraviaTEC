@@ -6,7 +6,7 @@ CREATE TABLE Sportman (
 	BirthDate DATE NOT NULL,
 	PhotoPath varchar,
 	Password varchar(20) NOT NULL,
-	Nationality varchar(20) NOT NULL,
+	Nationality tinyint NOT NULL,
 	PRIMARY KEY (Username)
 );
 
@@ -47,7 +47,7 @@ CREATE TABLE Activity (
 );
 
 CREATE TABLE ActivityType (
-	Id tinyint IDENTITY(1,1),
+	Id tinyint IDENTITY(0,1),
 	Type varchar(20) NOT NULL,
 	PRIMARY KEY (Id)
 );
@@ -100,7 +100,7 @@ CREATE TABLE RaceSportman (
 );
 
 CREATE TABLE Bill (
-	Id INT IDENTITY(1,1),
+	Id INT IDENTITY(0,1),
 	PhotoPath varchar,
 	Accepted bit NOT NULL,
 	Username varchar(20) NOT NULL,
@@ -115,7 +115,7 @@ CREATE TABLE RaceCategory (
 );
 
 CREATE TABLE Category (
-	Id tinyint IDENTITY(1,1),
+	Id tinyint IDENTITY(0,1),
 	MinimumAge tinyint NOT NULL,
 	MaximumAge tinyint NOT NULL,
 	Category varchar(20) NOT NULL,
@@ -132,6 +132,25 @@ CREATE TABLE RaceSponsor (
 	SponsorTradeName varchar(20) NOT NULL,
 	RaceName varchar(20) NOT NULL,
 	PRIMARY KEY (SponsorTradeName,RaceName)
+);
+
+CREATE TABLE Nationality (
+	Id tinyint NOT NULL IDENTITY(0,1),
+	Nationality varchar(20) NOT NULL,
+	PRIMARY KEY (Id)
+);
+
+
+CREATE TABLE ChallengeSportmanManager (
+	ChallengeName varchar(20) NOT NULL,
+	SportmanUsername varchar(20) NOT NULL,
+	PRIMARY KEY (ChallengeName,SportmanUsername)
+);
+
+CREATE TABLE ChallengeSportmanParticipant (
+	ChallengeName varchar(20) NOT NULL,
+	SportmanUsername varchar(20) NOT NULL,
+	PRIMARY KEY (ChallengeName,SportmanUsername)
 );
 
 ALTER TABLE Friend ADD CONSTRAINT Friend_fk0 FOREIGN KEY (Username) REFERENCES Sportman(Username);
@@ -156,6 +175,12 @@ ALTER TABLE Challenge ADD CONSTRAINT Challenge_fk0 FOREIGN KEY (Type) REFERENCES
 ALTER TABLE ChallengeSponsor ADD CONSTRAINT ChallengeSponsor_fk0 FOREIGN KEY (SponsorTradeName) REFERENCES Sponsor(TradeName);
 ALTER TABLE ChallengeSponsor ADD CONSTRAINT ChallengeSponsor_fk1 FOREIGN KEY (ChallengeName) REFERENCES Challenge(Name);
 
+ALTER TABLE ChallengeSportmanManager ADD CONSTRAINT ChallengeSportmanManager_fk0 FOREIGN KEY (ChallengeName) REFERENCES Challenge(Name);
+ALTER TABLE ChallengeSportmanManager ADD CONSTRAINT ChallengeSportmanManager_fk1 FOREIGN KEY (SportmanUsername) REFERENCES Sportman(Username);
+ALTER TABLE ChallengeSportmanParticipant ADD CONSTRAINT ChallengeSportmanParticipant_fk0 FOREIGN KEY (ChallengeName) REFERENCES Challenge(Name);
+ALTER TABLE ChallengeSportmanParticipant ADD CONSTRAINT ChallengeSportmanParticipant_fk1 FOREIGN KEY (SportmanUsername) REFERENCES Sportman(Username);
+
+
 ALTER TABLE RaceSportman ADD CONSTRAINT RaceSportman_fk0 FOREIGN KEY (Username) REFERENCES Sportman(Username);
 ALTER TABLE RaceSportman ADD CONSTRAINT RaceSportman_fk1 FOREIGN KEY (RaceName) REFERENCES Race(Name);
 
@@ -168,3 +193,5 @@ ALTER TABLE BankAccount ADD CONSTRAINT BankAccount_fk0 FOREIGN KEY (RaceName) RE
 
 ALTER TABLE RaceSponsor ADD CONSTRAINT RaceSponsor_fk0 FOREIGN KEY (SponsorTradeName) REFERENCES Sponsor(TradeName);
 ALTER TABLE RaceSponsor ADD CONSTRAINT RaceSponsor_fk1 FOREIGN KEY (RaceName) REFERENCES Race(Name);
+
+ALTER TABLE Sportman ADD CONSTRAINT Sportman_fk0 FOREIGN KEY (Nationality) REFERENCES Nationality(Id);

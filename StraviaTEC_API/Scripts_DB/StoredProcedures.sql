@@ -147,7 +147,7 @@ CREATE PROCEDURE spInsertSportman
 	@BirthDate DATE,
 	@PhotoPath varchar,
 	@Password varchar(20) ,
-	@Nationality varchar(20)
+	@Nationality tinyint
 AS
 BEGIN
     INSERT INTO Sportman (Username, Name, LastName1, LastName2, BirthDate, PhotoPath, Password, Nationality)
@@ -164,7 +164,7 @@ CREATE PROCEDURE spUpdateSportman
 	@BirthDate DATE,
 	@PhotoPath varchar,
 	@Password varchar(20) ,
-	@Nationality varchar(20)
+	@Nationality tinyint
 AS
 BEGIN
     UPDATE Sportman
@@ -186,4 +186,57 @@ AS
 BEGIN
     DELETE FROM Sportman
     WHERE Username = @Username;
+END;
+
+Go
+-- ================================================
+--                  Nationality
+-- ================================================
+CREATE PROCEDURE spGetNationalities
+AS
+BEGIN
+    SELECT * FROM Nationality;
+END;
+
+Go
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+CREATE PROCEDURE spGetNationality
+    @Id tinyint
+AS
+BEGIN
+    SELECT * FROM Nationality where Id = @Id;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+
+CREATE PROCEDURE spInsertNationality
+	@Nationality varchar(20)
+AS
+BEGIN
+    INSERT INTO Nationality (Nationality)
+    VALUES (@Nationality);
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spUpdateNationality
+	@Id tinyint,
+	@Nationality varchar(20)
+AS
+BEGIN
+    UPDATE Nationality
+    SET Nationality = @Nationality
+    WHERE Id = @Id;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spDeleteNationality
+    @Id tinyint
+AS
+BEGIN
+    DELETE FROM Nationality
+    WHERE Id = @Id;
 END;
