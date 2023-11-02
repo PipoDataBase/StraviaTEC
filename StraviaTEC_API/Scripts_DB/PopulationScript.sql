@@ -59,7 +59,7 @@ Go
 EXEC spInsertNationality Colombian;
 Go
 
-EXEC spInsertNationality Costa Rican;
+EXEC spInsertNationality "Costa Rican";
 Go
 
 EXEC spInsertNationality Croatian;
@@ -212,7 +212,7 @@ Go
 EXEC spInsertNationality Dutch;
 Go
 
-EXEC spInsertNationality New Zealand;
+EXEC spInsertNationality "New Zealand";
 Go
 
 EXEC spInsertNationality Nicaraguan;
@@ -269,7 +269,7 @@ Go
 EXEC spInsertNationality Slovak;
 Go
 
-EXEC spInsertNationality South African;
+EXEC spInsertNationality "South African";
 Go
 
 EXEC spInsertNationality Korean;
@@ -278,7 +278,7 @@ Go
 EXEC spInsertNationality Spanish;
 Go
 
-EXEC spInsertNationality Sri Lankan;
+EXEC spInsertNationality "Sri Lankan";
 Go
 
 EXEC spInsertNationality Sudanese;
@@ -341,3 +341,43 @@ Go
 EXEC spInsertNationality Zimbabwean;
 Go
 
+-- ================================================
+--                  ActivityTypes
+-- ================================================
+
+EXEC spInsertActivityType Baseball;
+Go
+EXEC spInsertActivityType Climbing;
+Go
+EXEC spInsertActivityType Cycling;
+Go
+EXEC spInsertActivityType Football;
+Go
+EXEC spInsertActivityType Freerunning;
+Go
+EXEC spInsertActivityType Hiking;
+Go
+EXEC spInsertActivityType jogging;
+Go
+EXEC spInsertActivityType Paddleboarding;
+Go
+EXEC spInsertActivityType Paragliding;
+Go
+EXEC spInsertActivityType Parkour;
+Go
+EXEC spInsertActivityType Running;
+Go
+EXEC spInsertActivityType Skateboarding;
+Go
+EXEC spInsertActivityType Snowboarding;
+Go
+EXEC spInsertActivityType Soccer;
+Go
+EXEC spInsertActivityType Streetluge;
+Go
+EXEC spInsertActivityType Surfing;
+Go
+EXEC spInsertActivityType Swimming;
+Go
+EXEC spInsertActivityType Triathlon;
+Go
