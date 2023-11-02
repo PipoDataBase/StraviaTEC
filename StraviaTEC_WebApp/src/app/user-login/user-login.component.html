@@ -1,4 +1,41 @@
-<div>
-    <button mat-flat-button class="custom-button" color="primary" (click)="login()">Iniciar
-        Sesión</button>
+<div class="container-fluid">
+    <div class="row no-gutter">
+        <!-- The image half -->
+        <div class="col-md-6 d-none d-md-flex bg-image"></div>
+
+        <!-- The content half -->
+        <div class="col-md-6 bg-light">
+            <div class="login d-flex align-items-center py-5">
+
+                <!-- Demo content-->
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-10 col-xl-7 mx-auto">
+                            <img src="../../assets/straviatec/StraviaTEC-Logo.png" class="display-4"
+                                style="margin-left: auto;margin-right: auto; display: block; width: 75%; margin-bottom: 10px;">
+                            <form>
+                                <div class="form-group mb-3">
+                                    <input #username type="text" placeholder="Username" required autofocus
+                                        class="form-control rounded-pill border-0 shadow-sm px-4">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <input #password type="password" placeholder="Password" required
+                                        class="form-control rounded-pill border-0 shadow-sm px-4 text-primary">
+                                </div>
+                                <button mat-flat-button class="text-uppercase mb-2 rounded-pill shadow-sm"
+                                    style="width: 100%;" color="primary"
+                                    (click)="login(username.value, password.value)">log in</button>
+                                <div>
+                                    <p style="text-align:center; margin-top: 20px;">Don't have an account yet?
+                                        <a type="button" (click)="toRegister()" class="font-italic text-muted">
+                                            <u>REGISTER</u></a>
+                                    </p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

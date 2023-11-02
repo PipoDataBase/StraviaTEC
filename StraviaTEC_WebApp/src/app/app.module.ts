@@ -14,6 +14,21 @@ import { PhotoService } from './demo/service/photo.service';
 import { UserLoginComponent } from './user-login/user-login.component';
 import { UserSignupComponent } from './user-signup/user-signup.component';
 
+//Angular material
+import { AngularMaterialModule } from './angular-material.module';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
+
+// FormsModule
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+//Primeng components
+import { ButtonModule } from 'primeng/button';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 @NgModule({
     declarations: [
         AppComponent, NotfoundComponent, UserLoginComponent, UserSignupComponent
@@ -21,12 +36,22 @@ import { UserSignupComponent } from './user-signup/user-signup.component';
     imports: [
         AppRoutingModule,
         AppLayoutModule,
+        ButtonModule,
+        BrowserAnimationsModule,
+        AngularMaterialModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatNativeDateModule,
+        MatDialogModule,
+        FormsModule,
+        ReactiveFormsModule
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         CountryService, CustomerService, EventService, IconService, NodeService,
         PhotoService, ProductService
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

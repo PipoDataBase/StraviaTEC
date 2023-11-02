@@ -7,11 +7,19 @@ import { Router } from '@angular/router';
   styleUrls: ['./user-login.component.scss']
 })
 export class UserLoginComponent {
+  username: string = '';
+  password: string = '';
+  hide: boolean = true;
 
   constructor(private router: Router) { }
 
-  login(): void {
-    console.log("Hola");
+  login(username: string, password: string): void {
+    //validate username and password
+    console.log(username, password);
     this.router.navigate(["dashboard"]);
+  }
+
+  toRegister(): void {
+    this.router.navigate(["user-signup"]);
   }
 }
