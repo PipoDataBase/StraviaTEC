@@ -31,6 +31,8 @@ import { TabMenuModule } from 'primeng/tabmenu';
 import { SkeletonModule } from 'primeng/skeleton';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { DatePipe } from '@angular/common';
+
 @NgModule({
     declarations: [
         AppComponent, NotfoundComponent, UserLoginComponent, UserSignupComponent
@@ -53,7 +55,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         CountryService, CustomerService, EventService, IconService, NodeService,
-        PhotoService, ProductService
+        PhotoService, ProductService, DatePipe
     ],
     bootstrap: [AppComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
