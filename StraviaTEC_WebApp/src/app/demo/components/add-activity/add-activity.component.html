@@ -41,7 +41,8 @@
             <div class="form-group">
               <label>Activity Type</label>
               <select #activityType name="activityType" required class="form-control shadow-sm px-4">
-                <option *ngFor="let type of activityTypes" [value]="type">{{ type }}</option>
+                <option *ngFor="let activityType of activityTypes" [value]="activityType.id">{{ activityType.type }}
+                </option>
               </select>
             </div>
           </div>

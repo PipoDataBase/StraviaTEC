@@ -14,9 +14,6 @@ Go
 EXEC spInsertNationality Argentine;
 Go
 
-EXEC spInsertNationality Argentinian;
-Go
-
 EXEC spInsertNationality Australian;
 Go
 
@@ -345,43 +342,15 @@ Go
 --                  ActivityTypes
 -- ================================================
 
-EXEC spInsertActivityType Baseball;
-Go
-EXEC spInsertActivityType Climbing;
-Go
-EXEC spInsertActivityType Cycling;
-Go
-EXEC spInsertActivityType Football;
-Go
-EXEC spInsertActivityType Freerunning;
-Go
-EXEC spInsertActivityType Hike;
-Go
-EXEC spInsertActivityType Hiking;
-Go
-EXEC spInsertActivityType Jogging;
-Go
-EXEC spInsertActivityType Kayak;
-Go
-EXEC spInsertActivityType Paddleboarding;
-Go
-EXEC spInsertActivityType Paragliding;
-Go
-EXEC spInsertActivityType Parkour;
-Go
 EXEC spInsertActivityType Running;
-Go
-EXEC spInsertActivityType Skateboarding;
-Go
-EXEC spInsertActivityType Snowboarding;
-Go
-EXEC spInsertActivityType Soccer;
-Go
-EXEC spInsertActivityType Streetluge;
-Go
-EXEC spInsertActivityType Surfing;
 Go
 EXEC spInsertActivityType Swimming;
 Go
-EXEC spInsertActivityType Triathlon;
+EXEC spInsertActivityType Cycling;
+Go
+EXEC spInsertActivityType Hike;
+Go
+EXEC spInsertActivityType Kayak;
+Go
+EXEC spInsertActivityType Hiking;
 Go

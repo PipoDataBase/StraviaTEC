@@ -3,9 +3,9 @@
         <div class="card px-6 py-6">
             <p-toast></p-toast>
             <h1>Challenges</h1>
-            <p-table #dt [value]="challenges" [columns]="cols" responsiveLayout="scroll" [rows]="10"
+            <p-table #dt [value]="challenges" responsiveLayout="scroll" [rows]="5"
                 [globalFilterFields]="['name', 'type', 'goal', 'startDate', 'endDate']" [paginator]="true"
-                [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[5,10,20]" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                 [(selection)]="selectedChallenges" selectionMode="multiple" [rowHover]="true" dataKey="name">
                 <ng-template pTemplate="caption">
@@ -82,9 +82,9 @@
                             <div class="flex">
                                 <button pButton pRipple icon="pi pi-pencil"
                                     class="p-button-rounded p-button-primary mr-2"
-                                    (click)="editProduct(challenge)"></button>
+                                    (click)="editChallenge(challenge)"></button>
                                 <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
-                                    (click)="deleteProduct(challenge)"></button>
+                                    (click)="deleteChallenge(challenge)"></button>
                             </div>
                         </td>
                     </tr>
@@ -92,46 +92,58 @@
             </p-table>
         </div>
 
-        <p-dialog [(visible)]="challengeDialog" [style]="{width: '60%', height: '90%'}" header="Challenge Details"
+        <p-dialog [(visible)]="challengeDialog" [style]="{width: '55%', height: '90%'}" header="Challenge Details"
             [modal]="true" class="p-fluid">
             <ng-template pTemplate="content" style="gap: 10px;">
                 <div class="field">
                     <label for="name">Name</label>
-                    <input type="text" pInputText id="name" disabled="{{ !newChallenge }}"
+                    <input type="text" pInputText id="name" disabled="{{ !isNewChallenge }}"
                         [(ngModel)]="challenge.name" />
                 </div>
 
                 <div class="formgrid grid">
                     <div class="field col">
                         <label for="startDate">Start Date</label>
-                        <p-calendar [(ngModel)]="challenge.startDate" [showIcon]="true"></p-calendar>
+                        <p-calendar [(ngModel)]="challenge.startDate" required [showIcon]="true"></p-calendar>
                     </div>
                     <div class="field col">
                         <label for="endDate">End Date</label>
-                        <p-calendar [(ngModel)]="challenge.endDate" [showIcon]="true"></p-calendar>
+                        <p-calendar [(ngModel)]="challenge.endDate" required [showIcon]="true"></p-calendar>
                     </div>
                 </div>
 
                 <div class="formgrid grid">
                     <div class="field col">
                         <label for="type">Type</label>
-                        <p-dropdown [options]="activities" [(ngModel)]="selectedType" optionLabel="type"></p-dropdown>
+                        <select [(ngModel)]="selectedActivityType" name="activityType" required
+                            class="form-control shadow-sm px-4">
+                            <option *ngFor="let activityType of activityTypes" [value]="activityType.id">{{
+                                activityType.type }}</option>
+                        </select>
                     </div>
                     <div class="field col">
                         <label for="goal">Goal</label>
-                        <input type="number" pInputText id="goal" min="0" [(ngModel)]="challenge.goal" />
+                        <input type="number" class="form-control shadow-sm px-4" pInputText id="goal" min="0" required
+                            [(ngModel)]="challenge.goal" />
                     </div>
                 </div>
 
                 <div class="formgrid grid">
                     <div class="field col">
-                        <label for="startDate">Deep/Height</label>
-                        <p-dropdown [options]="deep_height" [(ngModel)]="selectedDeepHeight"
-                            optionLabel="type"></p-dropdown>
+                        <label for="deep">Deep/Height</label>
+                        <select [(ngModel)]="selectedDeepHeight" name="deep_height" required
+                            class="form-control shadow-sm px-4">
+                            <option value="true">Deep</option>
+                            <option value="false">Height</option>
+                        </select>
                     </div>
                     <div class="field col">
-                        <label for="endDate">Privacy</label>
-                        <p-dropdown [options]="privacy" [(ngModel)]="selectedPrivacy" optionLabel="type"></p-dropdown>
+                        <label for="privacy">Privacy</label>
+                        <select [(ngModel)]="selectedPrivacy" name="privacy" required
+                            class="form-control shadow-sm px-4">
+                            <option value="true">Private</option>
+                            <option value="false">Public</option>
+                        </select>
                     </div>
                 </div>
             </ng-template>
@@ -144,27 +156,27 @@
             </ng-template>
         </p-dialog>
 
-        <p-dialog [(visible)]="deleteProductDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+        <p-dialog [(visible)]="deleteChallengeDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
                 <span *ngIf="challenge">Are you sure you want to delete <b>{{challenge.name}}</b>?</span>
             </div>
             <ng-template pTemplate="footer">
                 <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
-                    (click)="deleteProductDialog = false"></button>
+                    (click)="deleteChallengeDialog = false"></button>
                 <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
                     (click)="confirmDelete()"></button>
             </ng-template>
         </p-dialog>
 
-        <p-dialog [(visible)]="deleteProductsDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+        <p-dialog [(visible)]="deleteChallengesDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span>Are you sure you want to delete selected products?</span>
+                <span>Are you sure you want to delete selected challenges?</span>
             </div>
             <ng-template pTemplate="footer">
                 <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
-                    (click)="deleteProductsDialog = false"></button>
+                    (click)="deleteChallengesDialog = false"></button>
                 <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
                     (click)="confirmDeleteSelected()"></button>
             </ng-template>

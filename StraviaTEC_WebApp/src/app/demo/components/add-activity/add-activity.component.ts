@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { ActivityType } from 'src/app/models/activity-type.module';
+import { ActivityTypesService } from 'src/app/services/activity-types.service';
 
 @Component({
   selector: 'app-add-activity',
@@ -6,7 +8,20 @@ import { Component } from '@angular/core';
   styleUrls: ['./add-activity.component.scss']
 })
 export class AddActivityComponent {
-  activityTypes = ['Run', 'Swim', 'Cycling', 'Hiking', 'Kayak', 'Hike'];
+  activityTypes: ActivityType[] = [];
+
+  constructor(private activityTypesService: ActivityTypesService) { }
+
+  ngOnInit(): void {
+    this.activityTypesService.getActivityTypes().subscribe({
+      next: (activityTypes) => {
+        this.activityTypes = activityTypes;
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
+  }
 
   addActivity(description: string, activityDate: string, startTime: string, duration: string, activityType: string, kilometers: string, route: string) {
     //validate data

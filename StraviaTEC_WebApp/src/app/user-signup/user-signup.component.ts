@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { NationalitiesService } from '../services/nationalities.service';
+import { Nationality } from '../models/nationality.module';
 
 @Component({
   selector: 'app-user-signup',
@@ -11,8 +13,20 @@ export class UserSignupComponent {
   imgURL: any;
   message: string = '';
   valid: boolean = true;
+  nationalities: Nationality[] = [];
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private nationalitiesService: NationalitiesService) { }
+
+  ngOnInit(): void {
+    this.nationalitiesService.getNationalities().subscribe({
+      next: (nationalities) => {
+        this.nationalities = nationalities;
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
+  }
 
   register(name: string, lastName1: string, lastName2: string, nationality: string, birthDate: string, imgUrl: string, username: string, password: string): void {
     //validate data
