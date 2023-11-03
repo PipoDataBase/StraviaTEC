@@ -34,6 +34,7 @@ Activity {
 	Duration time
 	Date datetime
 	RoutePath varchar
+	Description varchar(40) null
 	Username varchar(20) null *> Sportman.Username
 	RaceName varchar(20) null *> Race.Name
 	ChallengeName varchar(20) null *> Challenge.Name

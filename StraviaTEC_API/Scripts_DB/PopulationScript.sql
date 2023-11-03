@@ -355,9 +355,13 @@ EXEC spInsertActivityType Football;
 Go
 EXEC spInsertActivityType Freerunning;
 Go
+EXEC spInsertActivityType Hike;
+Go
 EXEC spInsertActivityType Hiking;
 Go
-EXEC spInsertActivityType jogging;
+EXEC spInsertActivityType Jogging;
+Go
+EXEC spInsertActivityType Kayak;
 Go
 EXEC spInsertActivityType Paddleboarding;
 Go

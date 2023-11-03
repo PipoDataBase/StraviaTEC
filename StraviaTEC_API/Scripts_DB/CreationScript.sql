@@ -39,6 +39,7 @@ CREATE TABLE Activity (
 	Duration TIME NOT NULL,
 	Date DATETIME NOT NULL,
 	RoutePath varchar NOT NULL,
+	Description varchar(40),
 	Username varchar(20),
 	RaceName varchar(20),
 	ChallengeName varchar(20),
