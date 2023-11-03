@@ -3,10 +3,11 @@
         <div class="grid formgrid">
             <div class="flex gap-2 col-md-12">
                 <span class="p-input-icon-right" style="width: 100%;">
-                    <input #searchInput style="width: 100%;" type="text" pInputText placeholder="Search" required/>
+                    <input #searchInput style="width: 100%;" type="text" pInputText placeholder="Search" required />
                     <i class="pi pi-search"></i>
                 </span>
-                <p-button label="Search" [loading]="getLoadingAnimation()" (onClick)="searchButtonOnClick(searchInput.value)"></p-button>
+                <p-button label="Search" [loading]="getLoadingAnimation()"
+                    (onClick)="searchButtonOnClick(searchInput.value)"></p-button>
             </div>
         </div>
     </div>
@@ -18,19 +19,22 @@
             </ng-template>
             <div class="col-md-12">
                 <div class="card">
-                    <p-carousel [value]="getFoundUsers()" [numVisible]="5" [numScroll]="5" [circular]="true" [responsiveOptions]="carouselResponsiveOptions">
+                    <p-carousel [value]="getFoundUsers()" [numVisible]="5" [numScroll]="5" [circular]="true"
+                        [responsiveOptions]="carouselResponsiveOptions">
                         <ng-template let-user pTemplate="item">
-                                <div class="border-round m-2 text-center p-2" style="border: 1px solid var(--surface-d)">
-                                    <div class="my-5">
-                                        <img src="{{ user.photoPath }}" [alt]="user.username" class="shadow-4" width="50%"/>
-                                    </div>
-                                    <div>
-                                        <h2 class="mb-1">{{ user.username }}</h2>
-                                        <h4 class="mb-1">{{ user.name + " " + user.lastName1 }}</h4>
-                                        <h4 class="mt-0 mb-3">{{ user.nationalityId }}</h4>
-                                        <p-button #followButton label="Follow" (onClick)="followUserButtonOnClick(user.username); followButton.label='Following'; followButton.disabled=true"></p-button>
-                                    </div>
+                            <div class="border-round m-2 text-center p-2" style="border: 1px solid var(--surface-d)">
+                                <div class="my-5">
+                                    <img src="{{ user.photoPath }}" [alt]="user.username" class="shadow-4"
+                                        width="50%" />
                                 </div>
+                                <div>
+                                    <h2 class="mb-1">{{ user.username }}</h2>
+                                    <h4 class="mb-1">{{ user.name + " " + user.lastName1 }}</h4>
+                                    <h4 class="mt-0 mb-3">{{ user.nationalityId }}</h4>
+                                    <p-button #followButton label="Follow"
+                                        (onClick)="followUserButtonOnClick(user.username); followButton.label='Following'; followButton.disabled=true"></p-button>
+                                </div>
+                            </div>
                         </ng-template>
                     </p-carousel>
                 </div>
@@ -42,17 +46,20 @@
             </ng-template>
             <div class="col-md-12">
                 <div class="card">
-                    <p-carousel [value]="getFoundGroups()" [numVisible]="5" [numScroll]="5" [circular]="true" [responsiveOptions]="carouselResponsiveOptions">
+                    <p-carousel [value]="getFoundGroups()" [numVisible]="5" [numScroll]="5" [circular]="true"
+                        [responsiveOptions]="carouselResponsiveOptions">
                         <ng-template let-group pTemplate="item">
-                                <div class="border-round m-2 text-center p-2" style="border: 1px solid var(--surface-d)">
-                                    <div class="my-5">
-                                        <img src="../../../../assets/straviatec/default-avatar.png" [alt]="group.name" class="shadow-4" width="50%"/>
-                                    </div>
-                                    <div>
-                                        <h2 class="mb-1">{{ group.name }}</h2>
-                                        <p-button #submitButtton type="button" label="Submit" (onClick)="submitGroupButtonOnClick(group.name); submitButtton.label='Submitted'; submitButtton.disabled=true;"></p-button>
-                                    </div>
+                            <div class="border-round m-2 text-center p-2" style="border: 1px solid var(--surface-d)">
+                                <div class="my-5">
+                                    <img src="../../../../assets/straviatec/default-avatar.png" [alt]="group.name"
+                                        class="shadow-4" width="50%" />
                                 </div>
+                                <div>
+                                    <h2 class="mb-1">{{ group.name }}</h2>
+                                    <p-button #submitButtton type="button" label="Submit"
+                                        (onClick)="submitGroupButtonOnClick(group.name); submitButtton.label='Submitted'; submitButtton.disabled=true;"></p-button>
+                                </div>
+                            </div>
                         </ng-template>
                     </p-carousel>
                 </div>

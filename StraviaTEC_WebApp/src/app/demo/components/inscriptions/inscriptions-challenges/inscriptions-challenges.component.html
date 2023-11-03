@@ -1,1 +1,59 @@
-<p>inscriptions-challenges works!</p>
+<div class="col-md-12">
+    <div class="card">
+        <h1>Challenges</h1>
+        <p-dataView #dv [value]="challenges" [paginator]="true" [rows]="12" filterBy="name" [sortField]="sortField"
+            [sortOrder]="sortOrder" layout="grid">
+            <ng-template pTemplate="header">
+                <div class="flex flex-column md:flex-row md:justify-content-between gap-2">
+                    <span class="p-input-icon-left col-md-8">
+                        <i class="pi pi-search"></i>
+                        <input style="width: 100%;" type="search" pInputText placeholder="Search challenge" (input)="onFilter(dv, $event)">
+                    </span>
+                    <p-dropdown [options]="sortOptions" placeholder="Sort By Price"
+                        (onChange)="onSortChange($event)"></p-dropdown>
+                    <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
+                </div>
+            </ng-template>
+
+            <ng-template let-challenge pTemplate="listItem">
+                <div class="col-12">
+                    <div class="flex flex-column md:flex-row align-items-center p-3 w-full">
+                        <img [src]="'../../../../assets/straviatec/ChallengeDefaultImage.png'" [alt]="challenge.name"
+                            class="my-4 md:my-0 w-9 md:w-10rem shadow-2 mr-5" />
+                        <div class="flex-1 flex flex-column align-items-center text-center md:text-left">
+                            <div class="text-2xl font-bold mb-3">{{challenge.name}}</div>
+                            <div class="h6 mb-3">Complete {{challenge.goal}} meters</div>
+                            <div class="h6 mb-3">From {{challenge.startDate}} to {{ challenge.endDate }}</div>
+                            <div class="flex flex-wrap align-items-center mb-3">
+                                <p-chip label="{{ getActivityType(challenge.type) }}" styleClass="m-1"></p-chip>
+                                <p-chip label="{{ challenge.deep ? 'Deep' : 'Height' }}" styleClass="m-1"></p-chip>
+                                <p-chip label="{{ challenge.private ? 'Private' : 'Public' }}" styleClass="m-1"></p-chip>
+                            </div>
+                        </div>
+                        <p-button #joinChallengeButton label="Join Challenge" (onClick)="joinChallengeButtonOnClick(challenge.name); joinChallengeButton.label='Joined'; joinChallengeButton.disabled=true"></p-button>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template let-challenge pTemplate="gridItem">
+                <div class="col-12 md:col-4">
+                    <div class="card m-3 border-1 surface-border">
+                        <div class="flex flex-column align-items-center text-center mb-3">
+                            <img [src]="'../../../../assets/straviatec/ChallengeDefaultImage.png'" [alt]="challenge.name"
+                                class="w-10 shadow-2 my-3 mx-0 mb-3" />
+                            <div class="text-2xl font-bold mb-3">{{challenge.name}}</div>
+                            <div class="h6 mb-3">Complete {{challenge.goal}} meters</div>
+                            <div class="h6 mb-3">From {{challenge.startDate}} to {{ challenge.endDate }}</div>
+                            <div class="flex flex-wrap align-items-center mb-3">
+                                <p-chip label="{{ getActivityType(challenge.type) }}" styleClass="m-1"></p-chip>
+                                <p-chip label="{{ challenge.deep ? 'Deep' : 'Height' }}" styleClass="m-1"></p-chip>
+                                <p-chip label="{{ challenge.private ? 'Private' : 'Public' }}" styleClass="m-1"></p-chip>
+                            </div>
+                            <p-button #joinChallengeButton label="Join Challenge" (onClick)="joinChallengeButtonOnClick(challenge.name); joinChallengeButton.label='Joined'; joinChallengeButton.disabled=true"></p-button>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </p-dataView>
+    </div>
+</div>
