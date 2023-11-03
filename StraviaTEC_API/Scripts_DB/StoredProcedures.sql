@@ -363,3 +363,61 @@ BEGIN
     DELETE FROM Activity
     WHERE Id = @Id;
 END;
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+-- ================================================
+--                  Sponsor
+-- ================================================
+CREATE PROCEDURE spGetSponsors
+AS
+BEGIN
+    SELECT * FROM Sponsor;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spGetSponsor
+@TradeName varchar(20)
+AS
+BEGIN
+    SELECT * FROM Sponsor where TradeName = @TradeName;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spInsertSponsor
+    @TradeName varchar(20),
+	@LegalRepresentant varchar(20),
+	@Phone numeric(8,0),
+	@LogoPath varchar(MAX)
+AS
+BEGIN
+    INSERT INTO Sponsor (TradeName, LegalRepresentant, Phone, LogoPath)
+    VALUES (@TradeName, @LegalRepresentant, @Phone, @LogoPath);
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spUpdateSponsor
+    @TradeName varchar(20),
+	@LegalRepresentant varchar(20),
+	@Phone numeric(8,0),
+	@LogoPath varchar(MAX)
+AS
+BEGIN
+    UPDATE Sponsor
+    SET LegalRepresentant = @LegalRepresentant,
+        Phone = @Phone,
+        LogoPath = @LogoPath
+    WHERE TradeName = @TradeName;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spDeleteSponsor
+    @TradeName varchar(20)
+AS
+BEGIN
+    DELETE FROM Sponsor
+    WHERE TradeName = @TradeName;
+END;

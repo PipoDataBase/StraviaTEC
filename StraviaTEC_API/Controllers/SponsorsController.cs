@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using StraviaTEC_API.Models;
 
@@ -28,7 +29,8 @@ namespace StraviaTEC_API.Controllers
           {
               return NotFound();
           }
-            return await _context.Sponsors.ToListAsync();
+            return await _context.Sponsors.FromSqlRaw("spGetSponsors").ToListAsync();
+
         }
 
         // GET: api/Sponsors/5
@@ -39,18 +41,13 @@ namespace StraviaTEC_API.Controllers
           {
               return NotFound();
           }
-            var sponsor = await _context.Sponsors.FindAsync(id);
-
-            if (sponsor == null)
-            {
-                return NotFound();
-            }
-
-            return sponsor;
+          var result = await _context.Sponsors.FromSqlRaw($"spGetSponsor {id}").ToListAsync();
+          return Ok(result);
         }
 
         // PUT: api/Sponsors/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // In swagger add "" in the Id, otherwise throws error for not recognizing as string
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSponsor(string id, Sponsor sponsor)
         {
@@ -59,11 +56,16 @@ namespace StraviaTEC_API.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(sponsor).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC spUpdateSponsor @TradeName, @LegalRepresentant, @Phone, @LogoPath",
+                    new SqlParameter("TradeName", id),
+                    new SqlParameter("@LegalRepresentant", sponsor.LegalRepresentant),
+                    new SqlParameter("@Phone", sponsor.Phone),
+                    new SqlParameter("@LogoPath", sponsor.LogoPath)
+                    );
+                return Ok("Sponsor Updated");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -77,7 +79,6 @@ namespace StraviaTEC_API.Controllers
                 }
             }
 
-            return NoContent();
         }
 
         // POST: api/Sponsors
@@ -89,10 +90,16 @@ namespace StraviaTEC_API.Controllers
           {
               return Problem("Entity set 'StraviaTecContext.Sponsors'  is null.");
           }
-            _context.Sponsors.Add(sponsor);
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC spInsertSponsor @TradeName, @LegalRepresentant, @Phone, @LogoPath",
+                    new SqlParameter("TradeName", sponsor.TradeName),
+                    new SqlParameter("@LegalRepresentant", sponsor.LegalRepresentant),
+                    new SqlParameter("@Phone", sponsor.Phone),
+                    new SqlParameter("@LogoPath", sponsor.LogoPath)
+                    );
+                return Ok("Sponsor Created");
             }
             catch (DbUpdateException)
             {
@@ -106,7 +113,6 @@ namespace StraviaTEC_API.Controllers
                 }
             }
 
-            return CreatedAtAction("GetSponsor", new { id = sponsor.TradeName }, sponsor);
         }
 
         // DELETE: api/Sponsors/5
@@ -122,11 +128,12 @@ namespace StraviaTEC_API.Controllers
             {
                 return NotFound();
             }
+            await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC spDeleteSponsor @TradeName",
+                    new SqlParameter("@TradeName", id)
+                    );
 
-            _context.Sponsors.Remove(sponsor);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return Ok("Sponsor Deleted");
         }
 
         private bool SponsorExists(string id)
