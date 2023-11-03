@@ -145,7 +145,7 @@ CREATE PROCEDURE spInsertSportman
 	@LastName1 varchar(20),
 	@LastName2 varchar(20),
 	@BirthDate DATE,
-	@PhotoPath varchar,
+	@PhotoPath varchar(MAX),
 	@Password varchar(20) ,
 	@Nationality tinyint
 AS
@@ -162,7 +162,7 @@ CREATE PROCEDURE spUpdateSportman
 	@LastName1 varchar(20),
 	@LastName2 varchar(20),
 	@BirthDate DATE,
-	@PhotoPath varchar,
+	@PhotoPath varchar(MAX),
 	@Password varchar(20) ,
 	@Nationality tinyint
 AS
@@ -238,5 +238,128 @@ CREATE PROCEDURE spDeleteNationality
 AS
 BEGIN
     DELETE FROM Nationality
+    WHERE Id = @Id;
+END;
+
+Go
+-- ================================================
+--                  Activity
+-- ================================================
+CREATE PROCEDURE spGetActivities
+AS
+BEGIN
+    SELECT * FROM Activity;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spGetActivity
+@Id int
+AS
+BEGIN
+    SELECT * FROM Activity where Id = @Id;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spInsertActivity
+	@Kilometers numeric(10,3),
+	@Duration time(0) NULL,
+	@Date DATETIME,
+	@RoutePath varchar(MAX),
+	@Description varchar(40) NULL,
+	@Username varchar(20),
+	@Type tinyint
+AS
+BEGIN
+    INSERT INTO Activity (Kilometers, Duration, Date, Description, Username, RaceName, ChallengeName, Type)
+    VALUES (@Kilometers, @Duration, @Date, @Description, @Username, NULL, NULL, @Type);
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spInsertActivityRace
+	@Kilometers numeric(10,3),
+	@Duration time(0) NULL,
+	@Date DATETIME,
+	@RoutePath varchar(MAX),
+	@Description varchar(40) NULL,
+	@Username varchar(20),
+	@RaceName varchar(20) NULL,
+	@Type tinyint
+AS
+BEGIN
+    INSERT INTO Activity (Kilometers, Duration, Date, Description, Username, RaceName, ChallengeName, Type)
+    VALUES (@Kilometers, @Duration, @Date, @Description, @Username, @RaceName, NULL, @Type);
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spInsertActivityChallenge
+	@Kilometers numeric(10,3),
+	@Duration time(0) NULL,
+	@Date DATETIME,
+	@RoutePath varchar(MAX),
+	@Description varchar(40) NULL,
+	@Username varchar(20),
+	@ChallengeName varchar(20) NULL,
+	@Type tinyint
+AS
+BEGIN
+    INSERT INTO Activity (Kilometers, Duration, Date, Description, Username, RaceName, ChallengeName, Type)
+    VALUES (@Kilometers, @Duration, @Date, @Description, @Username, NULL, @ChallengeName, @Type);
+END;
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spInsertActivityChallengeAndRace
+	@Kilometers numeric(10,3),
+	@Duration time(0) NULL,
+	@Date DATETIME,
+	@RoutePath varchar(MAX),
+	@Description varchar(40) NULL,
+	@Username varchar(20),
+    @RaceName varchar(20) NULL,
+	@ChallengeName varchar(20) NULL,
+	@Type tinyint
+AS
+BEGIN
+    INSERT INTO Activity (Kilometers, Duration, Date, Description, Username, RaceName, ChallengeName, Type)
+    VALUES (@Kilometers, @Duration, @Date, @Description, @Username, @RaceName, @ChallengeName, @Type);
+END;
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spUpdateActivity
+    @Id int,
+	@Kilometers numeric(10,3),
+	@Duration time(0) NULL,
+	@Date DATETIME,
+	@RoutePath varchar(MAX),
+	@Description varchar(40) NULL,
+	@Username varchar(20),
+	@RaceName varchar(20) NULL,
+	@ChallengeName varchar(20) NULL,
+	@Type tinyint
+AS
+BEGIN
+    UPDATE Activity
+    SET Kilometers = @Kilometers,
+        Duration = @Duration,
+        Date = @Date,
+        RoutePath = @RoutePath,
+        Description = @Description,
+        Username = @Username,
+        RaceName = @RaceName,
+        ChallengeName = @ChallengeName,
+        Type = @Type
+    WHERE Id = @Id;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spDeleteActivity
+    @Id int
+AS
+BEGIN
+    DELETE FROM Activity
     WHERE Id = @Id;
 END;

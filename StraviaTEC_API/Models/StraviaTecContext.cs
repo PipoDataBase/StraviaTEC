@@ -69,13 +69,15 @@ public partial class StraviaTecContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.ChallengeNameNavigation).WithMany(p => p.Activities)
-                .HasForeignKey(d => d.ChallengeName)
-                .HasConstraintName("Activity_fk1");
-
             entity.HasOne(d => d.RaceNameNavigation).WithMany(p => p.Activities)
                 .HasForeignKey(d => d.RaceName)
-                .HasConstraintName("Activity_fk3");
+                .HasConstraintName("Activity_fk3")
+                .IsRequired(false); 
+
+            entity.HasOne(d => d.ChallengeNameNavigation).WithMany(p => p.Activities)
+                .HasForeignKey(d => d.ChallengeName)
+                .HasConstraintName("Activity_fk1")
+                .IsRequired(false);
 
             entity.HasOne(d => d.TypeNavigation).WithMany(p => p.Activities)
                 .HasForeignKey(d => d.Type)

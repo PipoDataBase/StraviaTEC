@@ -4,7 +4,7 @@ CREATE TABLE Sportman (
 	LastName1 varchar(20),
 	LastName2 varchar(20),
 	BirthDate DATE NOT NULL,
-	PhotoPath varchar,
+	PhotoPath varchar(MAX),
 	Password varchar(20) NOT NULL,
 	Nationality tinyint NOT NULL,
 	PRIMARY KEY (Username)
@@ -34,16 +34,16 @@ CREATE TABLE SportmanGroup (
 );
 
 CREATE TABLE Activity (
-	Id int NOT NULL,
+	Id int NOT NULL IDENTITY(0,1),
 	Kilometers numeric(10,3) NOT NULL,
-	Duration TIME NOT NULL,
+	Duration time(0),
 	Date DATETIME NOT NULL,
-	RoutePath varchar NOT NULL,
+	RoutePath varchar(MAX),
 	Description varchar(40),
 	Username varchar(20),
 	RaceName varchar(20),
 	ChallengeName varchar(20),
-	Type tinyint,
+	Type tinyint NOT NULL,
 	PRIMARY KEY (Id)
 );
 
@@ -74,7 +74,7 @@ CREATE TABLE Sponsor (
 	TradeName varchar(20) NOT NULL,
 	LegalRepresentant varchar(20),
 	Phone numeric(8,0),
-	LogoPath varchar,
+	LogoPath varchar(MAX),
 	PRIMARY KEY (TradeName)
 );
 
@@ -90,7 +90,7 @@ CREATE TABLE Race (
 	InscriptionPrice numeric(6,0) NOT NULL,
 	Date DATETIME NOT NULL,
 	Private bit NOT NULL,
-	RoutePath varchar,
+	RoutePath varchar(MAX),
 	PRIMARY KEY (Name)
 );
 
@@ -102,7 +102,7 @@ CREATE TABLE RaceSportman (
 
 CREATE TABLE Bill (
 	Id INT IDENTITY(0,1),
-	PhotoPath varchar,
+	PhotoPath varchar(MAX),
 	Accepted bit NOT NULL,
 	Username varchar(20) NOT NULL,
 	RaceName varchar(20) NOT NULL,
