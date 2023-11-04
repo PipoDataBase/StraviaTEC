@@ -17,7 +17,7 @@ public partial class Race
 
     public virtual ICollection<Activity>? Activities { get; set; } = new List<Activity>();
 
-    public virtual BankAccount? BankAccount { get; set; }
+    public virtual ICollection<BankAccount>? BankAccounts { get; set; } = new List<BankAccount>();
 
     public virtual ICollection<Bill>? Bills { get; set; } = new List<Bill>();
 

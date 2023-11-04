@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using StraviaTEC_API.Models;
 
@@ -28,7 +29,7 @@ namespace StraviaTEC_API.Controllers
           {
               return NotFound();
           }
-            return await _context.BankAccounts.ToListAsync();
+            return await _context.BankAccounts.FromSqlRaw("spGetBankAccounts").ToListAsync();
         }
 
         // GET: api/BankAccounts/5
@@ -39,45 +40,8 @@ namespace StraviaTEC_API.Controllers
           {
               return NotFound();
           }
-            var bankAccount = await _context.BankAccounts.FindAsync(id);
-
-            if (bankAccount == null)
-            {
-                return NotFound();
-            }
-
-            return bankAccount;
-        }
-
-        // PUT: api/BankAccounts/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutBankAccount(string id, BankAccount bankAccount)
-        {
-            if (id != bankAccount.RaceName)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(bankAccount).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BankAccountExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+          var result = await _context.BankAccounts.FromSqlRaw($"spGetBankAccount {id}").ToListAsync();
+          return Ok(result);
         }
 
         // POST: api/BankAccounts
@@ -89,14 +53,18 @@ namespace StraviaTEC_API.Controllers
           {
               return Problem("Entity set 'StraviaTecContext.BankAccounts'  is null.");
           }
-            _context.BankAccounts.Add(bankAccount);
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.Database.ExecuteSqlRawAsync(
+                        "EXEC spInsertBankAccount @BankAccount, @RaceName",
+                        new SqlParameter("@BankAccount", bankAccount.BankAccount1),
+                        new SqlParameter("@RaceName", bankAccount.RaceName)
+                        );
+                return Ok("BankAccount Created");
             }
             catch (DbUpdateException)
             {
-                if (BankAccountExists(bankAccount.RaceName))
+                if (BankAccountExists(bankAccount.BankAccount1))
                 {
                     return Conflict();
                 }
@@ -105,33 +73,27 @@ namespace StraviaTEC_API.Controllers
                     throw;
                 }
             }
-
-            return CreatedAtAction("GetBankAccount", new { id = bankAccount.RaceName }, bankAccount);
         }
 
         // DELETE: api/BankAccounts/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBankAccount(string id)
+        [HttpDelete]
+        public async Task<IActionResult> DeleteBankAccount(BankAccount bankAccount)
         {
             if (_context.BankAccounts == null)
             {
                 return NotFound();
             }
-            var bankAccount = await _context.BankAccounts.FindAsync(id);
-            if (bankAccount == null)
-            {
-                return NotFound();
-            }
-
-            _context.BankAccounts.Remove(bankAccount);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            await _context.Database.ExecuteSqlRawAsync(
+                "EXEC spDeleteBankAccount @BankAccount, @RaceName",
+                new SqlParameter("@BankAccount", bankAccount.BankAccount1),
+                new SqlParameter("@RaceName", bankAccount.RaceName)
+            );
+            return Ok("BankAccount deleted");
         }
 
         private bool BankAccountExists(string id)
         {
-            return (_context.BankAccounts?.Any(e => e.RaceName == id)).GetValueOrDefault();
+            return (_context.BankAccounts?.Any(e => e.BankAccount1 == id)).GetValueOrDefault();
         }
     }
 }

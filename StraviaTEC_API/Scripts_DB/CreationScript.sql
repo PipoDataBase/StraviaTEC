@@ -124,9 +124,9 @@ CREATE TABLE Category (
 );
 
 CREATE TABLE BankAccount (
-	RaceName varchar(20) NOT NULL,
 	BankAccount varchar(20) NOT NULL,
-	PRIMARY KEY (RaceName)
+	RaceName varchar(20) NOT NULL,
+	PRIMARY KEY (BankAccount, RaceName)
 );
 
 CREATE TABLE RaceSponsor (

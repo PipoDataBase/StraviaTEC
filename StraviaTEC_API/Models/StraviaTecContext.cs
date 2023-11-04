@@ -101,20 +101,20 @@ public partial class StraviaTecContext : DbContext
 
         modelBuilder.Entity<BankAccount>(entity =>
         {
-            entity.HasKey(e => e.RaceName).HasName("PK__BankAcco__0FC8791F991D73D3");
+            entity.HasKey(e => new { e.BankAccount1, e.RaceName }).HasName("PK__BankAcco__019ADEDB16C0CBC2");
 
             entity.ToTable("BankAccount");
 
-            entity.Property(e => e.RaceName)
-                .HasMaxLength(20)
-                .IsUnicode(false);
             entity.Property(e => e.BankAccount1)
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("BankAccount");
+            entity.Property(e => e.RaceName)
+                .HasMaxLength(20)
+                .IsUnicode(false);
 
-            entity.HasOne(d => d.RaceNameNavigation).WithOne(p => p.BankAccount)
-                .HasForeignKey<BankAccount>(d => d.RaceName)
+            entity.HasOne(d => d.RaceNameNavigation).WithMany(p => p.BankAccounts)
+                .HasForeignKey(d => d.RaceName)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("BankAccount_fk0");
         });
@@ -209,7 +209,7 @@ public partial class StraviaTecContext : DbContext
 
         modelBuilder.Entity<Race>(entity =>
         {
-            entity.HasKey(e => e.Name).HasName("PK__Race__737584F7BCC941B0");
+            entity.HasKey(e => e.Name).HasName("PK__Race__737584F75C94B08F");
 
             entity.ToTable("Race");
 
@@ -218,9 +218,7 @@ public partial class StraviaTecContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.Date).HasColumnType("datetime");
             entity.Property(e => e.InscriptionPrice).HasColumnType("numeric(6, 0)");
-            entity.Property(e => e.RoutePath)
-                .HasMaxLength(1)
-                .IsUnicode(false);
+            entity.Property(e => e.RoutePath).IsUnicode(false);
 
             entity.HasMany(d => d.Categories).WithMany(p => p.RaceNames)
                 .UsingEntity<Dictionary<string, object>>(
@@ -235,7 +233,7 @@ public partial class StraviaTecContext : DbContext
                         .HasConstraintName("RaceCategory_fk0"),
                     j =>
                     {
-                        j.HasKey("RaceName", "CategoryId").HasName("PK__RaceCate__AE58EABF162BB3B1");
+                        j.HasKey("RaceName", "CategoryId").HasName("PK__RaceCate__AE58EABFE73B3B9E");
                         j.ToTable("RaceCategory");
                         j.IndexerProperty<string>("RaceName")
                             .HasMaxLength(20)

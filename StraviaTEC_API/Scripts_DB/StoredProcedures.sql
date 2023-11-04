@@ -593,3 +593,45 @@ BEGIN
     DELETE FROM Category
     WHERE Id = @Id;
 END;
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+-- ================================================
+--                  BankAccount
+-- ================================================
+CREATE PROCEDURE spGetBankAccounts
+AS
+BEGIN
+    SELECT * FROM BankAccount;
+END;
+
+Go
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+CREATE PROCEDURE spGetBankAccount
+    @RaceName varchar(20)
+AS
+BEGIN
+    SELECT * FROM BankAccount where RaceName = @RaceName;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spInsertBankAccount
+	@BankAccount varchar(20),
+	@RaceName varchar(20)
+AS
+BEGIN
+    INSERT INTO BankAccount (BankAccount, RaceName)
+    VALUES (@BankAccount, @RaceName);
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spDeleteBankAccount
+    @BankAccount varchar(20),
+	@RaceName varchar(20)
+AS
+BEGIN
+    DELETE FROM BankAccount
+    WHERE BankAccount = @BankAccount AND RaceName = @RaceName;
+END;
