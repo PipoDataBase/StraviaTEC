@@ -354,3 +354,22 @@ EXEC spInsertActivityType Kayak;
 Go
 EXEC spInsertActivityType Hiking;
 Go
+
+-- ================================================
+--                  Categories
+-- ================================================
+
+EXEC spInsertCategory 0 14 'Junior';
+Go
+EXEC spInsertCategory 15 23 'Sub-23';
+Go
+EXEC spInsertCategory 24 30 'Open';
+Go
+EXEC spInsertCategory 0 99 'Elite';
+Go
+EXEC spInsertCategory 31 40 'Master A';
+Go
+EXEC spInsertCategory 41 50 'Master B';
+Go
+EXEC spInsertCategory 51 99 'Master C';
+Go
