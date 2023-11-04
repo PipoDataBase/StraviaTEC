@@ -1,1 +1,182 @@
-<p>management-races works!</p>
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <h1>Races</h1>
+            <p-table #dt [value]="races" responsiveLayout="scroll" [rows]="5" [globalFilterFields]="['name', 'date']"
+                [paginator]="true" [rowsPerPageOptions]="[5,10,20]" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [(selection)]="selectedRaces" selectionMode="multiple" [rowHover]="true" dataKey="name">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <span class="block mt-2 md:mt-0 p-input-icon-left" style="width: 100%;">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."
+                                class="w-full" />
+                        </span>
+                        <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success ml-2"
+                            (click)="openNew()"></button>
+                        <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger ml-2"
+                            (click)="deleteSelectedRaces()"
+                            [disabled]="!selectedRaces || !selectedRaces.length"></button>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="name" style="text-align: center;">Name <p-sortIcon
+                                field="name"></p-sortIcon></th>
+                        <th pSortableColumn="type" style="text-align: center;">Type <p-sortIcon
+                                field="type"></p-sortIcon></th>
+                        <th pSortableColumn="category" style="text-align: center;">Category <p-sortIcon
+                                field="category"></p-sortIcon></th>
+                        <th pSortableColumn="route" style="text-align: center;">Route <p-sortIcon
+                                field="route"></p-sortIcon></th>
+                        <th pSortableColumn="date" style="text-align: center;">Date <p-sortIcon
+                                field="date"></p-sortIcon></th>
+                        <th pSortableColumn="privacy" style="text-align: center;">Privacy <p-sortIcon
+                                field="privacy"></p-sortIcon></th>
+                        <th pSortableColumn="moreInfo" style="text-align: center;">More Info <p-sortIcon
+                                field="moreInfo"></p-sortIcon></th>
+                        <th pSortableColumn="action" style="text-align: center;">Action</th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-race>
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="race"></p-tableCheckbox>
+                        </td>
+                        <td style="width:12%; min-width:10rem; text-align: center;"><span
+                                class="p-column-title">Name</span>
+                            {{race.name}}
+                        </td>
+                        <td style="width:12%; min-width:10rem; text-align: center;">
+                            <span class="p-column-title">Type</span>
+                            {{getActivityType(race.type)}}
+                        </td>
+                        <td style="width:12%; min-width:10rem; text-align: center;">
+                            <span class="p-column-title">Category</span>
+                            {{getCategory(race.category)}}
+                        </td>
+                        <td style="width:12%; min-width:10rem; text-align: center;">
+                            <button pButton pRipple label="" icon="pi pi-map" class="p-button-rounded p-button-primary"
+                                (click)="seeRoute()"></button>
+                        </td>
+                        <td style="width:12%; min-width:10rem; text-align: center;">
+                            <span class="p-column-title">Date</span>
+                            {{race.date}}
+                        </td>
+                        <td style="width:12%; min-width:10rem; text-align: center;">
+                            <span class="p-column-title">Privacy</span>
+                            {{race.private ? 'Private' : 'Public'}}
+                        </td>
+                        <td style="width:12%; min-width:10rem; text-align: center;">
+                            <button pButton pRipple label="" icon="pi pi-list" class="p-button-rounded p-button-primary"
+                                (click)="seeMoreInfo()"></button>
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-primary mr-2" (click)="editRace(race)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                                    (click)="deleteRace(race)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog [(visible)]="raceDialog" [style]="{width: '55%', height: '90%'}" header="Race Details" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content" style="gap: 10px;">
+                <div class="field">
+                    <label for="name">Name</label>
+                    <input type="text" pInputText id="name" disabled="{{ !isNewRace }}" [(ngModel)]="race.name" />
+                </div>
+
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <label for="startDate">Start Date</label>
+                        <p-calendar [(ngModel)]="challenge.startDate" required [showIcon]="true"></p-calendar>
+                    </div>
+                    <div class="field col">
+                        <label for="endDate">End Date</label>
+                        <p-calendar [(ngModel)]="challenge.endDate" required [showIcon]="true"></p-calendar>
+                    </div>
+                </div>
+
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <label for="type">Type</label>
+                        <select [(ngModel)]="selectedActivityType" name="activityType" required
+                            class="form-control shadow-sm px-4">
+                            <option *ngFor="let activityType of activityTypes" [value]="activityType.id">{{
+                                activityType.type }}</option>
+                        </select>
+                    </div>
+                    <div class="field col">
+                        <label for="goal">Goal</label>
+                        <input type="number" class="form-control shadow-sm px-4" pInputText id="goal" min="0" required
+                            [(ngModel)]="challenge.goal" />
+                    </div>
+                </div>
+
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <label for="deep">Deep/Height</label>
+                        <select [(ngModel)]="selectedDeepHeight" name="deep_height" required
+                            class="form-control shadow-sm px-4">
+                            <option value="true">Deep</option>
+                            <option value="false">Height</option>
+                        </select>
+                    </div>
+                    <div class="field col">
+                        <label for="privacy">Privacy</label>
+                        <select [(ngModel)]="selectedPrivacy" name="privacy" required
+                            class="form-control shadow-sm px-4">
+                            <option value="true">Private</option>
+                            <option value="false">Public</option>
+                        </select>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                    (click)="saveChallenge()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteRaceDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="race">Are you sure you want to delete <b>{{race.name}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteRaceDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                    (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteRacesDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span>Are you sure you want to delete selected races?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteRacesDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                    (click)="confirmDeleteSelected()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>
