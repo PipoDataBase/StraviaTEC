@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using StraviaTEC_API.Models;
 
@@ -28,7 +29,7 @@ namespace StraviaTEC_API.Controllers
           {
               return NotFound();
           }
-            return await _context.Groups.ToListAsync();
+          return await _context.Groups.FromSqlRaw("EXEC spGetGroups").ToListAsync();
         }
 
         // GET: api/Groups/5
@@ -39,46 +40,11 @@ namespace StraviaTEC_API.Controllers
           {
               return NotFound();
           }
-            var @group = await _context.Groups.FindAsync(id);
-
-            if (@group == null)
-            {
-                return NotFound();
-            }
-
-            return @group;
+          var result = await _context.Groups.FromSqlRaw($"spGetGroup {id}").ToListAsync();
+          return Ok(result);
         }
 
-        // PUT: api/Groups/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutGroup(string id, Group @group)
-        {
-            if (id != @group.Name)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(@group).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!GroupExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
+        
 
         // POST: api/Groups
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -89,10 +55,13 @@ namespace StraviaTEC_API.Controllers
           {
               return Problem("Entity set 'StraviaTecContext.Groups'  is null.");
           }
-            _context.Groups.Add(@group);
             try
             {
-                await _context.SaveChangesAsync();
+               await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC spInsertGroup @Name",
+                    new SqlParameter("@Name", group.Name)
+                    );
+               return Ok("Group Created");
             }
             catch (DbUpdateException)
             {
@@ -105,8 +74,6 @@ namespace StraviaTEC_API.Controllers
                     throw;
                 }
             }
-
-            return CreatedAtAction("GetGroup", new { id = @group.Name }, @group);
         }
 
         // DELETE: api/Groups/5
@@ -122,11 +89,12 @@ namespace StraviaTEC_API.Controllers
             {
                 return NotFound();
             }
+            await _context.Database.ExecuteSqlRawAsync(
+                "EXEC spDeleteGroup @Name",
+                new SqlParameter("@Name", id)
+                );
 
-            _context.Groups.Remove(@group);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return Ok("Group Deleted");
         }
 
         private bool GroupExists(string id)

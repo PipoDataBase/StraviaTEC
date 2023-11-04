@@ -60,7 +60,7 @@ namespace StraviaTEC_API.Controllers
             {
                 await _context.Database.ExecuteSqlRawAsync(
                     "EXEC spUpdateSponsor @TradeName, @LegalRepresentant, @Phone, @LogoPath",
-                    new SqlParameter("TradeName", id),
+                    new SqlParameter("@TradeName", id),
                     new SqlParameter("@LegalRepresentant", sponsor.LegalRepresentant),
                     new SqlParameter("@Phone", sponsor.Phone),
                     new SqlParameter("@LogoPath", sponsor.LogoPath)
@@ -94,7 +94,7 @@ namespace StraviaTEC_API.Controllers
             {
                 await _context.Database.ExecuteSqlRawAsync(
                     "EXEC spInsertSponsor @TradeName, @LegalRepresentant, @Phone, @LogoPath",
-                    new SqlParameter("TradeName", sponsor.TradeName),
+                    new SqlParameter("@TradeName", sponsor.TradeName),
                     new SqlParameter("@LegalRepresentant", sponsor.LegalRepresentant),
                     new SqlParameter("@Phone", sponsor.Phone),
                     new SqlParameter("@LogoPath", sponsor.LogoPath)

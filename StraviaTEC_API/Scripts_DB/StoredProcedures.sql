@@ -421,3 +421,116 @@ BEGIN
     DELETE FROM Sponsor
     WHERE TradeName = @TradeName;
 END;
+
+Go
+-- ================================================
+--                  Group
+-- ================================================
+CREATE PROCEDURE spGetGroups
+AS
+BEGIN
+    SELECT * FROM Group_;
+END;
+
+Go
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+CREATE PROCEDURE spGetGroup
+    @Name varchar(20)
+AS
+BEGIN
+    SELECT * FROM Group_ where Name = @Name;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spInsertGroup
+	@Name varchar(20)
+AS
+BEGIN
+    INSERT INTO Group_ (Name)
+    VALUES (@Name);
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+-- Si quiero implementar bien el updated; crear nueva tabla, migrar relaciones y eliminar esta tabla
+Go
+CREATE PROCEDURE spUpdateGroup
+	@Name varchar(20),
+    @NewName varchar(20)
+AS
+BEGIN
+    UPDATE Group_
+    SET Name = @NewName
+    WHERE Name = @Name;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spDeleteGroup
+    @Name varchar(20)
+AS
+BEGIN
+    DELETE FROM Group_
+    WHERE Name = @Name;
+END;
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+-- ================================================
+--                  Race
+-- ================================================
+CREATE PROCEDURE spGetRaces
+AS
+BEGIN
+    SELECT * FROM Race;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spGetRace
+    @Name varchar(20)
+AS
+BEGIN
+    SELECT * FROM Race where Name = @Name;
+END;
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spInsertRace
+    @Name varchar(20),
+	@InscriptionPrice numeric(6,0),
+	@Date DATETIME,
+	@Private bit,
+	@RoutePath varchar(MAX)
+AS
+BEGIN
+    INSERT INTO Race (Name, InscriptionPrice, Date, Private, RoutePath)
+    VALUES (@Name, @InscriptionPrice, @Date, @Private, @RoutePath);
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spUpdateRace
+    @Name varchar(20),
+	@InscriptionPrice numeric(6,0),
+	@Date DATETIME,
+	@Private bit,
+	@RoutePath varchar(MAX)
+AS
+BEGIN
+    UPDATE Race
+    SET InscriptionPrice = @InscriptionPrice,
+        Date = @Date,
+        Private = @Private,
+        RoutePath = @RoutePath
+    WHERE Name = @Name;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spDeleteRace
+    @Name varchar(20)
+AS
+BEGIN
+    DELETE FROM Race
+    WHERE Name = @Name;
+END;
