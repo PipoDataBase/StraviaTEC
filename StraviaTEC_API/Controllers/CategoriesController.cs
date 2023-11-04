@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using StraviaTEC_API.Models;
 
@@ -28,7 +29,7 @@ namespace StraviaTEC_API.Controllers
           {
               return NotFound();
           }
-            return await _context.Categories.ToListAsync();
+            return await _context.Categories.FromSqlRaw("spGetCategories").ToListAsync();
         }
 
         // GET: api/Categories/5
@@ -45,8 +46,8 @@ namespace StraviaTEC_API.Controllers
             {
                 return NotFound();
             }
-
-            return category;
+            var result = await _context.Categories.FromSqlRaw($"spGetCategory {id}").ToListAsync();
+            return Ok(result);
         }
 
         // PUT: api/Categories/5
@@ -59,11 +60,16 @@ namespace StraviaTEC_API.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(category).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.Database.ExecuteSqlRawAsync(
+                 "EXEC spUpdateCategory @Id, @MinimumAge, @MaximumAge, @Category",
+                 new SqlParameter("@Id", id),
+                 new SqlParameter("@MinimumAge", category.MinimumAge),
+                 new SqlParameter("@MaximumAge", category.MaximumAge),
+                 new SqlParameter("@Category", category.Category1)
+                 );
+                return Ok("Category Updated");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -76,8 +82,6 @@ namespace StraviaTEC_API.Controllers
                     throw;
                 }
             }
-
-            return NoContent();
         }
 
         // POST: api/Categories
@@ -89,10 +93,15 @@ namespace StraviaTEC_API.Controllers
           {
               return Problem("Entity set 'StraviaTecContext.Categories'  is null.");
           }
-            _context.Categories.Add(category);
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC spInsertCategory @MinimumAge, @MaximumAge, @Category",
+                    new SqlParameter("@MinimumAge", category.MinimumAge),
+                    new SqlParameter("@MaximumAge", category.MaximumAge),
+                    new SqlParameter("@Category", category.Category1)
+                    );
+                return Ok("Category Created");
             }
             catch (DbUpdateException)
             {
@@ -105,8 +114,6 @@ namespace StraviaTEC_API.Controllers
                     throw;
                 }
             }
-
-            return CreatedAtAction("GetCategory", new { id = category.Id }, category);
         }
 
         // DELETE: api/Categories/5
@@ -122,11 +129,11 @@ namespace StraviaTEC_API.Controllers
             {
                 return NotFound();
             }
-
-            _context.Categories.Remove(category);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            await _context.Database.ExecuteSqlRawAsync(
+                "EXEC spDeleteCategory @Id",
+                new SqlParameter("@Id", id)
+                );
+            return Ok("Category deleted");
         }
 
         private bool CategoryExists(byte id)

@@ -534,3 +534,62 @@ BEGIN
     DELETE FROM Race
     WHERE Name = @Name;
 END;
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+-- ================================================
+--                  Category
+-- ================================================
+CREATE PROCEDURE spGetCategories
+AS
+BEGIN
+    SELECT * FROM Category;
+END;
+
+Go
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+CREATE PROCEDURE spGetCategory
+    @Id tinyint
+AS
+BEGIN
+    SELECT * FROM Category where Id = @Id;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+
+CREATE PROCEDURE spInsertCategory
+	@MinimumAge tinyint,
+    @MaximumAge tinyint,
+    @Category varchar(20)
+AS
+BEGIN
+    INSERT INTO Category (MinimumAge, MaximumAge, Category)
+    VALUES (@MinimumAge, @MaximumAge, @Category);
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spUpdateCategory
+	@Id tinyint,
+	@MinimumAge tinyint,
+    @MaximumAge tinyint,
+    @Category varchar(20)
+AS
+BEGIN
+    UPDATE Category
+    SET MinimumAge = @MinimumAge,
+        MaximumAge = @MaximumAge,
+        Category = @Category
+    WHERE Id = @Id;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spDeleteCategory
+    @Id tinyint
+AS
+BEGIN
+    DELETE FROM Category
+    WHERE Id = @Id;
+END;
