@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using StraviaTEC_API.Models;
 
@@ -28,7 +30,7 @@ namespace StraviaTEC_API.Controllers
           {
               return NotFound();
           }
-            return await _context.Bills.ToListAsync();
+            return await _context.Bills.FromSqlRaw("spGetBills").ToListAsync();
         }
 
         // GET: api/Bills/5
@@ -39,14 +41,8 @@ namespace StraviaTEC_API.Controllers
           {
               return NotFound();
           }
-            var bill = await _context.Bills.FindAsync(id);
-
-            if (bill == null)
-            {
-                return NotFound();
-            }
-
-            return bill;
+          var result = await _context.Bills.FromSqlRaw($"spGetBill {id}").ToListAsync();
+          return Ok(result);
         }
 
         // PUT: api/Bills/5
@@ -58,12 +54,17 @@ namespace StraviaTEC_API.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(bill).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC spUpdateBill @Id, @PhotoPath, @Accepted, @Username, @RaceName",
+                    new SqlParameter("@Id", id),
+                    new SqlParameter("@PhotoPath", bill.PhotoPath),
+                    new SqlParameter("@Accepted", bill.Accepted),
+                    new SqlParameter("@Username", bill.Username),
+                    new SqlParameter("@RaceName", bill.RaceName)
+                    );
+                return Ok("Bill Updated");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -76,8 +77,6 @@ namespace StraviaTEC_API.Controllers
                     throw;
                 }
             }
-
-            return NoContent();
         }
 
         // POST: api/Bills
@@ -89,10 +88,16 @@ namespace StraviaTEC_API.Controllers
           {
               return Problem("Entity set 'StraviaTecContext.Bills'  is null.");
           }
-            _context.Bills.Add(bill);
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC spInsertBill @PhotoPath, @Accepted, @Username, @RaceName",
+                    new SqlParameter("@PhotoPath", bill.PhotoPath),
+                    new SqlParameter("@Accepted", bill.Accepted),
+                    new SqlParameter("@Username", bill.Username),
+                    new SqlParameter("@RaceName", bill.RaceName)
+                    );
+                return Ok("Bill Created");
             }
             catch (DbUpdateException)
             {
@@ -105,8 +110,6 @@ namespace StraviaTEC_API.Controllers
                     throw;
                 }
             }
-
-            return CreatedAtAction("GetBill", new { id = bill.Id }, bill);
         }
 
         // DELETE: api/Bills/5
@@ -117,16 +120,12 @@ namespace StraviaTEC_API.Controllers
             {
                 return NotFound();
             }
-            var bill = await _context.Bills.FindAsync(id);
-            if (bill == null)
-            {
-                return NotFound();
-            }
+            await _context.Database.ExecuteSqlRawAsync(
+                "EXEC spDeleteBill @Id",
+                new SqlParameter("@Id", id)
+                );
 
-            _context.Bills.Remove(bill);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return Ok("Bill Deleted");
         }
 
         private bool BillExists(int id)

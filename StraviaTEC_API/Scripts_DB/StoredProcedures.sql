@@ -635,3 +635,64 @@ BEGIN
     DELETE FROM BankAccount
     WHERE BankAccount = @BankAccount AND RaceName = @RaceName;
 END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+-- ================================================
+--                  Bill
+-- ================================================
+CREATE PROCEDURE spGetBills
+AS
+BEGIN
+    SELECT * FROM Bill;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spGetBill
+@Id INT
+AS
+BEGIN
+    SELECT * FROM Bill where Id = @Id;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spInsertBill
+	@PhotoPath varchar(MAX),
+	@Accepted bit,
+	@Username varchar(20),
+	@RaceName varchar(20)
+AS
+BEGIN
+    INSERT INTO Bill (PhotoPath, Accepted, Username, RaceName)
+    VALUES (@PhotoPath, @Accepted, @Username, @RaceName);
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spUpdateBill
+    @Id int,
+	@PhotoPath varchar(MAX),
+	@Accepted bit,
+	@Username varchar(20),
+	@RaceName varchar(20)
+AS
+BEGIN
+    UPDATE Bill
+    SET PhotoPath = @PhotoPath,
+        Accepted = @Accepted,
+        Username = @Username,
+        RaceName = @RaceName
+    WHERE Id = @Id;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spDeleteBill
+    @Id int
+AS
+BEGIN
+    DELETE FROM Bill
+    WHERE Id = @Id;
+END;
