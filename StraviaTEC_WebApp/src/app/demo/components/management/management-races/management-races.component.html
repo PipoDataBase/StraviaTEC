@@ -63,7 +63,7 @@
                         </td>
                         <td style="width:12%; min-width:10rem; text-align: center;">
                             <button pButton pRipple label="" icon="pi pi-map" class="p-button-rounded p-button-primary"
-                                (click)="seeRoute()"></button>
+                                (click)="seeRoute(race)"></button>
                         </td>
                         <td style="width:12%; min-width:10rem; text-align: center;">
                             <span class="p-column-title">Date</span>
@@ -75,7 +75,7 @@
                         </td>
                         <td style="width:12%; min-width:10rem; text-align: center;">
                             <button pButton pRipple label="" icon="pi pi-list" class="p-button-rounded p-button-primary"
-                                (click)="seeMoreInfo()"></button>
+                                (click)="seeMoreInfo(race)"></button>
                         </td>
                         <td>
                             <div class="flex">
@@ -150,6 +150,27 @@
                     (click)="hideDialog()"></button>
                 <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
                     (click)="saveChallenge()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="raceRouteDialog" [style]="{width: '50%'}" header="Race Route" [modal]="true"
+            class="p-fluid">
+            <div class="z-depth-1-half map-container">
+                <iframe [src]="getSafeResourceUrl(race.routePath)" width="100%" height="450px"></iframe>
+            </div>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Close" icon="pi pi-times" class="p-button-text"
+                    (click)="hideRaceRouteDialog()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="raceMoreInfoDialog" [style]="{width: '55%', height: '90%'}"
+            header="Bank accounts and Sponsors" [modal]="true" class="p-fluid">
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideRaceMoreInfoDialog()"></button>
             </ng-template>
         </p-dialog>
 

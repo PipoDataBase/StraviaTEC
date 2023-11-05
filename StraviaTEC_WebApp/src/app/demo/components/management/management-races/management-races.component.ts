@@ -6,6 +6,7 @@ import { ActivityType } from 'src/app/models/activity-type.module';
 import { ActivityTypesService } from 'src/app/services/activity-types.service';
 import { CategoriesService } from 'src/app/services/categories.service';
 import { Category } from 'src/app/models/category.module';
+import { DomSanitizer } from '@angular/platform-browser';
 
 export interface Race {
   name?: string;
@@ -26,6 +27,8 @@ export interface Race {
 export class ManagementRacesComponent {
   isNewRace: boolean = false;
   raceDialog: boolean = false;
+  raceRouteDialog: boolean = false;
+  raceMoreInfoDialog: boolean = false;
   deleteRaceDialog: boolean = false;
   deleteRacesDialog: boolean = false;
 
@@ -41,7 +44,7 @@ export class ManagementRacesComponent {
 
   submitted: boolean = false;
 
-  constructor(private messageService: MessageService, private sharedService: SharedService, private activityTypesService: ActivityTypesService, private categoriesService: CategoriesService) { }
+  constructor(private messageService: MessageService, private sharedService: SharedService, private activityTypesService: ActivityTypesService, private categoriesService: CategoriesService, private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     this.activityTypesService.getActivityTypes().subscribe({
@@ -68,7 +71,7 @@ export class ManagementRacesComponent {
         inscriptionPrice: 20,
         date: '11/2/2023',
         private: false,
-        routePath: '',
+        routePath: 'https://www.google.com/maps/d/embed?mid=1cQv-iSgDnNCLG_jrQyX5emwZZDzLbixd&hl=es-419',
         type: 0, //running
         category: 1 //sub-23
       },
@@ -77,7 +80,7 @@ export class ManagementRacesComponent {
         inscriptionPrice: 20,
         date: '11/5/2023',
         private: false,
-        routePath: '',
+        routePath: 'https://www.google.com/maps/d/embed?mid=18RcpszqRsKd-Gy4Q6N7PRl5eaPa1bzqL&hl=es-419',
         type: 2, //cycling
         category: 3 //elite
       }
@@ -91,12 +94,14 @@ export class ManagementRacesComponent {
     this.isNewRace = true;
   }
 
-  seeRoute() {
-
+  seeRoute(race: Race) {
+    this.race = { ...race };
+    this.raceRouteDialog = true;
   }
 
-  seeMoreInfo() {
-    
+  seeMoreInfo(race: Race) {
+    this.race = { ...race };
+    this.raceMoreInfoDialog = true;
   }
 
   deleteSelectedRaces() {
@@ -135,7 +140,15 @@ export class ManagementRacesComponent {
     this.submitted = false;
   }
 
-  saveChallenge() {
+  hideRaceRouteDialog() {
+    this.raceRouteDialog = false;
+  }
+
+  hideRaceMoreInfoDialog() {
+    this.raceMoreInfoDialog = false;
+  }
+
+  saveRace() {
     /*
     this.submitted = true;
 
@@ -191,5 +204,9 @@ export class ManagementRacesComponent {
       return categoryFounded.category1;
     }
     return "";
+  }
+
+  getSafeResourceUrl(route: string) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(route);
   }
 }
