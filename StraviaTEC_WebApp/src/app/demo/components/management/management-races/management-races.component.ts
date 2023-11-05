@@ -18,6 +18,18 @@ export interface Race {
   category?: number;
 }
 
+export interface BankAccount {
+  raceName?: string;
+  bankAccount1?: string;
+}
+
+export interface Sponsor {
+  tradeName?: string;
+  legalRepresentant?: string;
+  phone?: number;
+  logoPath?: string;
+}
+
 @Component({
   selector: 'app-management-races',
   templateUrl: './management-races.component.html',
@@ -26,6 +38,7 @@ export interface Race {
 })
 export class ManagementRacesComponent {
   isNewRace: boolean = false;
+  isViewMoreInfo: boolean = false;
   raceDialog: boolean = false;
   raceRouteDialog: boolean = false;
   raceMoreInfoDialog: boolean = false;
@@ -41,6 +54,11 @@ export class ManagementRacesComponent {
   race: Race = {};
   activityTypes: ActivityType[] = [];
   categories: Category[] = [];
+
+  bankAccounts: BankAccount[] = [];
+  sponsors: Sponsor[] = [];
+  clonedSponsors: { [s: string]: Sponsor } = {};
+  clonedBankAccounts: { [s: string]: BankAccount } = {};
 
   submitted: boolean = false;
 
@@ -77,12 +95,38 @@ export class ManagementRacesComponent {
       },
       {
         name: 'Race 2',
-        inscriptionPrice: 20,
+        inscriptionPrice: 25,
         date: '11/5/2023',
-        private: false,
+        private: true,
         routePath: 'https://www.google.com/maps/d/embed?mid=18RcpszqRsKd-Gy4Q6N7PRl5eaPa1bzqL&hl=es-419',
         type: 2, //cycling
         category: 3 //elite
+      }
+    ]
+
+    this.sponsors = [
+      {
+        tradeName: 'Red Bull',
+        legalRepresentant: 'Kimberly Brooks',
+        phone: 71448465,
+        logoPath: '../../../../../assets/straviatec/red-bull-logo.png'
+      },
+      {
+        tradeName: 'Santander',
+        legalRepresentant: 'José Antonio Alvarez',
+        phone: 71448465,
+        logoPath: '../../../../../assets/straviatec/santander-logo.png'
+      }
+    ]
+
+    this.bankAccounts = [
+      {
+        raceName: 'Race',
+        bankAccount1: 'CR05 0152 0200 1026 2840 66'
+      },
+      {
+        raceName: 'Race',
+        bankAccount1: 'CR05 0152 0200 1026 2840 88'
       }
     ]
   }
@@ -102,6 +146,7 @@ export class ManagementRacesComponent {
   seeMoreInfo(race: Race) {
     this.race = { ...race };
     this.raceMoreInfoDialog = true;
+    this.isViewMoreInfo = true;
   }
 
   deleteSelectedRaces() {
@@ -208,5 +253,33 @@ export class ManagementRacesComponent {
 
   getSafeResourceUrl(route: string) {
     return this.sanitizer.bypassSecurityTrustResourceUrl(route);
+  }
+
+  onSponsorRowEditInit(sponsor: Sponsor) {
+    this.clonedSponsors[sponsor.tradeName as string] = { ...sponsor };
+  }
+
+  onSponsorRowEditSave(sponsor: Sponsor) {
+    //validate data
+    delete this.clonedSponsors[sponsor.tradeName as string];
+  }
+
+  onSponsorRowEditCancel(sponsor: Sponsor, index: number) {
+    this.sponsors[index] = this.clonedSponsors[sponsor.tradeName as string];
+    delete this.clonedSponsors[sponsor.tradeName as string];
+  }
+
+  onBankAccountRowEditInit(bankAccount: BankAccount) {
+    this.clonedBankAccounts[bankAccount.bankAccount1 as string] = { ...bankAccount };
+  }
+
+  onBankAccountRowEditSave(bankAccount: BankAccount) {
+    //validate data
+    delete this.clonedBankAccounts[bankAccount.bankAccount1 as string];
+  }
+
+  onBankAccountRowEditCancel(bankAccount: BankAccount, index: number) {
+    this.bankAccounts[index] = this.clonedBankAccounts[bankAccount.bankAccount1 as string];
+    delete this.clonedBankAccounts[bankAccount.bankAccount1 as string];
   }
 }

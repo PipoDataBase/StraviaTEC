@@ -3,7 +3,7 @@
         <div class="card px-6 py-6">
             <p-toast></p-toast>
             <h1>Races</h1>
-            <p-table #dt [value]="races" responsiveLayout="scroll" [rows]="5" [globalFilterFields]="['name', 'date']"
+            <p-table #dt [value]="races" responsiveLayout="scroll" [rows]="5" [globalFilterFields]="['name', 'date', 'inscriptionPrice']"
                 [paginator]="true" [rowsPerPageOptions]="[5,10,20]" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                 [(selection)]="selectedRaces" selectionMode="multiple" [rowHover]="true" dataKey="name">
@@ -36,8 +36,10 @@
                                 field="route"></p-sortIcon></th>
                         <th pSortableColumn="date" style="text-align: center;">Date <p-sortIcon
                                 field="date"></p-sortIcon></th>
-                        <th pSortableColumn="privacy" style="text-align: center;">Privacy <p-sortIcon
-                                field="privacy"></p-sortIcon></th>
+                        <th pSortableColumn="inscriptionPrice" style="text-align: center;">Price <p-sortIcon
+                                field="inscriptionPrice"></p-sortIcon></th>
+                        <th pSortableColumn="private" style="text-align: center;">Privacy <p-sortIcon
+                                field="private"></p-sortIcon></th>
                         <th pSortableColumn="moreInfo" style="text-align: center;">More Info <p-sortIcon
                                 field="moreInfo"></p-sortIcon></th>
                         <th pSortableColumn="action" style="text-align: center;">Action</th>
@@ -49,31 +51,35 @@
                         <td>
                             <p-tableCheckbox [value]="race"></p-tableCheckbox>
                         </td>
-                        <td style="width:12%; min-width:10rem; text-align: center;"><span
+                        <td style="width:11%; min-width:9rem; text-align: center;"><span
                                 class="p-column-title">Name</span>
                             {{race.name}}
                         </td>
-                        <td style="width:12%; min-width:10rem; text-align: center;">
+                        <td style="width:11%; min-width:9rem; text-align: center;">
                             <span class="p-column-title">Type</span>
                             {{getActivityType(race.type)}}
                         </td>
-                        <td style="width:12%; min-width:10rem; text-align: center;">
+                        <td style="width:11%; min-width:9rem; text-align: center;">
                             <span class="p-column-title">Category</span>
                             {{getCategory(race.category)}}
                         </td>
-                        <td style="width:12%; min-width:10rem; text-align: center;">
+                        <td style="width:11%; min-width:9rem; text-align: center;">
                             <button pButton pRipple label="" icon="pi pi-map" class="p-button-rounded p-button-primary"
                                 (click)="seeRoute(race)"></button>
                         </td>
-                        <td style="width:12%; min-width:10rem; text-align: center;">
+                        <td style="width:11%; min-width:9rem; text-align: center;">
                             <span class="p-column-title">Date</span>
                             {{race.date}}
                         </td>
-                        <td style="width:12%; min-width:10rem; text-align: center;">
+                        <td style="width:11%; min-width:9rem; text-align: center;">
+                            <span class="p-column-title">Price</span>
+                            {{race.inscriptionPrice}}
+                        </td>
+                        <td style="width:11%; min-width:9rem; text-align: center;">
                             <span class="p-column-title">Privacy</span>
                             {{race.private ? 'Private' : 'Public'}}
                         </td>
-                        <td style="width:12%; min-width:10rem; text-align: center;">
+                        <td style="width:11%; min-width:9rem; text-align: center;">
                             <button pButton pRipple label="" icon="pi pi-list" class="p-button-rounded p-button-primary"
                                 (click)="seeMoreInfo(race)"></button>
                         </td>
@@ -165,11 +171,119 @@
             </ng-template>
         </p-dialog>
 
-        <p-dialog [(visible)]="raceMoreInfoDialog" [style]="{width: '55%', height: '90%'}"
-            header="Bank accounts and Sponsors" [modal]="true" class="p-fluid">
+        <p-dialog [(visible)]="raceMoreInfoDialog" [style]="{width: '50%'}" header="More Information"
+            [modal]="true" class="p-fluid">
+            <div class="mb-5">
+                <h3>Sponsors</h3>
+                <p-toast></p-toast>
+                <p-table [value]="sponsors" dataKey="tradeName" editMode="row" [tableStyle]="{'min-width': '50rem'}">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width:20%; text-align: center;">Logo</th>
+                            <th style="width:20%; text-align: center;">Trade Name</th>
+                            <th style="width:20%; text-align: center;">Legal Representant</th>
+                            <th style="width:20%; text-align: center;">Phone</th>
+                            <th style="width:20%; text-align: center;"></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-sponsor let-editing="editing" let-ri="rowIndex">
+                        <tr [pEditableRow]="sponsor">
+                            <td style="width:20%; min-width:10rem; text-align: center;"><span
+                                    class="p-column-title">Image</span>
+                                <img [src]="sponsor.logoPath" [alt]="logo" width="100" class="shadow-4" />
+                            </td>
+                            <td style="text-align: center;">
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText type="text" [(ngModel)]="sponsor.tradeName" required>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{sponsor.tradeName}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td style="text-align: center;">
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText type="text" [(ngModel)]="sponsor.legalRepresentant" required>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{sponsor.legalRepresentant}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td style="text-align: center;">
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText type="text" [(ngModel)]="sponsor.phone">
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{sponsor.phone}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td style="text-align: center;">
+                                <div class="flex align-items-center justify-content-center gap-2">
+                                    <button *ngIf="!editing" disabled="{{ isViewMoreInfo }}" pButton pRipple type="button" pInitEditableRow
+                                        icon="pi pi-pencil" (click)="onSponsorRowEditInit(sponsor)"
+                                        class="p-button-rounded p-button-text"></button>
+                                    <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow
+                                        icon="pi pi-check" (click)="onSponsorRowEditSave(sponsor)"
+                                        class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                                    <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow
+                                        icon="pi pi-times" (click)="onSponsorRowEditCancel(sponsor, ri)"
+                                        class="p-button-rounded p-button-text p-button-danger"></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+
+            <div>
+                <h3>Bank Accounts</h3>
+                <p-toast></p-toast>
+                <p-table [value]="bankAccounts" dataKey="bankAccount1" editMode="row"
+                    [tableStyle]="{'min-width': '50rem'}">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width:80%; text-align: center;">Bank Account</th>
+                            <th style="width:20%; text-align: center;"></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-bankAccount let-editing="editing" let-ri="rowIndex">
+                        <tr [pEditableRow]="bankAccount">
+                            <td style="text-align: center;">
+                                <i class="pi pi-dollar" style="font-size: 1rem"></i>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText type="text" [(ngModel)]="bankAccount.bankAccount1" required>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{bankAccount.bankAccount1}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td style="text-align: center;">
+                                <div class="flex align-items-center justify-content-center gap-2">
+                                    <button *ngIf="!editing" disabled="{{ isViewMoreInfo }}" pButton pRipple type="button" pInitEditableRow
+                                        icon="pi pi-pencil" (click)="onBankAccountRowEditInit(bankAccount)"
+                                        class="p-button-rounded p-button-text"></button>
+                                    <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow
+                                        icon="pi pi-check" (click)="onBankAccountRowEditSave(bankAccount)"
+                                        class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                                    <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow
+                                        icon="pi pi-times" (click)="onBankAccountRowEditCancel(bankAccount, ri)"
+                                        class="p-button-rounded p-button-text p-button-danger"></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
 
             <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                <button pButton pRipple label="Close" icon="pi pi-times" class="p-button-text"
                     (click)="hideRaceMoreInfoDialog()"></button>
             </ng-template>
         </p-dialog>

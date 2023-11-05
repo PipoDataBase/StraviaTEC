@@ -63,7 +63,7 @@ export class ManagementChallengesComponent {
       {
         name: 'Challenge 2',
         goal: 1000,
-        private: false,
+        private: true,
         startDate: '11/2/2023',
         endDate: '11/3/2023',
         deep: false,
