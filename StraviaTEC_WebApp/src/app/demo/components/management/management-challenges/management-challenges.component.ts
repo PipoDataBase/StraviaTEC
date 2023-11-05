@@ -53,19 +53,19 @@ export class ManagementChallengesComponent {
     this.challenges = [
       {
         name: 'Challenge 1',
-        goal: 5000,
+        goal: 5,
         private: false,
-        startDate: '11/2/2023',
-        endDate: '11/3/2023',
+        startDate: '2023-11-02',
+        endDate: '2023-11-03',
         deep: true,
         type: 0 //runnig
       },
       {
         name: 'Challenge 2',
-        goal: 1000,
+        goal: 10,
         private: true,
-        startDate: '11/2/2023',
-        endDate: '11/3/2023',
+        startDate: '2023-11-02',
+        endDate: '2023-11-03',
         deep: false,
         type: 2 //cycling
       }
@@ -77,6 +77,8 @@ export class ManagementChallengesComponent {
     this.submitted = false;
     this.challengeDialog = true;
     this.isNewChallenge = true;
+    this.selectedActivityType = -1;
+    this.selectedPrivacy = false;
   }
 
   deleteSelectedChallenges() {

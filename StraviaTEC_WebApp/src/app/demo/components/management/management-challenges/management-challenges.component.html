@@ -52,31 +52,31 @@
                         </td>
                         <td style="width:12%; min-width:10rem; text-align: center;"><span
                                 class="p-column-title">Name</span>
-                            {{challenge.name}}
+                            {{ challenge.name }}
                         </td>
                         <td style="width:12%; min-width:10rem; text-align: center;">
                             <span class="p-column-title">Type</span>
-                            {{getActivityType(challenge.type)}}
+                            {{ getActivityType(challenge.type) }}
                         </td>
                         <td style="width:12%; min-width:10rem; text-align: center;">
                             <span class="p-column-title">Goal</span>
-                            {{challenge.goal + ' mts'}}
+                            {{ challenge.goal + ' km' }}
                         </td>
                         <td style="width:12%; min-width:10rem; text-align: center;">
                             <span class="p-column-title">Start Date</span>
-                            {{challenge.startDate}}
+                            {{ challenge.startDate }}
                         </td>
                         <td style="width:12%; min-width:10rem; text-align: center;">
                             <span class="p-column-title">End Date</span>
-                            {{challenge.endDate}}
+                            {{ challenge.endDate }}
                         </td>
                         <td style="width:12%; min-width:10rem; text-align: center;">
                             <span class="p-column-title">Deep/Height</span>
-                            {{challenge.deep ? 'Deep' : 'Height'}}
+                            {{ challenge.deep ? 'Deep' : 'Height' }}
                         </td>
                         <td style="width:12%; min-width:10rem; text-align: center;">
                             <span class="p-column-title">Privacy</span>
-                            {{challenge.private ? 'Private' : 'Public'}}
+                            {{ challenge.private ? 'Private' : 'Public' }}
                         </td>
                         <td>
                             <div class="flex">
@@ -92,24 +92,13 @@
             </p-table>
         </div>
 
-        <p-dialog [(visible)]="challengeDialog" [style]="{width: '55%', height: '90%'}" header="Challenge Details"
-            [modal]="true" class="p-fluid">
+        <p-dialog [(visible)]="challengeDialog" [style]="{width: '50%'}" header="Challenge Details" [modal]="true"
+            class="p-fluid">
             <ng-template pTemplate="content" style="gap: 10px;">
                 <div class="field">
                     <label for="name">Name</label>
                     <input type="text" pInputText id="name" disabled="{{ !isNewChallenge }}"
-                        [(ngModel)]="challenge.name" />
-                </div>
-
-                <div class="formgrid grid">
-                    <div class="field col">
-                        <label for="startDate">Start Date</label>
-                        <p-calendar [(ngModel)]="challenge.startDate" required [showIcon]="true"></p-calendar>
-                    </div>
-                    <div class="field col">
-                        <label for="endDate">End Date</label>
-                        <p-calendar [(ngModel)]="challenge.endDate" required [showIcon]="true"></p-calendar>
-                    </div>
+                        [(ngModel)]="challenge.name" class="form-control shadow-sm px-4" />
                 </div>
 
                 <div class="formgrid grid">
@@ -122,9 +111,22 @@
                         </select>
                     </div>
                     <div class="field col">
-                        <label for="goal">Goal</label>
+                        <label for="goal">Goal (km)</label>
                         <input type="number" class="form-control shadow-sm px-4" pInputText id="goal" min="0" required
                             [(ngModel)]="challenge.goal" />
+                    </div>
+                </div>
+
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <label for="startDate">Start Date</label>
+                        <input type="date" [(ngModel)]="challenge.startDate" id="startDate"
+                            placeholder="{{ challenge.startDate }}" required class="form-control shadow-sm px-4">
+                    </div>
+                    <div class="field col">
+                        <label for="endDate">End Date</label>
+                        <input type="date" [(ngModel)]="challenge.endDate" id="endDate"
+                            placeholder="{{ challenge.endDate }}" required class="form-control shadow-sm px-4">
                     </div>
                 </div>
 
@@ -159,7 +161,7 @@
         <p-dialog [(visible)]="deleteChallengeDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span *ngIf="challenge">Are you sure you want to delete <b>{{challenge.name}}</b>?</span>
+                <span *ngIf="challenge">Are you sure you want to delete <b>{{ challenge.name }}</b>?</span>
             </div>
             <ng-template pTemplate="footer">
                 <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"

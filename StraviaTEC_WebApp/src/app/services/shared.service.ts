@@ -9,7 +9,7 @@ export class SharedService {
   constructor(private datePipe: DatePipe) { }
 
   formatDate(date: string): string {
-    const result = this.datePipe.transform(date, 'M/d/yyyy');
+    const result = this.datePipe.transform(date, 'yyyy-MM-dd');
     if (result) {
       return result
     }

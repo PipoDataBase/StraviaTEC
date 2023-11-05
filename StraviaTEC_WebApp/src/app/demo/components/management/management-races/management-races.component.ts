@@ -46,8 +46,9 @@ export class ManagementRacesComponent {
   deleteRacesDialog: boolean = false;
 
   selectedActivityType: number = -1;
+  selectedCategory: number = -1;
   selectedPrivacy: boolean = false;
-  selectedDeepHeight: boolean = false;
+  routePath: any;
 
   races: Race[] = [];
   selectedRaces: Race[] = [];
@@ -85,7 +86,7 @@ export class ManagementRacesComponent {
       {
         name: 'Race 1',
         inscriptionPrice: 20,
-        date: '11/2/2023',
+        date: '2023-11-06T01:30',
         private: false,
         routePath: 'https://www.google.com/maps/d/embed?mid=1cQv-iSgDnNCLG_jrQyX5emwZZDzLbixd&hl=es-419',
         type: 0, //running
@@ -94,7 +95,7 @@ export class ManagementRacesComponent {
       {
         name: 'Race 2',
         inscriptionPrice: 25,
-        date: '11/5/2023',
+        date: '2023-11-06T12:30',
         private: true,
         routePath: 'https://www.google.com/maps/d/embed?mid=18RcpszqRsKd-Gy4Q6N7PRl5eaPa1bzqL&hl=es-419',
         type: 2, //cycling
@@ -134,6 +135,9 @@ export class ManagementRacesComponent {
     this.submitted = false;
     this.raceDialog = true;
     this.isNewRace = true;
+    this.selectedActivityType = -1;
+    this.selectedCategory = -1;
+    this.selectedPrivacy = false;
   }
 
   seeRoute(race: Race) {
@@ -156,6 +160,7 @@ export class ManagementRacesComponent {
     this.raceDialog = true;
     this.isNewRace = false;
     this.selectedActivityType = race.type;
+    this.selectedCategory = race.category;
     this.selectedPrivacy = race.private;
   }
 
@@ -192,6 +197,7 @@ export class ManagementRacesComponent {
   }
 
   saveRace() {
+    console.log(this.race.date);
     /*
     this.submitted = true;
 
@@ -245,6 +251,36 @@ export class ManagementRacesComponent {
     const categoryFounded = this.categories.find((category) => category.id == id);
     if (categoryFounded) {
       return categoryFounded.category1;
+    }
+    return "";
+  }
+
+  getCategoryDescription(id: number): string {
+    const categoryFounded = this.categories.find((category) => category.id == id);
+    if (categoryFounded) {
+      var result = categoryFounded.category1 + ' ('
+      if (categoryFounded.category1 == 'Junior') {
+        result += 'less than ' + categoryFounded.maximumAge + ' years)'
+      }
+      else if (categoryFounded.category1 == 'Sub-23') {
+        result += 'from ' + categoryFounded.minimumAge + ' to ' + categoryFounded.maximumAge + ' years)';
+      }
+      else if (categoryFounded.category1 == 'Open') {
+        result += 'from ' + categoryFounded.minimumAge + ' to ' + categoryFounded.maximumAge + ' years)';
+      }
+      else if (categoryFounded.category1 == 'Elite') {
+        result += 'anyone who wants to sign up)';
+      }
+      else if (categoryFounded.category1 == 'Master A') {
+        result += 'from ' + categoryFounded.minimumAge + ' to ' + categoryFounded.maximumAge + ' years)';
+      }
+      else if (categoryFounded.category1 == 'Master B') {
+        result += 'from ' + categoryFounded.minimumAge + ' to ' + categoryFounded.maximumAge + ' years)';
+      }
+      else {
+        result += 'more than ' + categoryFounded.minimumAge + ' years)';
+      }
+      return result;
     }
     return "";
   }
