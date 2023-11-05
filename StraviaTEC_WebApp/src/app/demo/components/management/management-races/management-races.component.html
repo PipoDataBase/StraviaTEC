@@ -174,21 +174,48 @@
         <p-dialog [(visible)]="raceMoreInfoDialog" [style]="{width: '50%'}" header="More Information"
             [modal]="true" class="p-fluid">
             <div class="mb-5">
+                <h3>Bank Accounts</h3>
+                <p-toast></p-toast>
+                <p-table [value]="bankAccounts" dataKey="bankAccount1" editMode="row"
+                    [tableStyle]="{'min-width': '50rem'}">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width:100%; text-align: center;">Bank Account</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-bankAccount let-editing="editing" let-ri="rowIndex">
+                        <tr [pEditableRow]="bankAccount">
+                            <td style="text-align: center;">
+                                <i class="pi pi-dollar" style="font-size: 1rem"></i>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText type="text" [(ngModel)]="bankAccount.bankAccount1" required>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{bankAccount.bankAccount1}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+
+            <div>
                 <h3>Sponsors</h3>
                 <p-toast></p-toast>
                 <p-table [value]="sponsors" dataKey="tradeName" editMode="row" [tableStyle]="{'min-width': '50rem'}">
                     <ng-template pTemplate="header">
                         <tr>
-                            <th style="width:20%; text-align: center;">Logo</th>
-                            <th style="width:20%; text-align: center;">Trade Name</th>
-                            <th style="width:20%; text-align: center;">Legal Representant</th>
-                            <th style="width:20%; text-align: center;">Phone</th>
-                            <th style="width:20%; text-align: center;"></th>
+                            <th style="width:25%; text-align: center;">Logo</th>
+                            <th style="width:25%; text-align: center;">Trade Name</th>
+                            <th style="width:25%; text-align: center;">Legal Representant</th>
+                            <th style="width:25%; text-align: center;">Phone</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-sponsor let-editing="editing" let-ri="rowIndex">
                         <tr [pEditableRow]="sponsor">
-                            <td style="width:20%; min-width:10rem; text-align: center;"><span
+                            <td style="width:25%; min-width:10rem; text-align: center;"><span
                                     class="p-column-title">Image</span>
                                 <img [src]="sponsor.logoPath" [alt]="logo" width="100" class="shadow-4" />
                             </td>
@@ -221,61 +248,6 @@
                                         {{sponsor.phone}}
                                     </ng-template>
                                 </p-cellEditor>
-                            </td>
-                            <td style="text-align: center;">
-                                <div class="flex align-items-center justify-content-center gap-2">
-                                    <button *ngIf="!editing" disabled="{{ isViewMoreInfo }}" pButton pRipple type="button" pInitEditableRow
-                                        icon="pi pi-pencil" (click)="onSponsorRowEditInit(sponsor)"
-                                        class="p-button-rounded p-button-text"></button>
-                                    <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow
-                                        icon="pi pi-check" (click)="onSponsorRowEditSave(sponsor)"
-                                        class="p-button-rounded p-button-text p-button-success mr-2"></button>
-                                    <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow
-                                        icon="pi pi-times" (click)="onSponsorRowEditCancel(sponsor, ri)"
-                                        class="p-button-rounded p-button-text p-button-danger"></button>
-                                </div>
-                            </td>
-                        </tr>
-                    </ng-template>
-                </p-table>
-            </div>
-
-            <div>
-                <h3>Bank Accounts</h3>
-                <p-toast></p-toast>
-                <p-table [value]="bankAccounts" dataKey="bankAccount1" editMode="row"
-                    [tableStyle]="{'min-width': '50rem'}">
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th style="width:80%; text-align: center;">Bank Account</th>
-                            <th style="width:20%; text-align: center;"></th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-bankAccount let-editing="editing" let-ri="rowIndex">
-                        <tr [pEditableRow]="bankAccount">
-                            <td style="text-align: center;">
-                                <i class="pi pi-dollar" style="font-size: 1rem"></i>
-                                <p-cellEditor>
-                                    <ng-template pTemplate="input">
-                                        <input pInputText type="text" [(ngModel)]="bankAccount.bankAccount1" required>
-                                    </ng-template>
-                                    <ng-template pTemplate="output">
-                                        {{bankAccount.bankAccount1}}
-                                    </ng-template>
-                                </p-cellEditor>
-                            </td>
-                            <td style="text-align: center;">
-                                <div class="flex align-items-center justify-content-center gap-2">
-                                    <button *ngIf="!editing" disabled="{{ isViewMoreInfo }}" pButton pRipple type="button" pInitEditableRow
-                                        icon="pi pi-pencil" (click)="onBankAccountRowEditInit(bankAccount)"
-                                        class="p-button-rounded p-button-text"></button>
-                                    <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow
-                                        icon="pi pi-check" (click)="onBankAccountRowEditSave(bankAccount)"
-                                        class="p-button-rounded p-button-text p-button-success mr-2"></button>
-                                    <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow
-                                        icon="pi pi-times" (click)="onBankAccountRowEditCancel(bankAccount, ri)"
-                                        class="p-button-rounded p-button-text p-button-danger"></button>
-                                </div>
                             </td>
                         </tr>
                     </ng-template>

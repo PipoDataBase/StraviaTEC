@@ -57,8 +57,6 @@ export class ManagementRacesComponent {
 
   bankAccounts: BankAccount[] = [];
   sponsors: Sponsor[] = [];
-  clonedSponsors: { [s: string]: Sponsor } = {};
-  clonedBankAccounts: { [s: string]: BankAccount } = {};
 
   submitted: boolean = false;
 
@@ -108,14 +106,14 @@ export class ManagementRacesComponent {
       {
         tradeName: 'Red Bull',
         legalRepresentant: 'Kimberly Brooks',
-        phone: 71448465,
+        phone: 22186442,
         logoPath: '../../../../../assets/straviatec/red-bull-logo.png'
       },
       {
-        tradeName: 'Santander',
-        legalRepresentant: 'José Antonio Alvarez',
-        phone: 71448465,
-        logoPath: '../../../../../assets/straviatec/santander-logo.png'
+        tradeName: 'The North Face',
+        legalRepresentant: 'Bracken Darrell',
+        phone: 22245312,
+        logoPath: '../../../../../assets/straviatec/the-north-face-logo.png'
       }
     ]
 
@@ -253,33 +251,5 @@ export class ManagementRacesComponent {
 
   getSafeResourceUrl(route: string) {
     return this.sanitizer.bypassSecurityTrustResourceUrl(route);
-  }
-
-  onSponsorRowEditInit(sponsor: Sponsor) {
-    this.clonedSponsors[sponsor.tradeName as string] = { ...sponsor };
-  }
-
-  onSponsorRowEditSave(sponsor: Sponsor) {
-    //validate data
-    delete this.clonedSponsors[sponsor.tradeName as string];
-  }
-
-  onSponsorRowEditCancel(sponsor: Sponsor, index: number) {
-    this.sponsors[index] = this.clonedSponsors[sponsor.tradeName as string];
-    delete this.clonedSponsors[sponsor.tradeName as string];
-  }
-
-  onBankAccountRowEditInit(bankAccount: BankAccount) {
-    this.clonedBankAccounts[bankAccount.bankAccount1 as string] = { ...bankAccount };
-  }
-
-  onBankAccountRowEditSave(bankAccount: BankAccount) {
-    //validate data
-    delete this.clonedBankAccounts[bankAccount.bankAccount1 as string];
-  }
-
-  onBankAccountRowEditCancel(bankAccount: BankAccount, index: number) {
-    this.bankAccounts[index] = this.clonedBankAccounts[bankAccount.bankAccount1 as string];
-    delete this.clonedBankAccounts[bankAccount.bankAccount1 as string];
   }
 }
