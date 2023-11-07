@@ -38,7 +38,7 @@ export class ManagementChallengesComponent {
 
   submitted: boolean = false;
 
-  constructor(private messageService: MessageService, private sharedService: SharedService, private activityTypesService: ActivityTypesService) { }
+  constructor(private messageService: MessageService, public sharedService: SharedService, private activityTypesService: ActivityTypesService) { }
 
   ngOnInit() {
     this.activityTypesService.getActivityTypes().subscribe({
@@ -156,13 +156,5 @@ export class ManagementChallengesComponent {
 
   onGlobalFilter(table: Table, event: Event) {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
-  }
-
-  getActivityType(id: number): string {
-    const typeFounded = this.activityTypes.find((type) => type.id == id);
-    if (typeFounded) {
-      return typeFounded.type;
-    }
-    return "";
   }
 }

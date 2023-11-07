@@ -5,6 +5,7 @@ import { ProfileComponent } from './profile.component';
 import { AngularMaterialModule } from 'src/app/angular-material.module';
 import { AvatarModule } from 'primeng/avatar';
 import { SkeletonModule } from 'primeng/skeleton';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
     imports: [
@@ -12,7 +13,8 @@ import { SkeletonModule } from 'primeng/skeleton';
         ProfileRoutingModule,
         AngularMaterialModule,
         AvatarModule,
-        SkeletonModule
+        SkeletonModule,
+        FormsModule
     ],
     declarations: [ProfileComponent]
 })

@@ -56,7 +56,7 @@
                         </td>
                         <td style="width:12%; min-width:10rem; text-align: center;">
                             <span class="p-column-title">Type</span>
-                            {{ getActivityType(challenge.type) }}
+                            {{ sharedService.getActivityType(activityTypes, challenge.type) }}
                         </td>
                         <td style="width:12%; min-width:10rem; text-align: center;">
                             <span class="p-column-title">Goal</span>

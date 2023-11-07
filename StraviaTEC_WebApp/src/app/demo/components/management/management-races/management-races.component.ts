@@ -61,7 +61,7 @@ export class ManagementRacesComponent {
 
   submitted: boolean = false;
 
-  constructor(private messageService: MessageService, private sharedService: SharedService, private activityTypesService: ActivityTypesService, private categoriesService: CategoriesService, private sanitizer: DomSanitizer) { }
+  constructor(private messageService: MessageService, public sharedService: SharedService, private activityTypesService: ActivityTypesService, private categoriesService: CategoriesService, private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     this.activityTypesService.getActivityTypes().subscribe({
@@ -237,55 +237,5 @@ export class ManagementRacesComponent {
 
   onGlobalFilter(table: Table, event: Event) {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
-  }
-
-  getActivityType(id: number): string {
-    const typeFounded = this.activityTypes.find((type) => type.id == id);
-    if (typeFounded) {
-      return typeFounded.type;
-    }
-    return "";
-  }
-
-  getCategory(id: number): string {
-    const categoryFounded = this.categories.find((category) => category.id == id);
-    if (categoryFounded) {
-      return categoryFounded.category1;
-    }
-    return "";
-  }
-
-  getCategoryDescription(id: number): string {
-    const categoryFounded = this.categories.find((category) => category.id == id);
-    if (categoryFounded) {
-      var result = categoryFounded.category1 + ' ('
-      if (categoryFounded.category1 == 'Junior') {
-        result += 'less than ' + categoryFounded.maximumAge + ' years)'
-      }
-      else if (categoryFounded.category1 == 'Sub-23') {
-        result += 'from ' + categoryFounded.minimumAge + ' to ' + categoryFounded.maximumAge + ' years)';
-      }
-      else if (categoryFounded.category1 == 'Open') {
-        result += 'from ' + categoryFounded.minimumAge + ' to ' + categoryFounded.maximumAge + ' years)';
-      }
-      else if (categoryFounded.category1 == 'Elite') {
-        result += 'anyone who wants to sign up)';
-      }
-      else if (categoryFounded.category1 == 'Master A') {
-        result += 'from ' + categoryFounded.minimumAge + ' to ' + categoryFounded.maximumAge + ' years)';
-      }
-      else if (categoryFounded.category1 == 'Master B') {
-        result += 'from ' + categoryFounded.minimumAge + ' to ' + categoryFounded.maximumAge + ' years)';
-      }
-      else {
-        result += 'more than ' + categoryFounded.minimumAge + ' years)';
-      }
-      return result;
-    }
-    return "";
-  }
-
-  getSafeResourceUrl(route: string) {
-    return this.sanitizer.bypassSecurityTrustResourceUrl(route);
   }
 }
