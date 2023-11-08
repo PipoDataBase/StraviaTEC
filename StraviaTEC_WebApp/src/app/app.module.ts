@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -29,7 +30,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { SkeletonModule } from 'primeng/skeleton';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 import { DatePipe } from '@angular/common';
 
@@ -43,6 +44,7 @@ import { DatePipe } from '@angular/common';
         ButtonModule,
         TabMenuModule,
         SkeletonModule,
+        MultiSelectModule,
         BrowserAnimationsModule,
         AngularMaterialModule,
         MatInputModule,

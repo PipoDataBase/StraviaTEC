@@ -15,7 +15,7 @@ export interface Race {
   private?: boolean;
   routePath?: string;
   type?: number;
-  category?: number;
+  categories?: Category[];
 }
 
 export interface BankAccount {
@@ -55,6 +55,7 @@ export class ManagementRacesComponent {
   race: Race = {};
   activityTypes: ActivityType[] = [];
   categories: Category[] = [];
+  selectedCategories: Category[];
 
   bankAccounts: BankAccount[] = [];
   sponsors: Sponsor[] = [];
@@ -90,7 +91,20 @@ export class ManagementRacesComponent {
         private: false,
         routePath: 'https://www.google.com/maps/d/embed?mid=1cQv-iSgDnNCLG_jrQyX5emwZZDzLbixd&hl=es-419',
         type: 0, //running
-        category: 1 //sub-23
+        categories: [
+          {
+            id: 0,
+            minimumAge: 0,
+            maximumAge: 14,
+            category1: 'Junior'
+          },
+          {
+            id: 1,
+            minimumAge: 15,
+            maximumAge: 23,
+            category1: 'Sub-23'
+          }
+        ]
       },
       {
         name: 'Race 2',
@@ -99,7 +113,26 @@ export class ManagementRacesComponent {
         private: true,
         routePath: 'https://www.google.com/maps/d/embed?mid=18RcpszqRsKd-Gy4Q6N7PRl5eaPa1bzqL&hl=es-419',
         type: 2, //cycling
-        category: 3 //elite
+        categories: [
+          {
+            id: 2,
+            minimumAge: 24,
+            maximumAge: 30,
+            category1: 'Open'
+          },
+          {
+            id: 3,
+            minimumAge: 0,
+            maximumAge: 99,
+            category1: 'Elite'
+          },
+          {
+            id: 4,
+            minimumAge: 31,
+            maximumAge: 40,
+            category1: 'Master A'
+          }
+        ]
       }
     ]
 
@@ -136,7 +169,7 @@ export class ManagementRacesComponent {
     this.raceDialog = true;
     this.isNewRace = true;
     this.selectedActivityType = -1;
-    this.selectedCategory = -1;
+    this.selectedCategories = [];
     this.selectedPrivacy = false;
   }
 
@@ -160,7 +193,7 @@ export class ManagementRacesComponent {
     this.raceDialog = true;
     this.isNewRace = false;
     this.selectedActivityType = race.type;
-    this.selectedCategory = race.category;
+    this.selectedCategories = race.categories;
     this.selectedPrivacy = race.private;
   }
 
@@ -198,6 +231,7 @@ export class ManagementRacesComponent {
 
   saveRace() {
     console.log(this.race.date);
+    console.log(this.selectedCategories);
     /*
     this.submitted = true;
 

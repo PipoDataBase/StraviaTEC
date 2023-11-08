@@ -60,7 +60,7 @@
                         </td>
                         <td style="width:11%; min-width:9rem; text-align: center;">
                             <span class="p-column-title">Category</span>
-                            {{ sharedService.getCategory(categories, race.category) }}
+                            {{ sharedService.getCategories(race.categories)}}
                         </td>
                         <td style="width:9%; min-width:5rem; text-align: center;">
                             <button pButton pRipple label="" icon="pi pi-map" class="p-button-rounded p-button-primary"
@@ -115,11 +115,8 @@
                     </div>
                     <div class="field col">
                         <label for="goal">Category</label>
-                        <select [(ngModel)]="selectedCategory" name="category" required
-                            class="form-control shadow-sm px-4">
-                            <option *ngFor="let category of categories" [value]="category.id">{{
-                                sharedService.getCategoryDescription(categories, category.id) }}</option>
-                        </select>
+                        <p-multiSelect [options]="categories" [(ngModel)]="selectedCategories"
+                            optionLabel="category1"></p-multiSelect>
                     </div>
                 </div>
 

@@ -27,12 +27,17 @@ export class SharedService {
     return "";
   }
 
-  getCategory(categories: Category[], id: number): string {
-    const categoryFounded = categories.find((category) => category.id == id);
-    if (categoryFounded) {
-      return categoryFounded.category1;
+  getCategories(categories: Category[]): string {
+    var result = "";
+    categories.forEach(element => {
+      result += element.category1 + ', '
+    });
+
+    if (result.length > 0) {
+      result = result.slice(0, -2);
     }
-    return "";
+
+    return result;
   }
 
   getCategoryDescription(categories: Category[], id: number): string {
