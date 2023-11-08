@@ -30,7 +30,9 @@
                                 <p-chip label="{{ challenge.private ? 'Private' : 'Public' }}" styleClass="m-1"></p-chip>
                             </div>
                         </div>
-                        <p-button #joinChallengeButton label="Join Challenge" (onClick)="joinChallengeButtonOnClick(challenge.name); joinChallengeButton.label='Joined'; joinChallengeButton.disabled=true"></p-button>
+                        <div class="flex flex-column align-items-center col-md-2">
+                            <p-button  #joinChallengeButton label="Join Challenge" (onClick)="joinChallengeButtonOnClick(challenge.name); joinChallengeButton.label='Joined'; joinChallengeButton.disabled=true"></p-button>
+                        </div>
                     </div>
                 </div>
             </ng-template>

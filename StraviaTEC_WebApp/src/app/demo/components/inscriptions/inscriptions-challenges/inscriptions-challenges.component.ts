@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { DataView } from 'primeng/dataview';
-import { ProductService } from 'src/app/demo/service/product.service';
 
 export interface Challenge {
   name: string,
@@ -34,7 +33,7 @@ export class InscriptionsChallengesComponent implements OnInit {
 
   sortField: string = '';
 
-  constructor(private productService: ProductService) { }
+  constructor() { }
 
   ngOnInit() {
     // Requests database for all challenges
