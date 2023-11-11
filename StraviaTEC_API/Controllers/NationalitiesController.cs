@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using StraviaTEC_API.Models;
 
 namespace StraviaTEC_API.Controllers
@@ -36,12 +38,22 @@ namespace StraviaTEC_API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Nationality>> GetNationality(byte id)
         {
-          if (_context.Nationalities == null)
-          {
-              return NotFound();
-          }
-            var result = await _context.Nationalities.FromSqlRaw($"spGetNationality {id}").ToListAsync();
-            return Ok(result);
+            if (_context.Nationalities == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _context.Nationalities.FromSqlRaw(
+                    "EXEC spGetNationality @Id",
+                    new SqlParameter("@Id", id)
+                    ).ToListAsync();
+
+            if (result.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+
+            return Ok(result[0]);
         }
 
         // PUT: api/Nationalities/5

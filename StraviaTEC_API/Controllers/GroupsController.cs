@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using StraviaTEC_API.Models;
 
 namespace StraviaTEC_API.Controllers
@@ -36,12 +37,22 @@ namespace StraviaTEC_API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Group>> GetGroup(string id)
         {
-          if (_context.Groups == null)
-          {
-              return NotFound();
-          }
-          var result = await _context.Groups.FromSqlRaw($"spGetGroup {id}").ToListAsync();
-          return Ok(result);
+            if (_context.Groups == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _context.Groups.FromSqlRaw(
+                    "EXEC spGetGroup @Name",
+                    new SqlParameter("@Name", id)
+                    ).ToListAsync();
+
+            if (result.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+
+            return Ok(result[0]);
         }
 
         
@@ -49,30 +60,24 @@ namespace StraviaTEC_API.Controllers
         // POST: api/Groups
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Group>> PostGroup(Group @group)
+        public async Task<ActionResult<Group>> PostGroup(Group group)
         {
-          if (_context.Groups == null)
-          {
-              return Problem("Entity set 'StraviaTecContext.Groups'  is null.");
-          }
+            if (_context.Groups == null)
+            {
+                return Problem("Entity set 'StraviaTecContext.Groups'  is null.");
+            }
             try
             {
-               await _context.Database.ExecuteSqlRawAsync(
-                    "EXEC spInsertGroup @Name",
-                    new SqlParameter("@Name", group.Name)
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC spInsertGroup @Name, @ManagerUsername",
+                    new SqlParameter("@Name", group.Name),
+                    new SqlParameter("@ManagerUsername", group.UsernamesNavigation.ElementAt(0).Username)
                     );
-               return Ok("Group Created");
+                return Ok("Group Created");
             }
             catch (DbUpdateException)
             {
-                if (GroupExists(@group.Name))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
         }
 

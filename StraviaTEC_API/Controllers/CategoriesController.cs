@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using StraviaTEC_API.Models;
 
 namespace StraviaTEC_API.Controllers
@@ -46,8 +47,18 @@ namespace StraviaTEC_API.Controllers
             {
                 return NotFound();
             }
-            var result = await _context.Categories.FromSqlRaw($"spGetCategory {id}").ToListAsync();
-            return Ok(result);
+
+            var result = await _context.Categories.FromSqlRaw(
+                    "EXEC spGetCategory @Id",
+                    new SqlParameter("@Id", id)
+                    ).ToListAsync();
+
+            if (result.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+
+            return Ok(result[0]);
         }
 
         // PUT: api/Categories/5

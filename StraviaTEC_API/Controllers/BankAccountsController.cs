@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using StraviaTEC_API.Models;
 
 namespace StraviaTEC_API.Controllers
@@ -36,12 +37,22 @@ namespace StraviaTEC_API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<BankAccount>> GetBankAccount(string id)
         {
-          if (_context.BankAccounts == null)
-          {
-              return NotFound();
-          }
-          var result = await _context.BankAccounts.FromSqlRaw($"spGetBankAccount {id}").ToListAsync();
-          return Ok(result);
+            if (_context.BankAccounts == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _context.BankAccounts.FromSqlRaw(
+                "EXEC spGetBankAccount @RaceName",
+                new SqlParameter("@RaceName", id)
+                ).ToListAsync();
+
+            if (result.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+
+            return Ok(result[0]);
         }
 
         // POST: api/BankAccounts

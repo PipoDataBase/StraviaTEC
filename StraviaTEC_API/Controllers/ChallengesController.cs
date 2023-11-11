@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using StraviaTEC_API.Models;
 
 namespace StraviaTEC_API.Controllers
@@ -37,13 +38,22 @@ namespace StraviaTEC_API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Challenge>> GetChallenge(string id)
         {
-          if (_context.Challenges == null)
-          {
-              return NotFound();
-          }
-            var result = await _context.Challenges.FromSqlRaw($"spGetChallenge {id}").ToListAsync();
-            return Ok(result);
+            if (_context.Challenges == null)
+            {
+                return NotFound();
+            }
 
+            var result = await _context.Challenges.FromSqlRaw(
+                "EXEC spGetChallenge @Name",
+                new SqlParameter("@Name", id)
+                ).ToListAsync();
+
+            if (result.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+
+            return Ok(result[0]);
         }
 
         // PUT: api/Challenges/5

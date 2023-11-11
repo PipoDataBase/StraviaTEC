@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using StraviaTEC_API.Models;
 
 namespace StraviaTEC_API.Controllers
@@ -26,10 +27,10 @@ namespace StraviaTEC_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Bill>>> GetBills()
         {
-          if (_context.Bills == null)
-          {
-              return NotFound();
-          }
+            if (_context.Bills == null)
+            {
+                return NotFound();
+            }
             return await _context.Bills.FromSqlRaw("spGetBills").ToListAsync();
         }
 
@@ -37,12 +38,22 @@ namespace StraviaTEC_API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Bill>> GetBill(int id)
         {
-          if (_context.Bills == null)
-          {
-              return NotFound();
-          }
-          var result = await _context.Bills.FromSqlRaw($"spGetBill {id}").ToListAsync();
-          return Ok(result);
+            if (_context.Bills == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _context.Bills.FromSqlRaw(
+                "EXEC spGetBill @Id",
+                new SqlParameter("@Id", id)
+                ).ToListAsync();
+
+            if (result.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+
+            return Ok(result[0]);
         }
 
         // PUT: api/Bills/5

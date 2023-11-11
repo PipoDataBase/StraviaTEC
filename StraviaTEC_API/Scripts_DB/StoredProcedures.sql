@@ -424,7 +424,7 @@ END;
 
 Go
 -- ================================================
---                  Group
+--                  Group_
 -- ================================================
 CREATE PROCEDURE spGetGroups
 AS
@@ -443,13 +443,33 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
+--Go
+--CREATE PROCEDURE spGroupInsertValidation
+--	@Name varchar(20),
+--    @ManagerUsername varchar(20)
+--AS
+--BEGIN
+--  IF NOT EXISTS (SELECT 1 FROM Sportman WHERE Username = @ManagerUsername)
+--    PRINT 'Sportman ID doesnt exists'
+--         
+--END;
+
+
 Go
 CREATE PROCEDURE spInsertGroup
-	@Name varchar(20)
+	@Name varchar(20),
+    @ManagerUsername varchar(20)
 AS
 BEGIN
-    INSERT INTO Group_ (Name)
-    VALUES (@Name);
+    BEGIN TRY
+        INSERT INTO Group_ (Name)
+        VALUES (@Name);
+        INSERT INTO GroupManager (Username, GroupName)
+        VALUES (@ManagerUsername, @Name);
+    END TRY
+    BEGIN CATCH
+        PRINT 'Error inserting group ' + ERROR_MESSAGE;
+    END CATCH;
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
