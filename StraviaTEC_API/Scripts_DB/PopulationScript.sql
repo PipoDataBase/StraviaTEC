@@ -339,6 +339,19 @@ EXEC spInsertNationality Zimbabwean;
 Go
 
 -- ================================================
+--                  Sportman/Organizer
+-- ================================================
+
+EXEC spInsertSportman 'Jose216', 'Jose', 'Rodriguez', 'Rojas', '2000-06-16', 'https://firebasestorage.googleapis.com/v0/b/straviatec-942e3.appspot.com/o/profile%2FAndres.png?alt=media&token=f59eec16-b280-47c8-ae5b-c75a6d7d4d50', 'admin123', 18;
+Go
+EXEC spInsertSportman 'Emarin19', 'Emanuel', 'Marín', 'Gutiérrez', '2000-01-21', 'https://firebasestorage.googleapis.com/v0/b/straviatec-942e3.appspot.com/o/profile%2FEmanuel.png?alt=media&token=4ef35ab0-380f-4d0b-8271-6d13a734887e', 'admin123', 18;
+Go
+EXEC spInsertSportman 'Camanem', 'Oscar', 'Soto', 'Varela', '2002-01-06', 'https://firebasestorage.googleapis.com/v0/b/straviatec-942e3.appspot.com/o/profile%2FOscar.png?alt=media&token=e63f0dd9-f7f5-4ccc-ac7a-2c47d9b196e9', 'admin123', 18;
+Go
+EXEC spInsertSportman 'Seballoll', 'Sebastian', 'Chen', 'Cerdas', '2002-09-09', 'https://firebasestorage.googleapis.com/v0/b/straviatec-942e3.appspot.com/o/profile%2FChen.png?alt=media&token=b15fdc41-4727-4d52-86e3-ea7cdbc4d6c4', 'admin123', 18;
+Go
+
+-- ================================================
 --                  ActivityTypes
 -- ================================================
 
@@ -359,17 +372,17 @@ Go
 --                  Categories
 -- ================================================
 
-EXEC spInsertCategory 0 14 'Junior';
+EXEC spInsertCategory 0, 14, 'Junior';
 Go
-EXEC spInsertCategory 15 23 'Sub-23';
+EXEC spInsertCategory 15, 23, 'Sub-23';
 Go
-EXEC spInsertCategory 24 30 'Open';
+EXEC spInsertCategory 24, 30, 'Open';
 Go
-EXEC spInsertCategory 0 99 'Elite';
+EXEC spInsertCategory 0, 99, 'Elite';
 Go
-EXEC spInsertCategory 31 40 'Master A';
+EXEC spInsertCategory 31, 40, 'Master A';
 Go
-EXEC spInsertCategory 41 50 'Master B';
+EXEC spInsertCategory 41, 50, 'Master B';
 Go
-EXEC spInsertCategory 51 99 'Master C';
+EXEC spInsertCategory 51, 99, 'Master C';
 Go

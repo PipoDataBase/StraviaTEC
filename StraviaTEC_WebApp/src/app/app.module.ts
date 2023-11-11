@@ -15,6 +15,12 @@ import { PhotoService } from './demo/service/photo.service';
 import { UserLoginComponent } from './user-login/user-login.component';
 import { UserSignupComponent } from './user-signup/user-signup.component';
 
+// FormsModule
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+// Firebase
+import { AngularFireModule } from '@angular/fire/compat';
+
 //Angular material
 import { AngularMaterialModule } from './angular-material.module';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -23,16 +29,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 
-// FormsModule
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 //Primeng components
 import { ButtonModule } from 'primeng/button';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { SkeletonModule } from 'primeng/skeleton';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { ToastModule } from 'primeng/toast';
 
 import { DatePipe } from '@angular/common';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
     declarations: [
@@ -45,6 +50,7 @@ import { DatePipe } from '@angular/common';
         TabMenuModule,
         SkeletonModule,
         MultiSelectModule,
+        ToastModule,
         BrowserAnimationsModule,
         AngularMaterialModule,
         MatInputModule,
@@ -52,7 +58,8 @@ import { DatePipe } from '@angular/common';
         MatNativeDateModule,
         MatDialogModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        AngularFireModule.initializeApp(environment.firebaseConfig)
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },

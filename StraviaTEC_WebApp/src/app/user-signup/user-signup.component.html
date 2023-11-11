@@ -27,11 +27,13 @@
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <input #birthDate type="date" placeholder="Birthdate" min="1950-01-01" required
+                                    <label>Birthdate</label>
+                                    <input #birthDate type="date" min="1950-01-01" required
                                         class="form-control shadow-sm px-4">
                                 </div>
 
                                 <div class="form-group mb-3">
+                                    <label>Nationality</label>
                                     <select #nationality name="nationality" required
                                         class="form-control shadow-sm px-4">
                                         <option *ngFor="let nationality of nationalities" [value]="nationality.id">{{
@@ -39,22 +41,20 @@
                                     </select>
                                 </div>
 
-                                <input #file type="file" accept='image/*'
-                                    class="form-control shadow-sm px-4" />
-
-                                <div class="form-group mb-3" style="padding-top: 20px;">
+                                <div class="form-group mb-3">
                                     <input #username type="text" placeholder="Username" required
                                         class="form-control shadow-sm px-4">
                                 </div>
-                                
+
                                 <div class="form-group mb-3">
                                     <input #password type="password" placeholder="Password" required
                                         class="form-control shadow-sm px-4 text-primary">
                                 </div>
 
+                                <p-toast position="top-center" key="tc"></p-toast>
                                 <button mat-flat-button class="text-uppercase mb-2 shadow-sm custom-button"
                                     style="width: 100%;"
-                                    (click)="register(name.value, lastName1.value, lastName2.value, nationality.value, birthDate.value, file.value, username.value, password.value)">Register</button>
+                                    (click)="register(name.value, lastName1.value, lastName2.value, nationality.value, birthDate.value, username.value, password.value)">Register</button>
                                 <div>
                                     <p style="text-align:center; margin-top: 20px;">Do you already have an account?
                                         <a type="button" (click)="toLogin()" class="font-italic text-muted"> <u>LOG

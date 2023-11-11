@@ -104,7 +104,7 @@ namespace StraviaTEC_API.Controllers
                     new SqlParameter("@Password", sportman.Password),
                     new SqlParameter("@Nationality", sportman.Nationality)
                 );
-                return Ok("Sportman Created");
+                return Ok(true);
             }
             catch (DbUpdateException)
             {
