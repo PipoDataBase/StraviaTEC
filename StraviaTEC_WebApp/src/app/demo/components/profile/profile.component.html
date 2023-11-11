@@ -9,8 +9,8 @@
                     <h2 style="color: #6366F1">{{ getSportman().name}} {{ getSportman().lastName1}} {{
                         getSportman().lastName2 }}</h2>
                     <p>@{{ getSportman().username }}</p>
-                    <p>{{ getSportman().nationality }}</p>
-                    <p>{{ getSportman().birthDate }}</p>
+                    <p>{{ getNationality().nationality1 }}</p>
+                    <p>{{ sharedService.formatDate2(getSportman().birthDate) }}</p>
                 </div>
             </div>
 
@@ -46,19 +46,11 @@
             <div class="card-body">
                 <form>
                     <div class="row mt-2 mb-3">
-                        <div class="col-md-6 pr-1">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label>Username</label>
                                 <input disabled id="username" #username type="text" required class="form-control"
                                     value="{{ getSportman().username }}" placeholder="{{ getSportman().username }}">
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 pl-1">
-                            <div class="form-group">
-                                <label>Password</label>
-                                <input #password type="text" required class="form-control"
-                                    value="{{ getSportman().password }}" placeholder="{{ getSportman().password }}">
                             </div>
                         </div>
                     </div>
@@ -123,7 +115,7 @@
                     <div class="row" style="text-align: center;">
                         <div class="update ml-auto mr-auto">
                             <button type="button" style="width: 30%;"
-                                (click)="updateSportmanInfo(password.value, name.value, lastName1.value, lastName2.value, birthDate.value, file.value)"
+                                (click)="updateSportmanInfo(name.value, lastName1.value, lastName2.value, birthDate.value, file.value)"
                                 class="btn btn-primary btn-round text-uppercase shadow-sm custom-button">Update
                                 profile</button>
                         </div>

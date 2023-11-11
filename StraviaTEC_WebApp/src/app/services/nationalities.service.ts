@@ -15,4 +15,8 @@ export class NationalitiesService {
   getNationalities(): Observable<Nationality[]> {
     return this.http.get<Nationality[]>(this.baseApiUrl + '/api/Nationalities');
   }
+
+  getNationality(id: number): Observable<Nationality> {
+    return this.http.get<Nationality>(this.baseApiUrl + '/api/Nationalities/' + id);
+  }
 }

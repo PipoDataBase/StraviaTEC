@@ -1,17 +1,9 @@
 import { Component } from '@angular/core';
 import { Nationality } from 'src/app/models/nationality.module';
+import { Sportman } from 'src/app/models/sportman.module';
 import { NationalitiesService } from 'src/app/services/nationalities.service';
-
-export interface Sportman {
-  username: string;
-  name: string;
-  lastName1: string;
-  lastName2: string;
-  birthDate: string;
-  photoPath: string;
-  password: string;
-  nationality: number;
-}
+import { SharedService } from 'src/app/services/shared.service';
+import { SportmenService } from 'src/app/services/sportmen.service';
 
 export interface MoreInfoTest {
   following: number;
@@ -26,20 +18,31 @@ export interface MoreInfoTest {
 })
 export class ProfileComponent {
   private _sportman: Sportman = {
-    username: 'MarinGE23',
-    name: 'Emanuel',
-    lastName1: 'Marín',
-    lastName2: 'Gutiérrez',
-    birthDate: '2000-01-21',
-    photoPath: '../../../../assets/straviatec/default-avatar.png',
-    password: 'abc123de',
-    nationality: 18 // Costa Rican
+    username: '',
+    name: '',
+    lastName1: '',
+    lastName2: '',
+    birthDate: '',
+    photoPath: '',
+    password: '',
+    nationality: -1
   };
   public getSportman(): Sportman {
     return this._sportman;
   }
   public setSportman(value: Sportman) {
     this._sportman = value;
+  }
+
+  private _nationality: Nationality = {
+    id: -1,
+    nationality1: ''
+  };
+  public getNationality(): Nationality {
+    return this._nationality;
+  }
+  public setNationality(value: Nationality) {
+    this._nationality = value;
   }
 
   private _nationalities: Nationality[] = [];
@@ -62,9 +65,32 @@ export class ProfileComponent {
     this._sportmanMoreInfo = value;
   }
 
-  constructor(private nationalitiesService: NationalitiesService) { }
+  constructor(private sportmenService: SportmenService, private nationalitiesService: NationalitiesService, public sharedService: SharedService) { }
 
   ngOnInit(): void {
+    // Get sportman
+    this.sportmenService.getSportman('Emarin19').subscribe({
+      next: (sportman) => {
+        sportman.birthDate = this.sharedService.formatDate(sportman.birthDate);
+        if (sportman.photoPath == '') sportman.photoPath = '../../../../assets/straviatec/default-avatar.png';
+        this.setSportman(sportman);
+
+        // Get nationality
+        this.nationalitiesService.getNationality(sportman.nationality).subscribe({
+          next: (nationality) => {
+            this.setNationality(nationality);
+          },
+          error: (response) => {
+            console.log(response);
+          }
+        })
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
+
+    // Get nationalities
     this.nationalitiesService.getNationalities().subscribe({
       next: (nationalities) => {
         this.setNationalities(nationalities);
@@ -75,8 +101,8 @@ export class ProfileComponent {
     })
   }
 
-  updateSportmanInfo(password: string, name: string, lastName1: string, lastName2, birthDate: string, file: string): void {
+  updateSportmanInfo(name: string, lastName1: string, lastName2, birthDate: string, file: string): void {
     //validate data
-    console.log(password, name, lastName1, lastName2, birthDate, file)
+    console.log(name, lastName1, lastName2, birthDate, file)
   }
 }

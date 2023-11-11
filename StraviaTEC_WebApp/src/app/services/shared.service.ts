@@ -19,6 +19,14 @@ export class SharedService {
     return date;
   }
 
+  formatDate2(date: string): string {
+    const result = this.datePipe.transform(date, 'MM/dd/yyyy');
+    if (result) {
+      return result
+    }
+    return date;
+  }
+
   getActivityType(activityTypes: ActivityType[], id: number): string {
     const typeFounded = activityTypes.find((type) => type.id == id);
     if (typeFounded) {
