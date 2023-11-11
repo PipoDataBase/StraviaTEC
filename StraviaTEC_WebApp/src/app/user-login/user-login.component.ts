@@ -16,6 +16,8 @@ export class UserLoginComponent {
   login(username: string, password: string): void {
     //validate username and password
     console.log(username, password);
+    const data = { id: 1, username: username }
+    localStorage.setItem('session', JSON.stringify(data));
     this.router.navigate(["dashboard"]);
   }
 

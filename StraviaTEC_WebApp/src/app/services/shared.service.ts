@@ -11,6 +11,12 @@ export class SharedService {
 
   constructor(private datePipe: DatePipe, private sanitizer: DomSanitizer) { }
 
+  getUsername(): string {
+    const data = localStorage.getItem('session');
+    const session = JSON.parse(data);
+    return session['username'];
+  }
+
   formatDate(date: string): string {
     const result = this.datePipe.transform(date, 'yyyy-MM-dd');
     if (result) {

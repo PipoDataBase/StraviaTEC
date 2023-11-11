@@ -69,7 +69,7 @@ export class ProfileComponent {
 
   ngOnInit(): void {
     // Get sportman
-    this.sportmenService.getSportman('Emarin19').subscribe({
+    this.sportmenService.getSportman(this.sharedService.getUsername()).subscribe({
       next: (sportman) => {
         sportman.birthDate = this.sharedService.formatDate(sportman.birthDate);
         if (sportman.photoPath == '') sportman.photoPath = '../../../../assets/straviatec/default-avatar.png';
