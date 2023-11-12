@@ -22,6 +22,7 @@
                                     <input #password type="password" placeholder="Password" required
                                         class="form-control shadow-sm px-4 text-primary">
                                 </div>
+                                <p-toast position="top-center" key="tc"></p-toast>
                                 <button mat-flat-button class="text-uppercase mb-2 shadow-sm custom-button"
                                     style="width: 100%;" (click)="login(username.value, password.value)">log in</button>
                                 <div>
