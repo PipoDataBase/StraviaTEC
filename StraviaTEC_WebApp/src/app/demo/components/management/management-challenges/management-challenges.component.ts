@@ -4,16 +4,8 @@ import { Table } from 'primeng/table';
 import { SharedService } from 'src/app/services/shared.service';
 import { ActivityType } from 'src/app/models/activity-type.module';
 import { ActivityTypesService } from 'src/app/services/activity-types.service';
-
-export interface Challenge {
-  name?: string;
-  goal?: number;
-  private?: boolean;
-  startDate?: string;
-  endDate?: string;
-  deep?: boolean;
-  type?: number;
-}
+import { Challenge } from 'src/app/models/challenge.module';
+import { ChallengesService } from 'src/app/services/challenges.service';
 
 @Component({
   selector: 'app-management-challenges',
@@ -38,7 +30,7 @@ export class ManagementChallengesComponent {
 
   submitted: boolean = false;
 
-  constructor(private messageService: MessageService, public sharedService: SharedService, private activityTypesService: ActivityTypesService) { }
+  constructor(private messageService: MessageService, public sharedService: SharedService, private activityTypesService: ActivityTypesService, private challengesService: ChallengesService) { }
 
   ngOnInit() {
     this.activityTypesService.getActivityTypes().subscribe({
@@ -50,26 +42,14 @@ export class ManagementChallengesComponent {
       }
     })
 
-    this.challenges = [
-      {
-        name: 'Challenge 1',
-        goal: 5,
-        private: false,
-        startDate: '2023-11-02',
-        endDate: '2023-11-03',
-        deep: true,
-        type: 0 //runnig
+    this.challengesService.getChallenges().subscribe({
+      next: (challenges) => {
+        this.challenges = challenges;
       },
-      {
-        name: 'Challenge 2',
-        goal: 10,
-        private: true,
-        startDate: '2023-11-02',
-        endDate: '2023-11-03',
-        deep: false,
-        type: 2 //cycling
+      error: (response) => {
+        console.log(response);
       }
-    ]
+    })
   }
 
   openNew() {
@@ -79,6 +59,7 @@ export class ManagementChallengesComponent {
     this.isNewChallenge = true;
     this.selectedActivityType = -1;
     this.selectedPrivacy = false;
+    this.selectedDeepHeight = false;
   }
 
   deleteSelectedChallenges() {
@@ -92,6 +73,8 @@ export class ManagementChallengesComponent {
     this.selectedActivityType = challenge.type;
     this.selectedPrivacy = challenge.private;
     this.selectedDeepHeight = challenge.deep;
+    this.challenge.startDate = this.sharedService.formatDate(this.challenge.startDate);
+    this.challenge.endDate = this.sharedService.formatDate(this.challenge.endDate);
   }
 
   deleteChallenge(challenge: Challenge) {
@@ -122,8 +105,6 @@ export class ManagementChallengesComponent {
     this.submitted = true;
 
     if (!this.isNewChallenge) {
-      //validate data
-
       this.challenges = this.challenges.filter((challenge) => challenge.name !== this.challenge.name);
       const challengeUpdated: Challenge = {
         name: this.challenge.name,
@@ -141,14 +122,32 @@ export class ManagementChallengesComponent {
       const newChallenge: Challenge = {
         name: this.challenge.name,
         goal: this.challenge.goal,
-        private: this.selectedPrivacy,
-        startDate: this.sharedService.formatDate(this.challenge.startDate),
-        endDate: this.sharedService.formatDate(this.challenge.endDate),
-        deep: this.selectedDeepHeight,
+        private: Boolean(String(this.selectedPrivacy) == "true"),
+        startDate: this.challenge.startDate,
+        endDate: this.challenge.endDate,
+        deep: Boolean(String(this.selectedDeepHeight) == "true"),
         type: this.selectedActivityType
       }
-      this.challenges.push(newChallenge);
-      this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Challenge Created', life: 3000 });
+
+      if (this.validateChallenge(newChallenge)) {
+        // Post challenge
+        this.challengesService.postChallenge(newChallenge).subscribe({
+          next: (response) => {
+            console.log(response);
+          },
+          error: (response) => {
+            console.log(response);
+            return;
+          }
+        })
+        
+        this.challenges.push(newChallenge);
+        this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Challenge Created', life: 3000 });
+      }
+      else {
+        return;
+      }
+
     }
     this.challengeDialog = false;
     this.challenge = {}
@@ -156,5 +155,47 @@ export class ManagementChallengesComponent {
 
   onGlobalFilter(table: Table, event: Event) {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+  }
+
+  validateChallenge(challenge: Challenge): boolean {
+    if (!challenge.name) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'The challenge name must not be empty.' });
+      return false;
+    }
+
+    const challengeFound = this.challenges.find((c) => c.name == challenge.name);
+    if (challengeFound) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Challenge name: ' + challenge.name + ' already exists.' });
+      return false;
+    }
+
+    if (!challenge.goal || challenge.goal <= 0) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'The goal must be greater than zero.' });
+      return false;
+    }
+
+    if (!challenge.startDate) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Start date not selected.' });
+      return false;
+    }
+
+    if (!challenge.endDate) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'End date not selected.' });
+      return false;
+    }
+
+    const startDate = new Date(challenge.startDate);
+    const endDate = new Date(challenge.endDate);
+    if (startDate >= endDate) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Incorrect dates.' });
+      return false;
+    }
+
+    if (challenge.type == -1) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'You have not selected an activity type.' });
+      return false;
+    }
+
+    return true;
   }
 }

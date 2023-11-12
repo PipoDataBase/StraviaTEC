@@ -1,7 +1,7 @@
 <div class="grid">
     <div class="col-12">
         <div class="card px-6 py-6">
-            <p-toast></p-toast>
+            <p-toast position="top-center" key="tc"></p-toast>
             <h1>Challenges</h1>
             <p-table #dt [value]="challenges" responsiveLayout="scroll" [rows]="5"
                 [globalFilterFields]="['name', 'type', 'goal', 'startDate', 'endDate']" [paginator]="true"
@@ -64,11 +64,11 @@
                         </td>
                         <td style="width:12%; min-width:10rem; text-align: center;">
                             <span class="p-column-title">Start Date</span>
-                            {{ challenge.startDate }}
+                            {{ sharedService.formatDate2(challenge.startDate) }}
                         </td>
                         <td style="width:12%; min-width:10rem; text-align: center;">
                             <span class="p-column-title">End Date</span>
-                            {{ challenge.endDate }}
+                            {{ sharedService.formatDate2(challenge.endDate) }}
                         </td>
                         <td style="width:12%; min-width:10rem; text-align: center;">
                             <span class="p-column-title">Deep/Height</span>

@@ -117,7 +117,7 @@ namespace StraviaTEC_API.Controllers
                     new SqlParameter("@Deep", challenge.Deep),
                     new SqlParameter("@Type", challenge.Type)
                     );
-                return Ok("Challenge Inserted");
+                return Ok(true);
                 /*
                 await _context.Challenges.FromSqlInterpolated($"EXEC spInsertChallenge {challenge.Name}, {challenge.Goal}, {challenge.Private}, {challenge.StartDate}, {challenge.EndDate}, {challenge.Deep}, {challenge.Type}").ToListAsync();
                 return challenge;
