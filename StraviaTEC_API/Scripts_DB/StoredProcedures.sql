@@ -443,33 +443,27 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
---Go
---CREATE PROCEDURE spGroupInsertValidation
---	@Name varchar(20),
---    @ManagerUsername varchar(20)
---AS
---BEGIN
---  IF NOT EXISTS (SELECT 1 FROM Sportman WHERE Username = @ManagerUsername)
---    PRINT 'Sportman ID doesnt exists'
---         
---END;
-
-
+-- Checks if the user exists and the name isnt taken. Then creates the group and sets its manager
 Go
 CREATE PROCEDURE spInsertGroup
 	@Name varchar(20),
     @ManagerUsername varchar(20)
 AS
 BEGIN
-    BEGIN TRY
-        INSERT INTO Group_ (Name)
-        VALUES (@Name);
-        INSERT INTO GroupManager (Username, GroupName)
-        VALUES (@ManagerUsername, @Name);
-    END TRY
-    BEGIN CATCH
-        PRINT 'Error inserting group ' + ERROR_MESSAGE;
-    END CATCH;
+    IF EXISTS (SELECT 1 FROM Sportman WHERE Username = @ManagerUsername) AND NOT EXISTS (SELECT 1 FROM Group_ WHERE Name = @Name)
+        BEGIN TRY
+            INSERT INTO Group_ (Name)
+            VALUES (@Name);
+            INSERT INTO GroupManager (Username, GroupName)
+            VALUES (@ManagerUsername, @Name);
+            RETURN;
+        END TRY
+        BEGIN CATCH
+            PRINT 'Error inserting group ' + ERROR_MESSAGE();
+        END CATCH;
+    ELSE
+        PRINT 'Error inserting group';
+        THROW 51000, 'ERROR: Username not exists or Name is taken', 1; 
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>

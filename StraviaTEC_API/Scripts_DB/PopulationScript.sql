@@ -386,3 +386,12 @@ EXEC spInsertCategory 41, 50, 'Master B';
 Go
 EXEC spInsertCategory 51, 99, 'Master C';
 Go
+
+-- ================================================
+--                  Groups
+-- ================================================
+
+Go
+EXEC spInsertGroup 'PIPO Runners', 'Seballoll'
+Go
+EXEC spInsertGroup 'Night Runners', 'Jose216'
