@@ -57,7 +57,7 @@ namespace StraviaTEC_API.Controllers
         }
 
         [HttpGet("mode/{username}")]
-        public async Task<IActionResult> GetChallengeByManager(string username)
+        public async Task<dynamic> GetChallengeByManager(string username)
         {
             if (_context.Challenges == null)
             {
@@ -65,10 +65,10 @@ namespace StraviaTEC_API.Controllers
             }
 
             try { 
-                var result = await _context.Challenges.FromSqlRaw(
+                var result = await _context.Database.ExecuteSqlRawAsync(
                     "EXEC spGetChallengeByManager @Username",
                     new SqlParameter("@Username", username)
-                    ).ToListAsync();
+                    );
                 Console.WriteLine(result);
                     return Ok(result);
                 }

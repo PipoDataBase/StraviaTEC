@@ -55,6 +55,38 @@ namespace StraviaTEC_API.Controllers
             return Ok(result[0]);
         }
 
+        // GET: api/Sportmen
+        [HttpGet("SportmenNationView")]
+        public async Task<ActionResult<IEnumerable<vwSportman>>> GetSportmenNationView()
+        {
+            if (_context.Sportmen == null)
+            {
+                return NotFound();
+            }
+            return await _context.VwSportmen.FromSqlRaw("spGetSportmenNationView").ToListAsync();
+        }
+
+        // GET: api/Sportmen
+        [HttpGet("SportmanNationView/{username}")]
+        public async Task<ActionResult<vwSportman>> GetSportmanNationView(string username)
+        {
+            if (_context.Sportmen == null)
+            {
+                return NotFound();
+            }
+            var result = await _context.VwSportmen.FromSqlRaw(
+                    "EXEC spGetSportmanNationView @Username",
+                    new SqlParameter("@Username", username)
+                    ).ToListAsync();
+
+            if (result.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+
+            return result.ElementAt(0);
+        }
+
         // PUT: api/Sportmen/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

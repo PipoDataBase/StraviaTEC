@@ -37,6 +37,8 @@ public partial class StraviaTecContext : DbContext
 
     public virtual DbSet<Nationality> Nationalities { get; set; }
 
+    public virtual DbSet<vwSportman> VwSportmen{ get; set; }
+
 
 
     /*
@@ -47,6 +49,13 @@ public partial class StraviaTecContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
+        modelBuilder.Entity<vwSportman>(entity =>
+        {
+            entity.HasKey(e => e.Username);
+
+        });
+
         modelBuilder.Entity<Activity>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Activity__3214EC07DA18249F");

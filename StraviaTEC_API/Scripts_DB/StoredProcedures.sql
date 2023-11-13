@@ -170,6 +170,26 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+Go
+CREATE PROCEDURE spGetSportmenNationView
+AS
+BEGIN
+    SELECT * FROM vwSportmanNationality;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+Go
+CREATE PROCEDURE spGetSportmanNationView
+    @Username varchar(20)
+AS
+BEGIN
+    SELECT * FROM vwSportmanNationality 
+    WHERE Username = @Username;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
 Go
 
 CREATE PROCEDURE spInsertSportman
