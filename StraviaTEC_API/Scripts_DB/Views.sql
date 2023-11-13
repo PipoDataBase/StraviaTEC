@@ -40,9 +40,8 @@ WHERE Challenge.EndDate < GETDATE();
 
 Go
 CREATE VIEW vwChallengesByManager
-AS SELECT Challenge.Name, Challenge.Goal, Challenge.Private, Challenge.StartDate, Challenge.EndDate, Challenge.Deep, ActivityType.Type, ChallengeSportmanManager.SportmanUsername
+AS SELECT Challenge.Name, Challenge.Goal, Challenge.Private, Challenge.StartDate, Challenge.EndDate, Challenge.Deep, Challenge.Type, ChallengeSportmanManager.SportmanUsername
 FROM Challenge 
-INNER JOIN ActivityType ON Challenge.Type = ActivityType.Id
 INNER JOIN ChallengeSportmanManager ON Challenge.Name = ChallengeSportmanManager.ChallengeName;
 
 -- ================================================
