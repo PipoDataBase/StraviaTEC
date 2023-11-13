@@ -65,11 +65,11 @@ namespace StraviaTEC_API.Controllers
             }
 
             try { 
-                var result = await _context.Database.ExecuteSqlRawAsync(
+                var result = await _context.VwChallenges.FromSqlRaw(
                     "EXEC spGetChallengeByManager @Username",
                     new SqlParameter("@Username", username)
-                    );
-                Console.WriteLine(result);
+                    ).ToListAsync();
+
                     return Ok(result);
                 }
             catch (Exception ex)

@@ -39,6 +39,8 @@ public partial class StraviaTecContext : DbContext
 
     public virtual DbSet<vwSportman> VwSportmen{ get; set; }
 
+    public virtual DbSet<VwChallenge> VwChallenges { get; set; }
+
 
 
     /*
@@ -53,6 +55,12 @@ public partial class StraviaTecContext : DbContext
         modelBuilder.Entity<vwSportman>(entity =>
         {
             entity.HasKey(e => e.Username);
+
+        });
+
+        modelBuilder.Entity<VwChallenge>(entity =>
+        {
+            entity.HasKey(e => e.Name);
 
         });
 
