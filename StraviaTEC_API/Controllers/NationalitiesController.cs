@@ -87,7 +87,6 @@ namespace StraviaTEC_API.Controllers
                 }
             }
 
-            return NoContent();
         }
 
         // POST: api/Nationalities

@@ -34,4 +34,8 @@ public partial class Sportman
     public virtual ICollection<Sportman>? Usernames { get; set; } = new List<Sportman>();
 
     public virtual Nationality? NationalityNavigation { get; set; } = null;
+
+    public virtual ICollection<Challenge>? ChallengeNames { get; set; } = new List<Challenge>();
+
+    public virtual ICollection<Challenge>? ChallengeNamesNavigation { get; set; } = new List<Challenge>();
 }
