@@ -32,19 +32,23 @@ export class ManagementChallengesComponent {
 
   constructor(private messageService: MessageService, public sharedService: SharedService, private activityTypesService: ActivityTypesService, private challengesService: ChallengesService) { }
 
-  ngOnInit() {
-    this.activityTypesService.getActivityTypes().subscribe({
-      next: (activityTypes) => {
-        this.activityTypes = activityTypes;
+  updateChallenges() {
+    this.challengesService.getChallengesByManager(this.sharedService.getUsername()).subscribe({
+      next: (challenges) => {
+        this.challenges = challenges;
       },
       error: (response) => {
         console.log(response);
       }
     })
+  }
 
-    this.challengesService.getChallenges().subscribe({
-      next: (challenges) => {
-        this.challenges = challenges;
+  ngOnInit() {
+    this.updateChallenges();
+
+    this.activityTypesService.getActivityTypes().subscribe({
+      next: (activityTypes) => {
+        this.activityTypes = activityTypes;
       },
       error: (response) => {
         console.log(response);
@@ -60,10 +64,6 @@ export class ManagementChallengesComponent {
     this.selectedActivityType = -1;
     this.selectedPrivacy = false;
     this.selectedDeepHeight = false;
-  }
-
-  deleteSelectedChallenges() {
-    this.deleteChallengesDialog = true;
   }
 
   editChallenge(challenge: Challenge) {
@@ -82,18 +82,48 @@ export class ManagementChallengesComponent {
     this.challenge = { ...challenge };
   }
 
-  confirmDeleteSelected() {
-    this.deleteChallengesDialog = false;
-    this.challenges = this.challenges.filter(val => !this.selectedChallenges.includes(val));
-    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Challenges Deleted', life: 3000 });
-    this.selectedChallenges = [];
-  }
-
   confirmDelete() {
     this.deleteChallengeDialog = false;
-    this.challenges = this.challenges.filter(val => val.name !== this.challenge.name);
-    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Challenge Deleted', life: 3000 });
+    // Delete challenge
+    this.challengesService.deleteChallenge(this.challenge.name).subscribe({
+      next: (response) => {
+        if (response) {
+          this.updateChallenges();
+          this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Challenge Deleted', life: 3000 });
+        }
+      },
+      error: (response) => {
+        console.log(response);
+        return;
+      }
+    })
+
     this.challenge = {};
+  }
+
+  deleteSelectedChallenges() {
+    this.deleteChallengesDialog = true;
+  }
+
+  confirmDeleteSelected() {
+    this.deleteChallengesDialog = false;
+    for (var challenge of this.selectedChallenges) {
+      // Delete challenge
+      this.challengesService.deleteChallenge(challenge.name).subscribe({
+        next: (response) => {
+          if (response) {
+            this.updateChallenges();
+          }
+        },
+        error: (response) => {
+          console.log(response);
+          return;
+        }
+      })
+    }
+
+    this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Challenges Deleted', life: 3000 });
+    this.selectedChallenges = [];
   }
 
   hideDialog() {
@@ -109,14 +139,32 @@ export class ManagementChallengesComponent {
       const challengeUpdated: Challenge = {
         name: this.challenge.name,
         goal: this.challenge.goal,
-        private: this.selectedPrivacy,
-        startDate: this.sharedService.formatDate(this.challenge.startDate),
-        endDate: this.sharedService.formatDate(this.challenge.endDate),
-        deep: this.selectedDeepHeight,
+        private: Boolean(String(this.selectedPrivacy) == "true"),
+        startDate: this.challenge.startDate,
+        endDate: this.challenge.endDate,
+        deep: Boolean(String(this.selectedDeepHeight) == "true"),
         type: this.selectedActivityType
       }
-      this.challenges.push(challengeUpdated);
-      this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Challenge Updated', life: 3000 });
+
+      if (this.validateChallenge(challengeUpdated)) {
+        // Put challenge
+        this.challengesService.putChallenge(challengeUpdated.name, challengeUpdated).subscribe({
+          next: (response) => {
+            if (response) {
+              this.updateChallenges();
+              this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Challenge Updated', life: 3000 });
+            }
+          },
+          error: (response) => {
+            console.log(response);
+            return;
+          }
+        })
+      }
+      else {
+        this.updateChallenges();
+        return;
+      }
     }
     else {
       const newChallenge: Challenge = {
@@ -131,24 +179,24 @@ export class ManagementChallengesComponent {
 
       if (this.validateChallenge(newChallenge)) {
         // Post challenge
-        this.challengesService.postChallenge(newChallenge).subscribe({
+        this.challengesService.postChallenge(this.sharedService.getUsername(), newChallenge).subscribe({
           next: (response) => {
-            console.log(response);
+            if (response) {
+              this.updateChallenges();
+              this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Challenge Created', life: 3000 });
+            }
           },
           error: (response) => {
             console.log(response);
             return;
           }
         })
-        
-        this.challenges.push(newChallenge);
-        this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Challenge Created', life: 3000 });
       }
       else {
         return;
       }
-
     }
+
     this.challengeDialog = false;
     this.challenge = {}
   }

@@ -16,12 +16,16 @@ export class ChallengesService {
     return this.http.get<Challenge[]>(this.baseApiUrl + '/api/Challenges');
   }
 
+  getChallengesByManager(username: string): Observable<Challenge[]> {
+    return this.http.get<Challenge[]>(this.baseApiUrl + '/api/Challenges/mode/' + username);
+  }
+
   getChallenge(id: string): Observable<Challenge> {
     return this.http.get<Challenge>(this.baseApiUrl + '/api/Challenges/' + id);
   }
 
-  postChallenge(challenge: Challenge): Observable<boolean> {
-    return this.http.post<boolean>(this.baseApiUrl + '/api/Challenges', challenge);
+  postChallenge(username: string, challenge: Challenge): Observable<boolean> {
+    return this.http.post<boolean>(this.baseApiUrl + '/api/Challenges/' + username, challenge);
   }
 
   putChallenge(id: string, challenge: Challenge): Observable<boolean> {

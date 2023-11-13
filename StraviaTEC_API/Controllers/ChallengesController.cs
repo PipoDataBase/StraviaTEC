@@ -57,7 +57,7 @@ namespace StraviaTEC_API.Controllers
         }
 
         [HttpGet("mode/{username}")]
-        public async Task<dynamic> GetChallengeByManager(string username)
+        public async Task<dynamic> GetChallengesByManager(string username)
         {
             if (_context.Challenges == null)
             {
@@ -102,7 +102,7 @@ namespace StraviaTEC_API.Controllers
                     new SqlParameter("@Deep", challenge.Deep),
                     new SqlParameter("@Type", challenge.Type)
                     );
-                return Ok("Challenge Updated");
+                return Ok(true);
                 //var result = await _context.Challenges.FromSqlRaw($"spUpdateChallenge {name}, {challenge.Goal}, {challenge.Private}, {challenge.StartDate}, {challenge.EndDate}, {challenge.Deep}, {challenge.Type}").ToListAsync();
                 //return Ok(result);
             }
@@ -172,7 +172,7 @@ namespace StraviaTEC_API.Controllers
                     new SqlParameter("@Name", id)
                     );
 
-            return Ok("Challenge Deleted");
+            return Ok(true);
         }
 
         private bool ChallengeExists(string id)

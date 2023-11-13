@@ -144,6 +144,8 @@ CREATE PROCEDURE spDeleteChallenge
     @Name varchar(20)
 AS
 BEGIN
+	DELETE FROM ChallengeSportmanManager
+	WHERE ChallengeName = @Name;
     DELETE FROM Challenge
     WHERE Name = @Name;
 END;
