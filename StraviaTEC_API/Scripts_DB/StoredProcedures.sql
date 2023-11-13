@@ -68,6 +68,18 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+Go
+CREATE PROCEDURE spGetChallengeByManager
+@Username varchar(20)
+AS
+BEGIN
+    SELECT Name, Goal, Private, StartDate, EndDate, Deep, Type
+    FROM vwChallengesByManager
+    WHERE SportmanUsername = @Username;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
 Go
 CREATE PROCEDURE spInsertChallenge
     @Name varchar(20),
@@ -76,11 +88,32 @@ CREATE PROCEDURE spInsertChallenge
     @StartDate DATETIME,
     @EndDate DATETIME,
     @Deep bit,
-    @Type tinyint
+    @Type tinyint,
+    @ManagerUsername varchar(20)
 AS
 BEGIN
-    INSERT INTO Challenge (Name, Goal, Private, StartDate, EndDate, Deep, Type)
-    VALUES (@Name, @Goal, @Private, @StartDate, @EndDate, @Deep, @Type);
+    IF NOT EXISTS (SELECT 1 FROM Sportman WHERE Username = @ManagerUsername)
+        BEGIN
+            PRINT 'Error inserting Challenge: Sportman username doesnt exists';
+            THROW 51000, 'ERROR: The given Sportman doesnt exists', 1;
+        END
+    IF EXISTS (SELECT 1 FROM Challenge WHERE Name = @Name)
+        BEGIN
+            PRINT 'Error inserting Challenge: Group name is taken';
+            THROW 51000, 'ERROR: Group name is taken', 1;
+        END
+    ELSE
+        BEGIN TRY
+            INSERT INTO Challenge (Name, Goal, Private, StartDate, EndDate, Deep, Type)
+            VALUES (@Name, @Goal, @Private, @StartDate, @EndDate, @Deep, @Type);
+            INSERT INTO ChallengeSportmanManager (ChallengeName, SportmanUsername)
+            VALUES (@Name, @ManagerUsername);
+            RETURN;
+        END TRY
+        BEGIN CATCH
+            PRINT 'Error inserting Challenge ' + ERROR_MESSAGE();
+            THROW 51000, 'Error inserting Challenge', 1;
+        END CATCH;
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>

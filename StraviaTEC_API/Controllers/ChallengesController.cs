@@ -56,6 +56,31 @@ namespace StraviaTEC_API.Controllers
             return Ok(result[0]);
         }
 
+        [HttpGet("mode/{username}")]
+        public async Task<IActionResult> GetChallengeByManager(string username)
+        {
+            if (_context.Challenges == null)
+            {
+                return NotFound();
+            }
+
+            try { 
+                var result = await _context.Challenges.FromSqlRaw(
+                    "EXEC spGetChallengeByManager @Username",
+                    new SqlParameter("@Username", username)
+                    ).ToListAsync();
+                Console.WriteLine(result);
+                    return Ok(result);
+                }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw ex;
+            }
+
+            
+        }
+
         // PUT: api/Challenges/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -97,8 +122,8 @@ namespace StraviaTEC_API.Controllers
 
         // POST: api/Challenges
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Challenge>> PostChallenge(Challenge challenge)
+        [HttpPost("{username}")]
+        public async Task<ActionResult<Challenge>> PostChallenge(Challenge challenge, string username)
         {
           if (_context.Challenges == null)
           {
@@ -108,31 +133,21 @@ namespace StraviaTEC_API.Controllers
             try
             {
                 await _context.Database.ExecuteSqlRawAsync(
-                    "EXEC spInsertChallenge @Name, @Goal, @Private, @StartDate, @EndDate, @Deep, @Type",
+                    "EXEC spInsertChallenge @Name, @Goal, @Private, @StartDate, @EndDate, @Deep, @Type, @ManagerUsername",
                     new SqlParameter("@Name", challenge.Name),
                     new SqlParameter("@Goal", challenge.Goal),
                     new SqlParameter("@Private", challenge.Private),
                     new SqlParameter("@StartDate", challenge.StartDate),
                     new SqlParameter("@EndDate", challenge.EndDate),
                     new SqlParameter("@Deep", challenge.Deep),
-                    new SqlParameter("@Type", challenge.Type)
+                    new SqlParameter("@Type", challenge.Type),
+                    new SqlParameter("@ManagerUsername", username)
                     );
                 return Ok(true);
-                /*
-                await _context.Challenges.FromSqlInterpolated($"EXEC spInsertChallenge {challenge.Name}, {challenge.Goal}, {challenge.Private}, {challenge.StartDate}, {challenge.EndDate}, {challenge.Deep}, {challenge.Type}").ToListAsync();
-                return challenge;
-                */
             }
             catch (DbUpdateException)
             {
-                if (ChallengeExists(challenge.Name))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
 
             

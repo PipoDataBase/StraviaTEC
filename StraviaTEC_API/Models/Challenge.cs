@@ -19,6 +19,7 @@ public partial class Challenge
 
     public byte? Type { get; set; }
 
+
     public virtual ICollection<Activity>? Activities { get; set; } = new List<Activity>();
 
     public virtual ActivityType? TypeNavigation { get; set; } = null!;
@@ -26,4 +27,5 @@ public partial class Challenge
     public virtual ICollection<Group>? GroupNames { get; set; } = new List<Group>();
 
     public virtual ICollection<Sponsor>? SponsorTradeNames { get; set; } = new List<Sponsor>();
+    public virtual ICollection<Sportman>? Usernames { get; set; } = new List<Sportman>();
 }

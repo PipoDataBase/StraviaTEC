@@ -13,16 +13,41 @@ WHERE GETDATE() < Race.Date;
 
 Go
 CREATE VIEW vwFutureChallenges
-AS SELECT * FROM Challenge
+AS SELECT Challenge.Name, Challenge.Goal, Challenge.Private, Challenge.StartDate, Challenge.EndDate, Challenge.Deep, ActivityType.Type 
+FROM Challenge INNER JOIN ActivityType
+ON Challenge.Type = ActivityType.Id
 WHERE  GETDATE() < Challenge.StartDate;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
 Go
 CREATE VIEW vwActiveChallenges
-AS SELECT * FROM Challenge
+AS SELECT Challenge.Name, Challenge.Goal, Challenge.Private, Challenge.StartDate, Challenge.EndDate, Challenge.Deep, ActivityType.Type 
+FROM Challenge INNER JOIN ActivityType
+ON Challenge.Type = ActivityType.Id
 WHERE Challenge.StartDate < GETDATE() AND  GETDATE() < Challenge.EndDate;
 
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+Go
+CREATE VIEW vwPastChallenges
+AS SELECT Challenge.Name, Challenge.Goal, Challenge.Private, Challenge.StartDate, Challenge.EndDate, Challenge.Deep, ActivityType.Type 
+FROM Challenge INNER JOIN ActivityType
+ON Challenge.Type = ActivityType.Id
+WHERE Challenge.EndDate < GETDATE();
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+Go
+CREATE VIEW vwChallengesByManager
+AS SELECT Challenge.Name, Challenge.Goal, Challenge.Private, Challenge.StartDate, Challenge.EndDate, Challenge.Deep, ActivityType.Type, ChallengeSportmanManager.SportmanUsername
+FROM Challenge 
+INNER JOIN ActivityType ON Challenge.Type = ActivityType.Id
+INNER JOIN ChallengeSportmanManager ON Challenge.Name = ChallengeSportmanManager.ChallengeName;
+
+-- ================================================
+--                    Sportmen
+-- ================================================
 
 Go
 CREATE VIEW vwSportmanNationality

@@ -392,6 +392,19 @@ Go
 -- ================================================
 
 Go
-EXEC spInsertGroup 'PIPO Runners', 'Seballoll'
+EXEC spInsertGroup 'PIPO Runners', 'Seballoll';
 Go
-EXEC spInsertGroup 'Night Runners', 'Jose216'
+EXEC spInsertGroup 'Night Runners', 'Jose216';
+
+-- ================================================
+--                Challenges
+-- ================================================
+
+Go
+EXEC spInsertChallenge 'MueveTec', 5, false, "2023-11-11T15:18:41.825Z", "2023-12-01T15:18:41.825Z", true, 0, 'Emarin19';
+Go
+EXEC spInsertChallenge 'Fortuna Challenge', 68, false, "2023-11-11T15:18:41.825Z", "2023-11-22T15:18:41.825Z", true, 0, 'Camanem';
+Go
+EXEC spInsertChallenge 'SC Challenge 2020', 8, false, "2020-01-01T15:18:41.825Z", "2020-11-22T15:18:41.825Z", true, 0, 'Camanem';
+Go
+EXEC spInsertChallenge 'SC Challenge 2024', 8, false, "2024-01-01T15:18:41.825Z", "2024-11-22T15:18:41.825Z", true, 0, 'Camanem';
