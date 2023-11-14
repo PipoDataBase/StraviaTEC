@@ -89,6 +89,7 @@ Race {
 	Date datetime
 	Private boolean
 	RoutePath varchar
+	Type tinyint *> ActivityType.Id
 }
 
 RaceSportman {
@@ -130,4 +131,3 @@ Nationality {
 	Id tinyint pk increments
 	Nationality varchar(20)
 }
-

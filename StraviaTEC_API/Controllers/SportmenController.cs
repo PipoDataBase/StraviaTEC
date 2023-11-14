@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using ParaSportman.Models;
 using StraviaTEC_API.Models;
 
 namespace StraviaTEC_API.Controllers
@@ -57,24 +58,24 @@ namespace StraviaTEC_API.Controllers
 
         // GET: api/Sportmen
         [HttpGet("SportmenNationView")]
-        public async Task<ActionResult<IEnumerable<vwSportman>>> GetSportmenNationView()
+        public async Task<ActionResult<IEnumerable<VwSportmanNationality>>> GetSportmenNationView()
         {
             if (_context.Sportmen == null)
             {
                 return NotFound();
             }
-            return await _context.VwSportmen.FromSqlRaw("spGetSportmenNationView").ToListAsync();
+            return await _context.VwSportmanNationalities.FromSqlRaw("spGetSportmenNationView").ToListAsync();
         }
 
         // GET: api/Sportmen
         [HttpGet("SportmanNationView/{username}")]
-        public async Task<ActionResult<vwSportman>> GetSportmanNationView(string username)
+        public async Task<ActionResult<VwSportmanNationality>> GetSportmanNationView(string username)
         {
             if (_context.Sportmen == null)
             {
                 return NotFound();
             }
-            var result = await _context.VwSportmen.FromSqlRaw(
+            var result = await _context.VwSportmanNationalities.FromSqlRaw(
                     "EXEC spGetSportmanNationView @Username",
                     new SqlParameter("@Username", username)
                     ).ToListAsync();

@@ -91,6 +91,7 @@ CREATE TABLE Race (
 	Date DATETIME NOT NULL,
 	Private bit NOT NULL,
 	RoutePath varchar(MAX),
+	Type tinyint NOT NULL,
 	PRIMARY KEY (Name)
 );
 
@@ -181,6 +182,7 @@ ALTER TABLE ChallengeSportmanManager ADD CONSTRAINT ChallengeSportmanManager_fk1
 ALTER TABLE ChallengeSportmanParticipant ADD CONSTRAINT ChallengeSportmanParticipant_fk0 FOREIGN KEY (ChallengeName) REFERENCES Challenge(Name);
 ALTER TABLE ChallengeSportmanParticipant ADD CONSTRAINT ChallengeSportmanParticipant_fk1 FOREIGN KEY (SportmanUsername) REFERENCES Sportman(Username);
 
+ALTER TABLE Race ADD CONSTRAINT Race_fk0 FOREIGN KEY (Type) REFERENCES ActivityType(Id);
 
 ALTER TABLE RaceSportman ADD CONSTRAINT RaceSportman_fk0 FOREIGN KEY (Username) REFERENCES Sportman(Username);
 ALTER TABLE RaceSportman ADD CONSTRAINT RaceSportman_fk1 FOREIGN KEY (RaceName) REFERENCES Race(Name);

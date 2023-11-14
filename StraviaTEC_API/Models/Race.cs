@@ -15,6 +15,8 @@ public partial class Race
 
     public string? RoutePath { get; set; } = null!;
 
+    public byte Type { get; set; }
+
     public virtual ICollection<Activity>? Activities { get; set; } = new List<Activity>();
 
     public virtual ICollection<BankAccount>? BankAccounts { get; set; } = new List<BankAccount>();
@@ -26,4 +28,7 @@ public partial class Race
     public virtual ICollection<Sponsor>? SponsorTradeNames { get; set; } = new List<Sponsor>();
 
     public virtual ICollection<Sportman>? Usernames { get; set; } = new List<Sportman>();
+
+    public virtual ActivityType? TypeNavigation { get; set; } = null!;
+
 }
