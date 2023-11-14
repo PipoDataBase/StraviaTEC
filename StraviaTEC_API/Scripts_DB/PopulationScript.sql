@@ -416,3 +416,8 @@ EXEC spInsertChallenge  'TEC Challenge 2024', 68, false, '2024-11-11T00:00:00.00
 
 GO
 EXEC spInsertRace 'End of Semester Race', 500, '2019-12-04T10:00:00.000Z', false, 'GpxPath', 0, 'Seballoll'
+-- Add RaceCategory:
+GO
+EXEC spAddRaceCategory 'End of Semester Race', 0
+GO
+EXEC spAddRaceCategory 'End of Semester Race', 1

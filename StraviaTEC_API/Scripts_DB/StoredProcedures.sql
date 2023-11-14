@@ -570,6 +570,19 @@ END;
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
 Go
+CREATE PROCEDURE spGetRaceCategoriesByName
+    @RaceName varchar(20)
+AS
+BEGIN
+    SELECT C.Id , C.MinimumAge, C.MaximumAge, C.Category
+    FROM Category C INNER JOIN RaceCategory RC
+    ON C.Id = RC.CategoryId
+    WHERE RC.RaceName = @RaceName
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+Go
 CREATE PROCEDURE spGetRace
     @Name varchar(20)
 AS
@@ -613,6 +626,36 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spAddRaceCategory
+    @RaceName varchar(20),
+    @CategoryId tinyint
+AS 
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM Race WHERE Name = @RaceName)
+        BEGIN
+            PRINT 'Error Adding RaceCategory: RaceName doesnt exists';
+            THROW 51000, 'ERROR: The given RaceName doesnt exists', 1;
+        END
+    IF NOT EXISTS (SELECT 1 FROM Category WHERE Id = @CategoryId)
+        BEGIN
+            PRINT 'Error Adding RaceCategory: Category doesnt exists';
+            THROW 51000, 'ERROR: The given Id doesnt exists', 1;
+        END
+    ELSE
+        BEGIN TRY
+            INSERT INTO RaceCategory (RaceName, CategoryId)
+            VALUES (@RaceName, @CategoryId);
+            RETURN;
+        END TRY
+        BEGIN CATCH
+        END CATCH;
+END;
+
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
 Go
 CREATE PROCEDURE spUpdateRace
     @Name varchar(20),

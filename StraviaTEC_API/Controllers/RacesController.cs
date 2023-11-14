@@ -47,6 +47,20 @@ namespace StraviaTEC_API.Controllers
                     ).ToListAsync();
         }
 
+        // GET: api/Races
+        [HttpGet("Categories/{raceName}")]
+        public async Task<ActionResult<IEnumerable<Category>>> GetGetRaceCategoriesByName(string raceName)
+        {
+            if (_context.Races == null)
+            {
+                return NotFound();
+            }
+            return await _context.Categories.FromSqlRaw(
+                    "EXEC spGetRaceCategoriesByName @RaceName",
+                    new SqlParameter("@RaceName", raceName)
+                    ).ToListAsync();
+        }
+
         // GET: api/Races/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Race>> GetRace(string id)
@@ -132,6 +146,30 @@ namespace StraviaTEC_API.Controllers
                                     new SqlParameter("@RoutePath", race.RoutePath),
                                     new SqlParameter("@Type", race.Type),
                                     new SqlParameter("@ManagerUsername", username)
+                                    );
+                return Ok(true);
+            }
+            catch (DbUpdateException)
+            {
+                throw;
+            }
+        }
+
+        // POST: api/Races
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("addRaceCategory/{raceName},{categoryId}")]
+        public async Task<ActionResult<Race>> PostRaceCategory(string raceName, int categoryId)
+        {
+            if (_context.Races == null)
+            {
+                return Problem("Entity set 'StraviaTecContext.Races'  is null.");
+            }
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                                    "EXEC spAddRaceCategory @RaceName, @CategoryId",
+                                    new SqlParameter("@RaceName", raceName),
+                                    new SqlParameter("@CategoryId", categoryId)
                                     );
                 return Ok(true);
             }
