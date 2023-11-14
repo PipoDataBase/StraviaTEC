@@ -80,6 +80,9 @@
                         </td>
                         <td>
                             <div class="flex">
+                                <button pButton pRipple icon="pi pi-info"
+                                    class="p-button-rounded p-button-secondary mr-2"
+                                    (click)="challengeSponsor(challenge)"></button>
                                 <button pButton pRipple icon="pi pi-pencil"
                                     class="p-button-rounded p-button-primary mr-2"
                                     (click)="editChallenge(challenge)"></button>
@@ -155,6 +158,18 @@
                     (click)="hideDialog()"></button>
                 <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
                     (click)="saveChallenge()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="challengeSponsorDialog" [style]="{width: '50%'}" header="Sponsors" [modal]="true"
+            class="p-fluid">
+            <p-toast></p-toast>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideChallengeSponsorDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                    (click)="saveChallengeSponsor()"></button>
             </ng-template>
         </p-dialog>
 
