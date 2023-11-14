@@ -99,8 +99,8 @@ BEGIN
         END
     IF EXISTS (SELECT 1 FROM Challenge WHERE Name = @Name)
         BEGIN
-            PRINT 'Error inserting Challenge: Group name is taken';
-            THROW 51000, 'ERROR: Group name is taken', 1;
+            PRINT 'Error inserting Challenge: Challenge name is taken';
+            THROW 51000, 'ERROR: Challenge name is taken', 1;
         END
     ELSE
         BEGIN TRY
@@ -555,6 +555,20 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+Go
+CREATE PROCEDURE spGetRacesByManager
+    @Username varchar(20)
+AS
+BEGIN
+    SELECT R.Name, R.InscriptionPrice, R.Date, R.Private, R.RoutePath, R.Type
+    FROM Race R INNER JOIN RaceSportman RS
+    ON R.Name = RS.RaceName
+    WHERE RS.Username = @Username
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
 Go
 CREATE PROCEDURE spGetRace
     @Name varchar(20)
@@ -569,11 +583,33 @@ CREATE PROCEDURE spInsertRace
 	@InscriptionPrice numeric(6,0),
 	@Date DATETIME,
 	@Private bit,
-	@RoutePath varchar(MAX)
+	@RoutePath varchar(MAX),
+    @Type varchar(20),
+    @ManagerUsername varchar(20)
 AS
 BEGIN
-    INSERT INTO Race (Name, InscriptionPrice, Date, Private, RoutePath)
-    VALUES (@Name, @InscriptionPrice, @Date, @Private, @RoutePath);
+    IF NOT EXISTS (SELECT 1 FROM Sportman WHERE Username = @ManagerUsername)
+        BEGIN
+            PRINT 'Error inserting Race: Sportman username doesnt exists';
+            THROW 51000, 'ERROR: The given Sportman doesnt exists', 1;
+        END
+    IF EXISTS (SELECT 1 FROM Race WHERE Name = @Name)
+        BEGIN
+            PRINT 'Error inserting Race: race name is taken';
+            THROW 51000, 'ERROR: Race name is taken', 1;
+        END
+    ELSE
+        BEGIN TRY
+            INSERT INTO Race (Name, InscriptionPrice, Date, Private, RoutePath, Type)
+            VALUES (@Name, @InscriptionPrice, @Date, @Private, @RoutePath, @Type);
+            INSERT INTO RaceSportman (Username, RaceName)
+            VALUES (@ManagerUsername, @Name);
+            RETURN;
+        END TRY
+        BEGIN CATCH
+            PRINT 'Error inserting Race ' + ERROR_MESSAGE();
+            THROW 51000, 'Error inserting Race', 1;
+        END CATCH;
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
@@ -583,14 +619,16 @@ CREATE PROCEDURE spUpdateRace
 	@InscriptionPrice numeric(6,0),
 	@Date DATETIME,
 	@Private bit,
-	@RoutePath varchar(MAX)
+	@RoutePath varchar(MAX),
+    @Type varchar(20)
 AS
 BEGIN
     UPDATE Race
     SET InscriptionPrice = @InscriptionPrice,
         Date = @Date,
         Private = @Private,
-        RoutePath = @RoutePath
+        RoutePath = @RoutePath,
+        Type = @Type
     WHERE Name = @Name;
 END;
 

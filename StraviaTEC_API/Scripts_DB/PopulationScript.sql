@@ -393,5 +393,26 @@ Go
 
 EXEC spInsertGroup 'PIPO Runners', 'Seballoll';
 Go
-EXEC spInsertGroup 'Night Runners', 'Jose216';
+EXEC spInsertGroup 'Night Runners', 'Emarin19';
 Go
+EXEC spInsertGroup 'Sahara Runners', 'Jose216';
+Go
+EXEC spInsertGroup 'Running Cows', 'Camanem';
+
+-- ================================================
+--                  Challenges
+-- ================================================
+
+GO
+EXEC spInsertChallenge  'TEC Challenge 2019', 68, false, '2019-11-11T00:00:00.000Z', '2019-12-12T00:00:00.000Z', true, 0, 'Jose216'
+GO
+EXEC spInsertChallenge  'TEC Challenge 2023', 68, false, '2023-11-11T00:00:00.000Z', '2023-12-12T00:00:00.000Z', true, 0, 'Jose216'
+GO
+EXEC spInsertChallenge  'TEC Challenge 2024', 68, false, '2024-11-11T00:00:00.000Z', '2024-12-12T00:00:00.000Z', true, 0, 'Jose216'
+
+-- ================================================
+--                    Races
+-- ================================================
+
+GO
+EXEC spInsertRace 'End of Semester Race', 500, '2019-12-04T10:00:00.000Z', false, 'GpxPath', 0, 'Seballoll'

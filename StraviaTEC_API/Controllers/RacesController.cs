@@ -33,6 +33,20 @@ namespace StraviaTEC_API.Controllers
             return await _context.Races.FromSqlRaw("EXEC spGetRaces").ToListAsync();
         }
 
+        // GET: api/Races
+        [HttpGet("byManager/{username}")]
+        public async Task<ActionResult<IEnumerable<Race>>> GetRacesByManager(string username)
+        {
+            if (_context.Races == null)
+            {
+                return NotFound();
+            }
+            return await _context.Races.FromSqlRaw(
+                    "EXEC spGetRacesByManager @Username",
+                    new SqlParameter("@Username", username)
+                    ).ToListAsync();
+        }
+
         // GET: api/Races/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Race>> GetRace(string id)
@@ -62,6 +76,7 @@ namespace StraviaTEC_API.Controllers
             return Ok(result[0]);
         }
 
+
         // PUT: api/Races/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -82,7 +97,7 @@ namespace StraviaTEC_API.Controllers
                     new SqlParameter("@Private", race.Private),
                     new SqlParameter("@RoutePath", race.RoutePath)
                     );
-                return Ok("Race Updated");
+                return Ok(true);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -99,8 +114,8 @@ namespace StraviaTEC_API.Controllers
 
         // POST: api/Races
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Race>> PostRace(Race race)
+        [HttpPost("{username}")]
+        public async Task<ActionResult<Race>> PostRace(Race race, string username)
         {
           if (_context.Races == null)
           {
@@ -109,25 +124,20 @@ namespace StraviaTEC_API.Controllers
             try
             {
                 await _context.Database.ExecuteSqlRawAsync(
-                                    "EXEC spInsertRace @Name, @InscriptionPrice, @Date, @Private, @RoutePath",
+                                    "EXEC spInsertRace @Name, @InscriptionPrice, @Date, @Private, @RoutePath, @Type, @ManagerUsername",
                                     new SqlParameter("@Name", race.Name),
                                     new SqlParameter("@InscriptionPrice", race.InscriptionPrice),
                                     new SqlParameter("@Date", race.Date),
                                     new SqlParameter("@Private", race.Private),
-                                    new SqlParameter("@RoutePath", race.RoutePath)
+                                    new SqlParameter("@RoutePath", race.RoutePath),
+                                    new SqlParameter("@Type", race.Type),
+                                    new SqlParameter("@ManagerUsername", username)
                                     );
-                return Ok("Race Created");
+                return Ok(true);
             }
             catch (DbUpdateException)
             {
-                if (RaceExists(race.Name))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
         }
 

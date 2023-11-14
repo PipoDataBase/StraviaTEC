@@ -56,7 +56,7 @@ namespace StraviaTEC_API.Controllers
             return Ok(result[0]);
         }
 
-        [HttpGet("mode/{username}")]
+        [HttpGet("byManager/{username}")]
         public async Task<dynamic> GetChallengesByManager(string username)
         {
             if (_context.Challenges == null)
