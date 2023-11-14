@@ -13,7 +13,7 @@ public partial class Sponsor
 
     public string? LogoPath { get; set; }
 
-    public virtual ICollection<Challenge> ChallengeNames { get; set; } = new List<Challenge>();
+    public virtual ICollection<Challenge>? ChallengeNames { get; set; } = new List<Challenge>();
 
-    public virtual ICollection<Race> RaceNames { get; set; } = new List<Race>();
+    public virtual ICollection<Race>? RaceNames { get; set; } = new List<Race>();
 }

@@ -29,7 +29,7 @@ public partial class Activity
 
     public virtual Race? RaceNameNavigation { get; set; }
 
-    public virtual ActivityType TypeNavigation { get; set; } = null!;
+    public virtual ActivityType? TypeNavigation { get; set; } = null!;
 
     public virtual Sportman? UsernameNavigation { get; set; }
 }

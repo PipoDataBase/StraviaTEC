@@ -9,5 +9,5 @@ public partial class Nationality
 
     public string Nationality1 { get; set; } = null!;
 
-    public virtual ICollection<Sportman> Sportmen { get; set; } = new List<Sportman>();
+    public virtual ICollection<Sportman>? Sportmen { get; set; } = new List<Sportman>();
 }

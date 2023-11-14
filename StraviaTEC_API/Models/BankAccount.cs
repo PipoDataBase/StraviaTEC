@@ -9,5 +9,5 @@ public partial class BankAccount
 
     public string RaceName { get; set; } = null!;
 
-    public virtual Race RaceNameNavigation { get; set; } = null!;
+    public virtual Race? RaceNameNavigation { get; set; } = null!;
 }
