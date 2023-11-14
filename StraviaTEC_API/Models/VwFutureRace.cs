@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ParaSportman.Models;
+namespace StraviaTEC_API.Models;
 
 public partial class VwFutureRace
 {

@@ -19,14 +19,14 @@ public partial class Challenge
 
     public byte? Type { get; set; }
 
+    public virtual ICollection<Activity> Activities { get; set; } = new List<Activity>();
 
-    public virtual ICollection<Activity>? Activities { get; set; } = new List<Activity>();
+    public virtual ActivityType? TypeNavigation { get; set; }
 
-    public virtual ActivityType? TypeNavigation { get; set; } = null!;
+    public virtual ICollection<Group> GroupNames { get; set; } = new List<Group>();
 
-    public virtual ICollection<Group>? GroupNames { get; set; } = new List<Group>();
+    public virtual ICollection<Sponsor> SponsorTradeNames { get; set; } = new List<Sponsor>();
 
-    public virtual ICollection<Sponsor>? SponsorTradeNames { get; set; } = new List<Sponsor>();
     public virtual ICollection<Sportman> SportmanUsernames { get; set; } = new List<Sportman>();
 
     public virtual ICollection<Sportman> SportmanUsernamesNavigation { get; set; } = new List<Sportman>();

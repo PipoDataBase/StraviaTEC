@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using ParaSportman.Models;
 using StraviaTEC_API.Models;
 
 namespace StraviaTEC_API.Controllers

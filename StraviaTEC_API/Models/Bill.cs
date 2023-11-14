@@ -7,7 +7,7 @@ public partial class Bill
 {
     public int Id { get; set; }
 
-    public string? PhotoPath { get; set; } = null!;
+    public string? PhotoPath { get; set; }
 
     public bool Accepted { get; set; }
 
@@ -15,5 +15,5 @@ public partial class Bill
 
     public string RaceName { get; set; } = null!;
 
-    public virtual Race? RaceNameNavigation { get; set; } = null!;
+    public virtual Race RaceNameNavigation { get; set; } = null!;
 }

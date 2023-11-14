@@ -13,7 +13,7 @@ public partial class Activity
 
     public DateTime Date { get; set; }
 
-    public string? RoutePath { get; set; } = null!;
+    public string? RoutePath { get; set; }
 
     public string? Description { get; set; }
 
@@ -25,11 +25,11 @@ public partial class Activity
 
     public byte Type { get; set; }
 
-    public virtual Race? RaceNameNavigation { get; set; }
-
     public virtual Challenge? ChallengeNameNavigation { get; set; }
 
-    public virtual ActivityType? TypeNavigation { get; set; }
+    public virtual Race? RaceNameNavigation { get; set; }
+
+    public virtual ActivityType TypeNavigation { get; set; } = null!;
 
     public virtual Sportman? UsernameNavigation { get; set; }
 }

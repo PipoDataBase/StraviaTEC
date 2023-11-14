@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using ParaSportman.Models;
 
 namespace StraviaTEC_API.Models;
 
@@ -30,13 +29,13 @@ public partial class StraviaTecContext : DbContext
 
     public virtual DbSet<Group> Groups { get; set; }
 
+    public virtual DbSet<Nationality> Nationalities { get; set; }
+
     public virtual DbSet<Race> Races { get; set; }
 
     public virtual DbSet<Sponsor> Sponsors { get; set; }
 
     public virtual DbSet<Sportman> Sportmen { get; set; }
-
-    public virtual DbSet<Nationality> Nationalities { get; set; }
 
     public virtual DbSet<VwActiveChallenge> VwActiveChallenges { get; set; }
 
@@ -50,18 +49,12 @@ public partial class StraviaTecContext : DbContext
 
     public virtual DbSet<VwSportmanNationality> VwSportmanNationalities { get; set; }
 
-
-
-    /*
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("server=DESKTOP-VEB3CKO; database=StraviaTEC; integrated security=true; Encrypt=False;");
-    */
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
-
         modelBuilder.Entity<Activity>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Activity__3214EC07F64628B9");

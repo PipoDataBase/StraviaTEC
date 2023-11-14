@@ -13,22 +13,21 @@ public partial class Race
 
     public bool Private { get; set; }
 
-    public string? RoutePath { get; set; } = null!;
+    public string? RoutePath { get; set; }
 
     public byte Type { get; set; }
 
-    public virtual ICollection<Activity>? Activities { get; set; } = new List<Activity>();
+    public virtual ICollection<Activity> Activities { get; set; } = new List<Activity>();
 
-    public virtual ICollection<BankAccount>? BankAccounts { get; set; } = new List<BankAccount>();
+    public virtual ICollection<BankAccount> BankAccounts { get; set; } = new List<BankAccount>();
 
-    public virtual ICollection<Bill>? Bills { get; set; } = new List<Bill>();
+    public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
 
-    public virtual ICollection<Category>? Categories { get; set; } = new List<Category>();
+    public virtual ActivityType TypeNavigation { get; set; } = null!;
 
-    public virtual ICollection<Sponsor>? SponsorTradeNames { get; set; } = new List<Sponsor>();
+    public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
 
-    public virtual ICollection<Sportman>? Usernames { get; set; } = new List<Sportman>();
+    public virtual ICollection<Sponsor> SponsorTradeNames { get; set; } = new List<Sponsor>();
 
-    public virtual ActivityType? TypeNavigation { get; set; } = null!;
-
+    public virtual ICollection<Sportman> Usernames { get; set; } = new List<Sportman>();
 }

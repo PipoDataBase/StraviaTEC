@@ -1,5 +1,4 @@
-﻿using StraviaTEC_API.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace StraviaTEC_API.Models;

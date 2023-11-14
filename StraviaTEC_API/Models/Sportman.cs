@@ -21,21 +21,21 @@ public partial class Sportman
 
     public byte Nationality { get; set; }
 
-    public virtual ICollection<Activity>? Activities { get; set; } = new List<Activity>();
+    public virtual ICollection<Activity> Activities { get; set; } = new List<Activity>();
 
-    public virtual ICollection<Sportman>? FriendUsernames { get; set; } = new List<Sportman>();
-
-    public virtual ICollection<Group>? GroupNames { get; set; } = new List<Group>();
-
-    public virtual ICollection<Group>? GroupNamesNavigation { get; set; } = new List<Group>();
-
-    public virtual ICollection<Race>? RaceNames { get; set; } = new List<Race>();
-
-    public virtual ICollection<Sportman>? Usernames { get; set; } = new List<Sportman>();
-
-    public virtual Nationality? NationalityNavigation { get; set; } = null;
+    public virtual Nationality NationalityNavigation { get; set; } = null!;
 
     public virtual ICollection<Challenge> ChallengeNames { get; set; } = new List<Challenge>();
 
     public virtual ICollection<Challenge> ChallengeNamesNavigation { get; set; } = new List<Challenge>();
+
+    public virtual ICollection<Sportman> FriendUsernames { get; set; } = new List<Sportman>();
+
+    public virtual ICollection<Group> GroupNames { get; set; } = new List<Group>();
+
+    public virtual ICollection<Group> GroupNamesNavigation { get; set; } = new List<Group>();
+
+    public virtual ICollection<Race> RaceNames { get; set; } = new List<Race>();
+
+    public virtual ICollection<Sportman> Usernames { get; set; } = new List<Sportman>();
 }
