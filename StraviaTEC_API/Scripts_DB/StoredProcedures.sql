@@ -225,6 +225,23 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spLogin
+    @Username varchar (20),
+    @Password varchar (20)
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM Sportman WHERE Username = @Username AND Password = @Password)
+        RETURN;
+    IF EXISTS (SELECT 1 FROM Sportman WHERE Username = @Username)
+        THROW 51000, 'ERROR: wrong password', 1;
+    ELSE
+        THROW 51000, 'ERROR: the given username doesnt exists', 1;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
 Go
 
 CREATE PROCEDURE spInsertSportman
@@ -866,8 +883,9 @@ AS
 BEGIN
     BEGIN TRANSACTION;
     BEGIN TRY
-        EXEC spDeleteBankAccount @BankAccount, @RaceName
-        EXEC spInsertBankAccount @NewBankAccount, @RaceName
+        UPDATE BankAccount
+        SET BankAccount = @NewBankAccount
+        WHERE BankAccount = @BankAccount AND RaceName = @RaceName;
         COMMIT;
         RETURN;
     END TRY

@@ -87,6 +87,30 @@ namespace StraviaTEC_API.Controllers
             return result.ElementAt(0);
         }
 
+        // GET: api/Sportmen
+        [HttpGet("Login/{username},{password}")]
+        public async Task<IActionResult> Login (string username, string password)
+        {
+            if (_context.Sportmen == null)
+            {
+                return NotFound();
+            }
+
+            try { 
+                var result = await _context.Database.ExecuteSqlRawAsync(
+                        "EXEC spLogin @Username, @Password",
+                        new SqlParameter("@Username", username),
+                        new SqlParameter("@Password", password)
+                        );
+                return Ok(true);
+            }
+            catch (Exception ex) {
+
+                throw ex;
+            }
+        
+        }
+
         // PUT: api/Sportmen/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
