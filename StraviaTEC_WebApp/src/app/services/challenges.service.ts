@@ -17,7 +17,7 @@ export class ChallengesService {
   }
 
   getChallengesByManager(username: string): Observable<Challenge[]> {
-    return this.http.get<Challenge[]>(this.baseApiUrl + '/api/Challenges/mode/' + username);
+    return this.http.get<Challenge[]>(this.baseApiUrl + '/api/Challenges/byManager/' + username);
   }
 
   getChallenge(id: string): Observable<Challenge> {

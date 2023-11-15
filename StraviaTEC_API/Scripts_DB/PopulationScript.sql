@@ -352,6 +352,16 @@ EXEC spInsertSportman 'Seballoll', 'Sebastian', 'Chen', 'Cerdas', '2002-09-09', 
 Go
 
 -- ================================================
+--                  Sponsors
+-- ================================================
+
+EXEC spInsertSponsor 'Red Bull', 'Kimberly Brooks', 22186442, 'https://firebasestorage.googleapis.com/v0/b/straviatec-942e3.appspot.com/o/sponsors%2Fred-bull-logo.png?alt=media&token=883b513b-c286-4e40-9d1a-fe93af70d263';
+GO
+EXEC spInsertSponsor 'The North Face', 'Bracken Darrell', 22245312, 'https://firebasestorage.googleapis.com/v0/b/straviatec-942e3.appspot.com/o/sponsors%2Fthe-north-face-logo.png?alt=media&token=5005cae9-d50d-4b75-b354-74ca65ef9c44';
+GO
+
+
+-- ================================================
 --                  ActivityTypes
 -- ================================================
 
@@ -398,35 +408,39 @@ Go
 EXEC spInsertGroup 'Sahara Runners', 'Jose216';
 Go
 EXEC spInsertGroup 'Running Cows', 'Camanem';
+Go
 
 -- ================================================
 --                  Challenges
 -- ================================================
 
 GO
-EXEC spInsertChallenge  'TEC Challenge 2019', 68, false, '2019-11-11T00:00:00.000Z', '2019-12-12T00:00:00.000Z', true, 0, 'Jose216'
+EXEC spInsertChallenge  'TEC Challenge 2019', 68, false, '2019-11-11T00:00:00.000Z', '2019-12-12T00:00:00.000Z', true, 0, 'Jose216';
 GO
-EXEC spInsertChallenge  'TEC Challenge 2023', 68, false, '2023-11-11T00:00:00.000Z', '2023-12-12T00:00:00.000Z', true, 0, 'Jose216'
+EXEC spInsertChallenge  'TEC Challenge 2023', 68, false, '2023-11-11T00:00:00.000Z', '2023-12-12T00:00:00.000Z', true, 0, 'Jose216';
 GO
-EXEC spInsertChallenge  'TEC Challenge 2024', 68, false, '2024-11-11T00:00:00.000Z', '2024-12-12T00:00:00.000Z', true, 0, 'Jose216'
+EXEC spInsertChallenge  'TEC Challenge 2024', 68, false, '2024-11-11T00:00:00.000Z', '2024-12-12T00:00:00.000Z', true, 0, 'Jose216';
+Go
 
 -- ================================================
 --                    Races
 -- ================================================
 
 GO
-EXEC spInsertRace 'End of Semester Race', 500, '2019-12-04T10:00:00.000Z', false, 'GpxPath', 0, 'Seballoll'
+EXEC spInsertRace 'End of Semester Race', 500, '2019-12-04T10:00:00.000Z', false, 'GpxPath', 0, 'Seballoll';
 -- Add RaceCategory:
 GO
 EXEC spAddRaceCategory 'End of Semester Race', 0
 GO
 EXEC spAddRaceCategory 'End of Semester Race', 1
+Go
 
 -- ================================================
 --                BankAccounts
 -- ================================================
 
 GO
-EXEC spInsertBankAccount 'CR05015202001026284066', 'End of Semester Race'
+EXEC spInsertBankAccount 'CR05015202001026284066', 'End of Semester Race';
 GO
-EXEC spInsertBankAccount 'CR05015202001026284067', 'End of Semester Race'
+EXEC spInsertBankAccount 'CR05015202001026284067', 'End of Semester Race';
+Go

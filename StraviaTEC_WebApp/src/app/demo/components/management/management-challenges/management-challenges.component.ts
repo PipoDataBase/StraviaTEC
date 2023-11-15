@@ -260,7 +260,7 @@ export class ManagementChallengesComponent {
 
     const challengeFound = this.challenges.find((c) => c.name == challenge.name);
     if (challengeFound) {
-      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Challenge name: ' + challenge.name + ' already exists.' });
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Challenge name: ' + challenge.name + ' already exists or it was created by another organizer.' });
       return false;
     }
 
