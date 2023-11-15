@@ -80,6 +80,19 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spGetChallengeSponsors
+    @ChallengeName varchar(20)
+AS
+BEGIN 
+    SELECT S.TradeName, S.LegalRepresentant, S.Phone, S.LogoPath
+    FROM Sponsor S INNER JOIN ChallengeSponsor CS
+    ON S.TradeName = CS.SponsorTradeName
+    WHERE ChallengeName = @ChallengeName
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
 Go
 CREATE PROCEDURE spInsertChallenge
     @Name varchar(20),
@@ -117,7 +130,27 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
-Go
+
+GO
+CREATE PROCEDURE spAddChallengeSponsor
+    @SponsorTradeName varchar(20),
+    @ChallengeName varchar(20)
+AS
+BEGIN
+    BEGIN TRY
+        INSERT INTO ChallengeSponsor (SponsorTradeName, ChallengeName)
+        VALUES (@SponsorTradeName, @ChallengeName);
+        RETURN;
+    END TRY
+    BEGIN CATCH
+        PRINT 'Error adding Challenge Sponsor ' + ERROR_MESSAGE();
+        THROW 51000, 'Error adding ChallengeSponsor', 1;
+    END CATCH;
+END
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
 CREATE PROCEDURE spUpdateChallenge
     @Name varchar(20),
     @Goal numeric(12,3),

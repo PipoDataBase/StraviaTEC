@@ -27,10 +27,10 @@ namespace StraviaTEC_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Challenge>>> GetChallenges()
         {
-          if (_context.Challenges == null)
-          {
-              return NotFound();
-          }
+            if (_context.Challenges == null)
+            {
+                return NotFound();
+            }
             return await _context.Challenges.FromSqlRaw("spGetChallenges").ToListAsync();
         }
 
@@ -64,21 +64,40 @@ namespace StraviaTEC_API.Controllers
                 return NotFound();
             }
 
-            try { 
+            try {
                 var result = await _context.Challenges.FromSqlRaw(
                     "EXEC spGetChallengeByManager @Username",
                     new SqlParameter("@Username", username)
                     ).ToListAsync();
 
-                    return Ok(result);
-                }
+                return Ok(result);
+            }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 throw ex;
             }
+        }
 
-            
+        // GET: api/Challenges
+        [HttpGet("GetSponsors/{challengeName}")]
+        public async Task<ActionResult<IEnumerable<Sponsor>>> GetChallengeSponsors(string challengeName)
+        {
+            if (_context.Challenges == null)
+            {
+                return NotFound();
+            }
+            var result = await _context.Sponsors.FromSqlRaw(
+                "EXEC spGetChallengeSponsors @ChallengeName",
+                new SqlParameter("@ChallengeName", challengeName)
+                ).ToListAsync();
+
+            if (result.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
         }
 
         // PUT: api/Challenges/5
@@ -149,8 +168,32 @@ namespace StraviaTEC_API.Controllers
             {
                 throw;
             }
+        }
 
-            
+
+        // POST: api/Challenges
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("AddSponsor/{sponsorTradeName}, {challengeName}")]
+        public async Task<ActionResult<Challenge>> PostChallengeSponsor(string sponsorTradeName, string challengeName)
+        {
+            if (_context.Challenges == null)
+            {
+                return Problem("Entity set 'StraviaTecContext.Challenges'  is null.");
+            }
+
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC spAddChallengeSponsor @SponsorTradeName, @ChallengeName",
+                    new SqlParameter("@SponsorTradeName", sponsorTradeName),
+                    new SqlParameter("@ChallengeName", challengeName)
+                    );
+                return Ok(true);
+            }
+            catch (DbUpdateException)
+            {
+                throw;
+            }
         }
 
         // DELETE: api/Challenges/5
