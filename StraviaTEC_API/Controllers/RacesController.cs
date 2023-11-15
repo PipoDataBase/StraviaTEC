@@ -61,6 +61,20 @@ namespace StraviaTEC_API.Controllers
                     ).ToListAsync();
         }
 
+        // GET: api/Races
+        [HttpGet("BankAccounts/{raceName}")]
+        public async Task<ActionResult<IEnumerable<BankAccount>>> GetRaceBankAccounts(string raceName)
+        {
+            if (_context.Races == null)
+            {
+                return NotFound();
+            }
+            return await _context.BankAccounts.FromSqlRaw(
+                    "EXEC spGetRaceBankAccounts @RaceName",
+                    new SqlParameter("@RaceName", raceName)
+                    ).ToListAsync();
+        }
+
         // GET: api/Races/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Race>> GetRace(string id)

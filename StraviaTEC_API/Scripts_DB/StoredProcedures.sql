@@ -589,7 +589,19 @@ AS
 BEGIN
     SELECT * FROM Race where Name = @Name;
 END;
+
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spGetRaceBankAccounts
+    @RaceName varchar(20)
+AS
+BEGIN
+    SELECT * FROM BankAccount WHERE RaceName = @RaceName;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
 Go
 CREATE PROCEDURE spInsertRace
     @Name varchar(20),
@@ -744,6 +756,7 @@ BEGIN
     WHERE Id = @Id;
 END;
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
+
 Go
 -- ================================================
 --                  BankAccount
@@ -767,7 +780,7 @@ END;
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 Go
 CREATE PROCEDURE spInsertBankAccount
-	@BankAccount varchar(20),
+	@BankAccount varchar(22),
 	@RaceName varchar(20)
 AS
 BEGIN
@@ -778,7 +791,7 @@ END;
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 Go
 CREATE PROCEDURE spDeleteBankAccount
-    @BankAccount varchar(20),
+    @BankAccount varchar(22),
 	@RaceName varchar(20)
 AS
 BEGIN

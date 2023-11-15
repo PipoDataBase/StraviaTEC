@@ -125,7 +125,7 @@ CREATE TABLE Category (
 );
 
 CREATE TABLE BankAccount (
-	BankAccount varchar(20) NOT NULL,
+	BankAccount varchar(22) NOT NULL,
 	RaceName varchar(20) NOT NULL,
 	PRIMARY KEY (BankAccount, RaceName)
 );

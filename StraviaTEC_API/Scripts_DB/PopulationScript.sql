@@ -421,3 +421,12 @@ GO
 EXEC spAddRaceCategory 'End of Semester Race', 0
 GO
 EXEC spAddRaceCategory 'End of Semester Race', 1
+
+-- ================================================
+--                BankAccounts
+-- ================================================
+
+GO
+EXEC spInsertBankAccount 'CR05015202001026284066', 'End of Semester Race'
+GO
+EXEC spInsertBankAccount 'CR05015202001026284067', 'End of Semester Race'
