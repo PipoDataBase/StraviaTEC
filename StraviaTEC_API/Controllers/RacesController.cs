@@ -49,7 +49,7 @@ namespace StraviaTEC_API.Controllers
 
         // GET: api/Races
         [HttpGet("Categories/{raceName}")]
-        public async Task<ActionResult<IEnumerable<Category>>> GetGetRaceCategoriesByName(string raceName)
+        public async Task<ActionResult<IEnumerable<Category>>> GetRaceCategoriesByName(string raceName)
         {
             if (_context.Races == null)
             {
@@ -57,6 +57,20 @@ namespace StraviaTEC_API.Controllers
             }
             return await _context.Categories.FromSqlRaw(
                     "EXEC spGetRaceCategoriesByName @RaceName",
+                    new SqlParameter("@RaceName", raceName)
+                    ).ToListAsync();
+        }
+
+        // GET: api/Races
+        [HttpGet("Sponsors/{raceName}")]
+        public async Task<ActionResult<IEnumerable<Sponsor>>> GetRaceSponsors(string raceName)
+        {
+            if (_context.Races == null)
+            {
+                return NotFound();
+            }
+            return await _context.Sponsors.FromSqlRaw(
+                    "EXEC spGetRaceSponsors @RaceName",
                     new SqlParameter("@RaceName", raceName)
                     ).ToListAsync();
         }
@@ -184,6 +198,30 @@ namespace StraviaTEC_API.Controllers
                                     "EXEC spAddRaceCategory @RaceName, @CategoryId",
                                     new SqlParameter("@RaceName", raceName),
                                     new SqlParameter("@CategoryId", categoryId)
+                                    );
+                return Ok(true);
+            }
+            catch (DbUpdateException)
+            {
+                throw;
+            }
+        }
+
+        // POST: api/Races
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("addRaceSponsor/{SponsorTradeName},{RaceName}")]
+        public async Task<ActionResult<Race>> PostRaceSponsor(string SponsorTradeName, string RaceName)
+        {
+            if (_context.Races == null)
+            {
+                return Problem("Entity set 'StraviaTecContext.Races'  is null.");
+            }
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                                    "EXEC spAddRaceSponsor @SponsorTradeName, @RaceName",
+                                    new SqlParameter("@SponsorTradeName", SponsorTradeName),
+                                    new SqlParameter("@RaceName", RaceName)
                                     );
                 return Ok(true);
             }

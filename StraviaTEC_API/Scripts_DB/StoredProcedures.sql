@@ -582,6 +582,19 @@ END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
+GO
+CREATE PROCEDURE spGetRaceSponsors
+    @RaceName varchar(20)
+AS
+BEGIN 
+    SELECT S.TradeName, S.LegalRepresentant, S.Phone, S.LogoPath
+    FROM Sponsor S INNER JOIN RaceSponsor RS
+    ON S.TradeName = RS.SponsorTradeName
+    WHERE RaceName = @RaceName
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
 Go
 CREATE PROCEDURE spGetRace
     @Name varchar(20)
@@ -662,9 +675,30 @@ BEGIN
             RETURN;
         END TRY
         BEGIN CATCH
+            PRINT 'Error adding RaceCategory ' + ERROR_MESSAGE();
+            THROW 51000, 'Error adding RaceCategory', 1;
         END CATCH;
 END;
 
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spAddRaceSponsor
+    @SponsorTradeName varchar(20),
+    @RaceName varchar(20)
+AS
+BEGIN
+    BEGIN TRY
+        INSERT INTO RaceSponsor (SponsorTradeName, RaceName)
+        VALUES (@SponsorTradeName, @RaceName);
+        RETURN;
+    END TRY
+    BEGIN CATCH
+        PRINT 'Error adding RaceSponsor ' + ERROR_MESSAGE();
+        THROW 51000, 'Error adding RaceSponsor', 1;
+    END CATCH;
+END
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
