@@ -86,6 +86,31 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
+        // PUT: api/BankAccounts
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("{bankAccount},{raceName}, {newBankAccount}")]
+        public async Task<ActionResult<BankAccount>> PutBankAccount(string bankAccount, string raceName, string newBankAccount)
+        {
+            if (_context.BankAccounts == null)
+            {
+                return Problem("Entity set 'StraviaTecContext.BankAccounts'  is null.");
+            }
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                        "EXEC spUpdateBankAccount @BankAccount, @RaceName, @NewBankAccount",
+                        new SqlParameter("@BankAccount", bankAccount),
+                        new SqlParameter("@RaceName", raceName),
+                        new SqlParameter("@NewBankAccount", newBankAccount)
+                        );
+                return Ok(true);
+            }
+            catch (DbUpdateException)
+            {
+                throw;
+            }
+        }
+
         // DELETE: api/BankAccounts/5
         [HttpDelete]
         public async Task<IActionResult> DeleteBankAccount(BankAccount bankAccount)

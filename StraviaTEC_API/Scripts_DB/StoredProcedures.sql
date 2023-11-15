@@ -823,6 +823,30 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spUpdateBankAccount
+	@BankAccount varchar(22),
+	@RaceName varchar(20),
+    @NewBankAccount varchar(22)
+AS
+BEGIN
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        EXEC spDeleteBankAccount @BankAccount, @RaceName
+        EXEC spInsertBankAccount @NewBankAccount, @RaceName
+        COMMIT;
+        RETURN;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        PRINT 'BankAccount Update Failed';
+        THROW 51000, 'ERROR: BankAccount Update Failed', 1;
+    END CATCH;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
 Go
 CREATE PROCEDURE spDeleteBankAccount
     @BankAccount varchar(22),
