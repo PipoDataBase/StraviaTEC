@@ -421,6 +421,10 @@ EXEC spInsertChallenge  'TEC Challenge 2023', 68, false, '2023-11-11T00:00:00.00
 GO
 EXEC spInsertChallenge  'TEC Challenge 2024', 68, false, '2024-11-11T00:00:00.000Z', '2024-12-12T00:00:00.000Z', true, 0, 'Jose216';
 Go
+EXEC spInsertChallenge  'Challenge 1', 12, false, '2023-11-15T00:00:00.000Z', '2023-11-29T00:00:00.000Z', true, 0, 'Emarin19';
+Go
+EXEC spInsertChallenge  'Challenge 2', 25, true, '2023-11-16T00:00:00.000Z', '2023-11-30T00:00:00.000Z', false, 2, 'Emarin19';
+Go
 
 -- ================================================
 --                    Races

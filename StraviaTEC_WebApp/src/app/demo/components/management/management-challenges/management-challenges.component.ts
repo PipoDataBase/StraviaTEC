@@ -8,6 +8,7 @@ import { Challenge } from 'src/app/models/challenge.module';
 import { ChallengesService } from 'src/app/services/challenges.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Sponsor } from 'src/app/models/sponsor.module';
+import { SponsorsService } from 'src/app/services/sponsors.service';
 
 @Component({
   selector: 'app-management-challenges',
@@ -27,14 +28,16 @@ export class ManagementChallengesComponent {
   selectedDeepHeight: boolean = false;
 
   challenges: Challenge[] = [];
-  selectedChallenges: Challenge[] = [];
-  challenge: Challenge = {};
-  activityTypes: ActivityType[] = [];
   sponsors: Sponsor[] = [];
+  selectedChallenges: Challenge[] = [];
+  selectedSponsors: Sponsor[] = [];
+  challenge: Challenge = {};
+  sponsor: Sponsor = {};
+  activityTypes: ActivityType[] = [];
 
   submitted: boolean = false;
 
-  constructor(private messageService: MessageService, public sharedService: SharedService, private activityTypesService: ActivityTypesService, private challengesService: ChallengesService, private storage: AngularFireStorage) { }
+  constructor(private messageService: MessageService, public sharedService: SharedService, private activityTypesService: ActivityTypesService, private challengesService: ChallengesService, private sponsorsService: SponsorsService, private storage: AngularFireStorage) { }
 
   updateChallenges() {
     this.challengesService.getChallengesByManager(this.sharedService.getUsername()).subscribe({
@@ -59,20 +62,14 @@ export class ManagementChallengesComponent {
       }
     })
 
-    this.sponsors = [
-      {
-        tradeName: 'Red Bull',
-        legalRepresentant: 'Kimberly Brooks',
-        phone: 71448465,
-        logoPath: '../../../../../assets/straviatec/red-bull-logo.png'
+    this.sponsorsService.getSponsors().subscribe({
+      next: (sponsors) => {
+        this.sponsors = sponsors;
       },
-      {
-        tradeName: 'The North Face',
-        legalRepresentant: 'Bracken Darrell',
-        phone: 22245312,
-        logoPath: '../../../../../assets/straviatec/the-north-face-logo.png'
+      error: (response) => {
+        console.log(response);
       }
-    ]
+    })
   }
 
   openNew() {
@@ -88,6 +85,15 @@ export class ManagementChallengesComponent {
   challengeSponsor(challenge: Challenge) {
     this.challenge = { ...challenge };
     this.challengeSponsorDialog = true;
+
+    this.challengesService.getChallengeSponsors(this.challenge.name).subscribe({
+      next: (sponsors) => {
+        this.selectedSponsors = sponsors;
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
   }
 
   editChallenge(challenge: Challenge) {
@@ -157,6 +163,7 @@ export class ManagementChallengesComponent {
 
   hideChallengeSponsorDialog() {
     this.challengeSponsorDialog = false;
+    this.selectedSponsors = [];
   }
 
   saveChallenge() {
@@ -230,6 +237,28 @@ export class ManagementChallengesComponent {
   }
 
   saveChallengeSponsor() {
+    this.challengesService.deleteChallengeSponsors(this.challenge.name).subscribe({
+      next: (response) => {
+        if (response) {
+          for (var sponsor of this.selectedSponsors) {
+            this.challengesService.postChallengeSponsor(sponsor.tradeName, this.challenge.name).subscribe({
+              next: (response) => {
+              },
+              error: (response) => {
+                console.log(response);
+              }
+            })
+          }
+        }
+
+        this.selectedSponsors = [];
+        this.challenge = {}
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
+
     this.challengeSponsorDialog = false;
   }
 

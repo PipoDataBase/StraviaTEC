@@ -1,6 +1,6 @@
 export interface Sponsor {
-    tradeName: string;
-    legalRepresentant: string;
-    phone: number;
-    logoPath: string;
+    tradeName?: string;
+    legalRepresentant?: string;
+    phone?: number;
+    logoPath?: string;
 }

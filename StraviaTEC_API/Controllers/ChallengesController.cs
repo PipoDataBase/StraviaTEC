@@ -56,7 +56,7 @@ namespace StraviaTEC_API.Controllers
             return Ok(result[0]);
         }
 
-        [HttpGet("byManager/{username}")]
+        [HttpGet("ByManager/{username}")]
         public async Task<dynamic> GetChallengesByManager(string username)
         {
             if (_context.Challenges == null)
@@ -72,10 +72,9 @@ namespace StraviaTEC_API.Controllers
 
                 return Ok(result);
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine(ex.Message);
-                throw ex;
+                throw;
             }
         }
 
@@ -173,7 +172,7 @@ namespace StraviaTEC_API.Controllers
 
         // POST: api/Challenges
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("AddSponsor/{sponsorTradeName}, {challengeName}")]
+        [HttpPost("AddSponsor/{sponsorTradeName}/{challengeName}")]
         public async Task<ActionResult<Challenge>> PostChallengeSponsor(string sponsorTradeName, string challengeName)
         {
             if (_context.Challenges == null)
@@ -216,6 +215,29 @@ namespace StraviaTEC_API.Controllers
                     );
 
             return Ok(true);
+        }
+
+        [HttpDelete("DeleteSponsors/{challengeName}")]
+        public async Task<IActionResult> DeleteChallengeSponsors(string challengeName)
+        {
+            if (_context.Challenges == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                   "EXEC spDeleteChallengeSponsors @ChallengeName",
+                   new SqlParameter("@ChallengeName", challengeName)
+                   );
+
+                return Ok(true);
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         private bool ChallengeExists(string id)

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Challenge } from '../models/challenge.module';
+import { Sponsor } from '../demo/components/inscriptions/inscriptions-races/inscriptions-races.component';
 
 @Injectable({
   providedIn: 'root'
@@ -16,16 +17,24 @@ export class ChallengesService {
     return this.http.get<Challenge[]>(this.baseApiUrl + '/api/Challenges');
   }
 
-  getChallengesByManager(username: string): Observable<Challenge[]> {
-    return this.http.get<Challenge[]>(this.baseApiUrl + '/api/Challenges/byManager/' + username);
-  }
-
   getChallenge(id: string): Observable<Challenge> {
     return this.http.get<Challenge>(this.baseApiUrl + '/api/Challenges/' + id);
   }
 
+  getChallengesByManager(username: string): Observable<Challenge[]> {
+    return this.http.get<Challenge[]>(this.baseApiUrl + '/api/Challenges/ByManager/' + username);
+  }
+
+  getChallengeSponsors(challengeName: string): Observable<Sponsor[]> {
+    return this.http.get<Sponsor[]>(this.baseApiUrl + '/api/Challenges/GetSponsors/' + challengeName);
+  }
+
   postChallenge(username: string, challenge: Challenge): Observable<boolean> {
     return this.http.post<boolean>(this.baseApiUrl + '/api/Challenges/' + username, challenge);
+  }
+
+  postChallengeSponsor(sponsorTradeName: string, challengeName: string): Observable<boolean> {
+    return this.http.post<boolean>(this.baseApiUrl + `/api/Challenges/AddSponsor/${sponsorTradeName}/${challengeName}`, null);
   }
 
   putChallenge(id: string, challenge: Challenge): Observable<boolean> {
@@ -34,5 +43,9 @@ export class ChallengesService {
 
   deleteChallenge(id: string): Observable<boolean> {
     return this.http.delete<boolean>(this.baseApiUrl + '/api/Challenges/' + id);
+  }
+
+  deleteChallengeSponsors(challengeName: string): Observable<boolean> {
+    return this.http.delete<boolean>(this.baseApiUrl + '/api/Challenges/DeleteSponsors/' + challengeName);
   }
 }

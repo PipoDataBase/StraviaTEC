@@ -179,8 +179,20 @@ AS
 BEGIN
 	DELETE FROM ChallengeSportmanManager
 	WHERE ChallengeName = @Name;
+	DELETE FROM ChallengeSponsor
+	WHERE ChallengeName = @Name;
     DELETE FROM Challenge
     WHERE Name = @Name;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spDeleteChallengeSponsors
+    @ChallengeName varchar(20)
+AS
+BEGIN
+	DELETE FROM ChallengeSponsor
+	WHERE ChallengeName = @ChallengeName;
 END;
 
 
