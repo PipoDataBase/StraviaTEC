@@ -11,6 +11,17 @@ WHERE GETDATE() < Race.Date;
 --                    Challenge
 -- ================================================
 
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+Go
+CREATE VIEW vwAvailableChallenges
+AS SELECT Challenge.Name, Challenge.Goal, Challenge.Private, Challenge.StartDate, Challenge.EndDate, Challenge.Deep, ActivityType.Type 
+FROM Challenge INNER JOIN ActivityType
+ON Challenge.Type = ActivityType.Id
+WHERE GETDATE() < Challenge.EndDate;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
 Go
 CREATE VIEW vwFutureChallenges
 AS SELECT Challenge.Name, Challenge.Goal, Challenge.Private, Challenge.StartDate, Challenge.EndDate, Challenge.Deep, ActivityType.Type 

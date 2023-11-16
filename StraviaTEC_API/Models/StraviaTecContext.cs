@@ -39,6 +39,8 @@ public partial class StraviaTecContext : DbContext
 
     public virtual DbSet<VwActiveChallenge> VwActiveChallenges { get; set; }
 
+    public virtual DbSet<VwAvailableChallenge> VwAvailableChallenges { get; set; }
+
     public virtual DbSet<VwChallengesByManager> VwChallengesByManagers { get; set; }
 
     public virtual DbSet<VwFutureChallenge> VwFutureChallenges { get; set; }
@@ -48,11 +50,11 @@ public partial class StraviaTecContext : DbContext
     public virtual DbSet<VwPastChallenge> VwPastChallenges { get; set; }
 
     public virtual DbSet<VwSportmanNationality> VwSportmanNationalities { get; set; }
-    /*
-  protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+/*
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-      => optionsBuilder.UseSqlServer("server=DESKTOP-VEB3CKO; database=StraviaTEC; integrated security=true; Encrypt=False;");
-    */
+        => optionsBuilder.UseSqlServer("server=DESKTOP-VEB3CKO; database=StraviaTEC; integrated security=true; Encrypt=False;");
+*/
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Activity>(entity =>
@@ -523,6 +525,23 @@ public partial class StraviaTecContext : DbContext
             entity
                 .HasNoKey()
                 .ToView("vwActiveChallenges");
+
+            entity.Property(e => e.EndDate).HasColumnType("datetime");
+            entity.Property(e => e.Goal).HasColumnType("numeric(12, 3)");
+            entity.Property(e => e.Name)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.StartDate).HasColumnType("datetime");
+            entity.Property(e => e.Type)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<VwAvailableChallenge>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vwAvailableChallenges");
 
             entity.Property(e => e.EndDate).HasColumnType("datetime");
             entity.Property(e => e.Goal).HasColumnType("numeric(12, 3)");

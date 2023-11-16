@@ -34,6 +34,17 @@ namespace StraviaTEC_API.Controllers
             return await _context.Challenges.FromSqlRaw("spGetChallenges").ToListAsync();
         }
 
+        // GET: api/Challenges
+        [HttpGet("vwAvailableChallenges")]
+        public async Task<ActionResult<IEnumerable<VwAvailableChallenge>>> GetAvailableChallenges()
+        {
+            if (_context.Challenges == null)
+            {
+                return NotFound();
+            }
+            return await _context.VwAvailableChallenges.FromSqlRaw("spGetAvailableChallenges").ToListAsync();
+        }
+
         // GET: api/Challenges/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Challenge>> GetChallenge(string id)

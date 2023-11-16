@@ -69,6 +69,15 @@ END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
+GO
+CREATE PROCEDURE spGetAvailableChallenges
+AS
+BEGIN
+    SELECT * FROM vwAvailableChallenges;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
 Go
 CREATE PROCEDURE spGetChallengeByManager
 @Username varchar(20)
