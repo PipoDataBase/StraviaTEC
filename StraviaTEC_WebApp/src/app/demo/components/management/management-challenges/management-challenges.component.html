@@ -163,7 +163,6 @@
 
         <p-dialog [(visible)]="challengeSponsorDialog" [style]="{width: '50%'}" header="Sponsors" [modal]="true"
             class="p-fluid">
-            <p-toast></p-toast>
             <p-table #dt2 [value]="sponsors" responsiveLayout="scroll" [rows]="5"
                 [globalFilterFields]="['tradeName', 'legalRepresentant', 'phone']" [paginator]="true"
                 [rowsPerPageOptions]="[5,10,20]" [showCurrentPageReport]="true"

@@ -256,6 +256,7 @@ export class ManagementChallengesComponent {
 
         this.selectedSponsors = [];
         this.challenge = {}
+        this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Challenge sponsors updated.', life: 3000 });
       },
       error: (response) => {
         console.log(response);

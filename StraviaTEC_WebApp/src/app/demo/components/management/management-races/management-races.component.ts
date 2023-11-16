@@ -21,7 +21,6 @@ import { forkJoin } from 'rxjs';
 })
 export class ManagementRacesComponent {
   isNewRace: boolean = false;
-  isViewMoreInfo: boolean = false;
   raceDialog: boolean = false;
   raceRouteDialog: boolean = false;
   raceMoreInfoDialog: boolean = false;
@@ -140,7 +139,15 @@ export class ManagementRacesComponent {
   seeMoreInfo(race: Race) {
     this.race = { ...race };
     this.raceMoreInfoDialog = true;
-    this.isViewMoreInfo = true;
+
+    this.racesService.getRaceSponsors(this.race.name).subscribe({
+      next: (sponsors) => {
+        this.selectedSponsors = sponsors;
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
   }
 
   editRace(race: Race) {
@@ -221,6 +228,7 @@ export class ManagementRacesComponent {
 
   hideRaceMoreInfoDialog() {
     this.raceMoreInfoDialog = false;
+    this.selectedSponsors = [];
   }
 
   saveRace() {
@@ -290,6 +298,33 @@ export class ManagementRacesComponent {
     }
 
     this.raceDialog = false;
+  }
+
+  saveMoreInfo() {
+    this.racesService.deleteRaceSponsors(this.race.name).subscribe({
+      next: (response) => {
+        if (response) {
+          for (var sponsor of this.selectedSponsors) {
+            this.racesService.postRaceSponsor(sponsor.tradeName, this.race.name).subscribe({
+              next: (response) => {
+              },
+              error: (response) => {
+                console.log(response);
+              }
+            })
+          }
+        }
+
+        this.selectedSponsors = [];
+        this.race = {}
+        this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Race sponsors updated.', life: 3000 });
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
+
+    this.raceMoreInfoDialog = false;
   }
 
   onGlobalFilter(table: Table, event: Event) {
