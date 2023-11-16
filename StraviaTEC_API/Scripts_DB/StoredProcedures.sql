@@ -1103,13 +1103,17 @@ END;
 Go
 CREATE PROCEDURE spInsertBill
 	@PhotoPath varchar(MAX),
-	@Accepted bit,
 	@Username varchar(20),
 	@RaceName varchar(20)
 AS
 BEGIN
-    INSERT INTO Bill (PhotoPath, Accepted, Username, RaceName)
-    VALUES (@PhotoPath, @Accepted, @Username, @RaceName);
+    BEGIN TRY
+        INSERT INTO Bill (PhotoPath, Username, RaceName)
+        VALUES (@PhotoPath, @Username, @RaceName);
+    END TRY
+    BEGIN CATCH
+        THROW 51000, 'ERROR: Couldnt Insert Bill', 1;
+    END CATCH;
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>

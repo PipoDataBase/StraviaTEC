@@ -104,7 +104,7 @@ CREATE TABLE RaceSportmanManager (
 CREATE TABLE Bill (
 	Id INT IDENTITY(0,1),
 	PhotoPath varchar(MAX),
-	Accepted bit NOT NULL,
+	Accepted bit DEFAULT 0,
 	Username varchar(20) NOT NULL,
 	RaceName varchar(20) NOT NULL,
 	PRIMARY KEY (Id)

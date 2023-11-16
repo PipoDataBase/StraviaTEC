@@ -102,24 +102,16 @@ namespace StraviaTEC_API.Controllers
             try
             {
                 await _context.Database.ExecuteSqlRawAsync(
-                    "EXEC spInsertBill @PhotoPath, @Accepted, @Username, @RaceName",
+                    "EXEC spInsertBill @PhotoPath, @Username, @RaceName",
                     new SqlParameter("@PhotoPath", bill.PhotoPath),
-                    new SqlParameter("@Accepted", bill.Accepted),
                     new SqlParameter("@Username", bill.Username),
                     new SqlParameter("@RaceName", bill.RaceName)
                     );
-                return Ok("Bill Created");
+                return Ok(true);
             }
             catch (DbUpdateException)
             {
-                if (BillExists(bill.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
         }
 
@@ -136,7 +128,7 @@ namespace StraviaTEC_API.Controllers
                 new SqlParameter("@Id", id)
                 );
 
-            return Ok("Bill Deleted");
+            return Ok(true);
         }
 
         private bool BillExists(int id)
