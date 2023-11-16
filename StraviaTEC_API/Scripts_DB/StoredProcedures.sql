@@ -361,6 +361,36 @@ END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
+GO
+CREATE PROCEDURE spAddFriend
+    @Username varchar(20),
+    @FriendUsername varchar(20)
+AS
+BEGIN
+    BEGIN TRY
+        INSERT INTO Friend (Username, FriendUsername)
+        VALUES (@Username, @FriendUsername)
+    END TRY
+    BEGIN CATCH
+        THROW 51000, 'ERROR: couldnt add friend', 1;
+    END CATCH
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spGetFriends
+    @Username varchar(20)
+AS 
+BEGIN
+    SELECT S.Username, S.Name, S.LastName1, S.LastName2, S.BirthDate, S.PhotoPath, S.Nationality
+    FROM vwSportmanNationality S INNER JOIN Friend F
+    ON S.Username = F.FriendUsername
+    WHERE F.Username = @Username 
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
 Go
 -- ================================================
 --                  Nationality

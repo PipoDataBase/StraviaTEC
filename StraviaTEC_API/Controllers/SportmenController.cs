@@ -129,6 +129,27 @@ namespace StraviaTEC_API.Controllers
         }
 
         // GET: api/Sportmen
+        [HttpGet("GetFriends/{username}")]
+        public async Task<ActionResult<IEnumerable<VwSportmanNationality>>> GetFriends(string username)
+        {
+            if (_context.Sportmen == null)
+            {
+                return NotFound();
+            }
+            var result = await _context.VwSportmanNationalities.FromSqlRaw(
+                    "EXEC spGetFriends @Username",
+                    new SqlParameter("@Username", username)
+                    ).ToListAsync();
+
+            if (result.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+
+            return result;
+        }
+
+        // GET: api/Sportmen
         [HttpGet("Login/{username}/{password}")]
         public async Task<IActionResult> Login (string username, string password)
         {
@@ -242,6 +263,30 @@ namespace StraviaTEC_API.Controllers
                 "EXEC spAddChallengeSportmanParticipant @ChallengeName, @SportmanUsername",
                     new SqlParameter("@ChallengeName", challengeName),
                     new SqlParameter("@SportmanUsername", username)
+                );
+                return Ok(true);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        // POST: api/Sportmen
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("AddFriend/{username}/{friendUsername}")]
+        public async Task<IActionResult> PostAddFriend(string username, string friendUsername)
+        {
+            if (_context.Sportmen == null)
+            {
+                return Problem("Entity set 'StraviaTecContext.Sportmen'  is null.");
+            }
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                "EXEC spAddFriend @username, @friendUsername",
+                    new SqlParameter("@username", username),
+                    new SqlParameter("@friendUsername", friendUsername)
                 );
                 return Ok(true);
             }
