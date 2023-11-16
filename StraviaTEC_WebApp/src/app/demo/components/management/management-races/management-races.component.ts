@@ -12,6 +12,7 @@ import { BankAccount } from 'src/app/models/bank-account.module';
 import { RacesService } from 'src/app/services/races.service';
 import { SponsorsService } from 'src/app/services/sponsors.service';
 import { forkJoin } from 'rxjs';
+import { BankAccountsService } from 'src/app/services/bank-accounts.service';
 
 @Component({
   selector: 'app-management-races',
@@ -20,12 +21,18 @@ import { forkJoin } from 'rxjs';
   providers: [MessageService]
 })
 export class ManagementRacesComponent {
+  numberRegExp: RegExp = /^[0-9]+$/;
+
   isNewRace: boolean = false;
   raceDialog: boolean = false;
   raceRouteDialog: boolean = false;
   raceMoreInfoDialog: boolean = false;
+  raceBankAccountDialog: boolean = false;
+  raceIBANAccountDialog: boolean = false;
   deleteRaceDialog: boolean = false;
   deleteRacesDialog: boolean = false;
+  deleteBankAccountDialog: boolean = false;
+  deleteBankAccountsDialog: boolean = false;
 
   selectedActivityType: number = -1;
   selectedPrivacy: boolean = false;
@@ -34,32 +41,34 @@ export class ManagementRacesComponent {
   races: Race[] = [];
   sponsors: Sponsor[] = [];
   categories: Category[] = [];
+  bankAccounts: BankAccount[] = [];
 
   selectedRaces: Race[] = [];
   selectedSponsors: Sponsor[] = [];
   selectedCategories: Category[] = [];
+  selectedBankAccounts: BankAccount[] = [];
 
   race: Race = {};
   sponsor: Sponsor = {};
   category: Category = {};
+  bankAccount: BankAccount = {};
 
   activityTypes: ActivityType[] = [];
-  bankAccounts: BankAccount[] = [];
 
   submitted: boolean = false;
 
-  constructor(private messageService: MessageService, public sharedService: SharedService, private activityTypesService: ActivityTypesService, private racesService: RacesService, private categoriesService: CategoriesService, private sponsorsService: SponsorsService) { }
+  constructor(private messageService: MessageService, public sharedService: SharedService, private activityTypesService: ActivityTypesService, private racesService: RacesService, private categoriesService: CategoriesService, private sponsorsService: SponsorsService, private bankAccountsService: BankAccountsService) { }
 
   updateRaces() {
     this.racesService.getRacesByManager(this.sharedService.getUsername()).subscribe({
       next: (races) => {
         this.races = races;
-  
+
         // We create an array of observables for the categories of each race
         const categoryObservables = this.races.map(race =>
           this.racesService.getRaceCategories(race.name)
         );
-  
+
         // We use forkJoin to combine all observables into one
         forkJoin(categoryObservables).subscribe({
           next: (categoriesArray) => {
@@ -77,6 +86,17 @@ export class ManagementRacesComponent {
         console.log(response);
       }
     });
+  }
+
+  updateBankAccounts() {
+    this.racesService.getRaceBankAccounts(this.race.name).subscribe({
+      next: (bankAccounts) => {
+        this.bankAccounts = bankAccounts;
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
   }
 
   ngOnInit() {
@@ -108,17 +128,6 @@ export class ManagementRacesComponent {
         console.log(response);
       }
     })
-
-    this.bankAccounts = [
-      {
-        raceName: 'Race',
-        bankAccount1: 'CR05 0152 0200 1026 2840 66'
-      },
-      {
-        raceName: 'Race',
-        bankAccount1: 'CR05 0152 0200 1026 2840 88'
-      }
-    ]
   }
 
   openNew() {
@@ -127,13 +136,24 @@ export class ManagementRacesComponent {
     this.raceDialog = true;
     this.isNewRace = true;
     this.selectedActivityType = -1;
-    this.selectedCategories = [];
     this.selectedPrivacy = false;
+    this.selectedCategories = [];
+  }
+
+  openNewBankAccount() {
+    this.bankAccount = {};
+    this.raceIBANAccountDialog = true;
   }
 
   seeRoute(race: Race) {
     this.race = { ...race };
     this.raceRouteDialog = true;
+  }
+
+  seeBankAccounts(race: Race) {
+    this.race = { ...race };
+    this.raceBankAccountDialog = true;
+    this.updateBankAccounts();
   }
 
   seeMoreInfo(race: Race) {
@@ -172,6 +192,11 @@ export class ManagementRacesComponent {
     this.race = { ...race };
   }
 
+  deleteBankAccount(bankAccount: BankAccount) {
+    this.deleteBankAccountDialog = true;
+    this.bankAccount = { ...bankAccount };
+  }
+
   confirmDelete() {
     this.deleteRaceDialog = false;
     // Delete race
@@ -191,8 +216,31 @@ export class ManagementRacesComponent {
     this.race = {};
   }
 
+  confirmDeleteBankAccount() {
+    this.deleteBankAccountDialog = false;
+    // Delete bank account
+    this.bankAccountsService.deleteBankAccount(this.bankAccount.bankAccount1, this.bankAccount.raceName).subscribe({
+      next: (response) => {
+        if (response) {
+          this.updateBankAccounts();
+          this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Bank Account Deleted.', life: 3000 });
+        }
+      },
+      error: (response) => {
+        console.log(response);
+        return;
+      }
+    })
+
+    this.bankAccount = {};
+  }
+
   deleteSelectedRaces() {
     this.deleteRacesDialog = true;
+  }
+
+  deleteSelectedBankAccounts() {
+    this.deleteBankAccountsDialog = true;
   }
 
   confirmDeleteSelected() {
@@ -216,10 +264,41 @@ export class ManagementRacesComponent {
     this.selectedRaces = [];
   }
 
+  confirmDeleteSelectedBankAccounts() {
+    this.deleteBankAccountsDialog = false;
+    for (var bankAccount of this.selectedBankAccounts) {
+      // Delete bank account
+      this.bankAccountsService.deleteBankAccount(bankAccount.bankAccount1, bankAccount.raceName).subscribe({
+        next: (response) => {
+          if (response) {
+            this.updateBankAccounts();
+          }
+        },
+        error: (response) => {
+          console.log(response);
+          return;
+        }
+      })
+    }
+
+    this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Bank Accounts Deleted.', life: 3000 });
+    this.selectedBankAccounts = [];
+  }
+
   hideDialog() {
     this.raceDialog = false;
     this.submitted = false;
     this.selectedCategories = [];
+  }
+
+  hideRaceIBANAccountDialog() {
+    this.raceIBANAccountDialog = false;
+  }
+
+  hideRaceBankAccountDialog() {
+    this.raceBankAccountDialog = false;
+    this.bankAccounts = [];
+    this.selectedBankAccounts = [];
   }
 
   hideRaceRouteDialog() {
@@ -300,6 +379,50 @@ export class ManagementRacesComponent {
     this.raceDialog = false;
   }
 
+  saveRaceIBANAccount() {
+    if (!this.bankAccount.bankAccount1) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'The bank account must not be empty.' });
+      return;
+    }
+
+    const length = String(this.bankAccount.bankAccount1).length;
+    if (length < 20 || length > 20) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'The bank account is incorrect.' });
+      return;
+    }
+
+    if (!this.validateBankAccount(this.bankAccount.bankAccount1)) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'The bank account should only have numbers.' });
+      return;
+    }
+
+    const bankAccountFound = this.bankAccounts.find((ba) => ba.bankAccount1 == "CR" + this.bankAccount.bankAccount1);
+    if (bankAccountFound) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Bank account: CR' + this.bankAccount.bankAccount1 + ' already exists.' });
+      return;
+    }
+
+    const newBankAccount: BankAccount = {
+      bankAccount1: "CR" + this.bankAccount.bankAccount1,
+      raceName: this.race.name
+    }
+
+    this.bankAccountsService.postBankAccount(newBankAccount).subscribe({
+      next: (response) => {
+        if (response) {
+          this.bankAccount = {};
+          this.updateBankAccounts();
+          this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'BankAccount Created.', life: 3000 });
+        }
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
+
+    this.raceIBANAccountDialog = false;
+  }
+
   saveMoreInfo() {
     this.racesService.deleteRaceSponsors(this.race.name).subscribe({
       next: (response) => {
@@ -366,6 +489,13 @@ export class ManagementRacesComponent {
     return true;
   }
 
+  validateBankAccount(value: string): boolean {
+    if (this.numberRegExp.test(value)) {
+      return true;
+    }
+    return false;
+  }
+
   aboutCategories(name: string) {
     this.racesService.deleteRaceCategories(name).subscribe({
       next: (response) => {
@@ -373,7 +503,7 @@ export class ManagementRacesComponent {
           const postCategoryObservables = this.selectedCategories.map(category =>
             this.racesService.postRaceCategory(name, category.id)
           );
-  
+
           forkJoin(postCategoryObservables).subscribe({
             next: (response) => {
             },
@@ -382,7 +512,7 @@ export class ManagementRacesComponent {
             }
           });
         }
-  
+
         this.selectedCategories = [];
         this.race = {};
       },

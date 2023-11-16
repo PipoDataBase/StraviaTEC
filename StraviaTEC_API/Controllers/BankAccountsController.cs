@@ -71,7 +71,7 @@ namespace StraviaTEC_API.Controllers
                         new SqlParameter("@BankAccount", bankAccount.BankAccount1),
                         new SqlParameter("@RaceName", bankAccount.RaceName)
                         );
-                return Ok("BankAccount Created");
+                return Ok(true);
             }
             catch (DbUpdateException)
             {
@@ -124,7 +124,23 @@ namespace StraviaTEC_API.Controllers
                 new SqlParameter("@BankAccount", bankAccount.BankAccount1),
                 new SqlParameter("@RaceName", bankAccount.RaceName)
             );
-            return Ok("BankAccount deleted");
+            return Ok(true);
+        }
+
+        // DELETE: api/BankAccounts/5
+        [HttpDelete("{bankAccount}/{raceName}")]
+        public async Task<IActionResult> DeleteBankAccount(string bankAccount, string raceName)
+        {
+            if (_context.BankAccounts == null)
+            {
+                return NotFound();
+            }
+            await _context.Database.ExecuteSqlRawAsync(
+                "EXEC spDeleteBankAccount @BankAccount, @RaceName",
+                new SqlParameter("@BankAccount", bankAccount),
+                new SqlParameter("@RaceName", raceName)
+            );
+            return Ok(true);
         }
 
         private bool BankAccountExists(string id)

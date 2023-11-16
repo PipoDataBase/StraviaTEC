@@ -34,6 +34,7 @@
                         <th pSortableColumn="categories" style="text-align: center;">Categories <p-sortIcon
                                 field="categories"></p-sortIcon></th>
                         <th pSortableColumn="route" style="text-align: center;">Route</th>
+                        <th pSortableColumn="bankAccount" style="text-align: center;">BA</th>
                         <th pSortableColumn="date" style="text-align: center;">Date <p-sortIcon
                                 field="date"></p-sortIcon></th>
                         <th pSortableColumn="inscriptionPrice" style="text-align: center;">Price <p-sortIcon
@@ -49,7 +50,7 @@
                         <td>
                             <p-tableCheckbox [value]="race"></p-tableCheckbox>
                         </td>
-                        <td style="width:13%; min-width:13rem; text-align: center;"><span
+                        <td style="width:13%; min-width:10rem; text-align: center;"><span
                                 class="p-column-title">Name</span>
                             {{ race.name }}
                         </td>
@@ -61,9 +62,13 @@
                             <span class="p-column-title">Categories</span>
                             {{ setCategories(race.name) }}
                         </td>
-                        <td style="width:9%; min-width:5rem; text-align: center;">
+                        <td style="width:9%; min-width:4rem; text-align: center;">
                             <button pButton pRipple label="" icon="pi pi-map"
                                 class="p-button-rounded p-button-secondary" (click)="seeRoute(race)"></button>
+                        </td>
+                        <td style="width:9%; min-width:4rem; text-align: center;">
+                            <button pButton pRipple label="" icon="pi pi-dollar"
+                                class="p-button-rounded p-button-secondary" (click)="seeBankAccounts(race)"></button>
                         </td>
                         <td style="width:13%; min-width:13rem; text-align: center;">
                             <span class="p-column-title">Date</span>
@@ -141,8 +146,7 @@
                     </div>
                 </div>
 
-                <p-toast></p-toast>
-                <h3 style="margin-bottom: 0;">Categories</h3>
+                <h3 style="margin-bottom: 0%;">Categories</h3>
                 <p-table #dt2 [value]="categories" responsiveLayout="scroll" [rows]="5"
                     [globalFilterFields]="['category1', 'minimumAge', 'maximumAge']" [paginator]="false"
                     [rowsPerPageOptions]="[5,10,20]" [showCurrentPageReport]="true"
@@ -213,7 +217,81 @@
             </ng-template>
         </p-dialog>
 
-        <p-dialog [(visible)]="raceMoreInfoDialog" [style]="{width: '50%'}" header="More Information" [modal]="true"
+        <p-dialog [(visible)]="raceBankAccountDialog" [style]="{width: '50%'}" header="Bank Accounts" [modal]="true"
+            class="p-fluid">
+            <p-table #dt3 [value]="bankAccounts" responsiveLayout="scroll" [rows]="5"
+                [globalFilterFields]="['category1', 'minimumAge', 'maximumAge']" [paginator]="false"
+                [rowsPerPageOptions]="[5,10,20]" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [(selection)]="selectedBankAccounts" selectionMode="multiple" [rowHover]="true" dataKey="bankAccount1">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <span class="block mt-2 md:mt-0 p-input-icon-left" style="width: 100%;">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt3, $event)" placeholder="Search..."
+                                class="w-full" />
+                        </span>
+                        <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success ml-2"
+                            (click)="openNewBankAccount()"></button>
+                        <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger ml-2"
+                            (click)="deleteSelectedBankAccounts()"
+                            [disabled]="!selectedBankAccounts || !selectedBankAccounts.length"></button>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="minimumAge" style="text-align: center;">Bank Account <p-sortIcon
+                                field="minimumAge"></p-sortIcon></th>
+                        <th pSortableColumn="action" style="text-align: center;">Action</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-bankAccount>
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="bankAccount"></p-tableCheckbox>
+                        </td>
+                        <td style="width:50%; min-width:10rem; text-align: center;">
+                            <span class="p-column-title">Bank Account</span>
+                            <span class="pi pi-dollar"></span>
+                            {{ bankAccount.bankAccount1 }}
+                        </td>
+                        <td style="width:50%; min-width:10rem; text-align: center;">
+                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                                (click)="deleteBankAccount(bankAccount)"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Close" icon="pi pi-times" class="p-button-text"
+                    (click)="hideRaceBankAccountDialog()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="raceIBANAccountDialog" [style]="{width: '40%'}" header="Add Bank Account" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content" style="gap: 10px;">
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon">
+                        CR
+                    </span>
+                    <input pInputText placeholder="IBAN Account" [(ngModel)]="bankAccount.bankAccount1" />
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideRaceIBANAccountDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                    (click)="saveRaceIBANAccount()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="raceMoreInfoDialog" [style]="{width: '50%'}" header="Sponsors" [modal]="true"
             class="p-fluid">
             <p-table #dt2 [value]="sponsors" responsiveLayout="scroll" [rows]="5"
                 [globalFilterFields]="['tradeName', 'legalRepresentant', 'phone']" [paginator]="true"
@@ -300,6 +378,32 @@
                     (click)="deleteRacesDialog = false"></button>
                 <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
                     (click)="confirmDeleteSelected()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteBankAccountDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="race">Are you sure you want to delete bank account: <b>{{ bankAccount.bankAccount1 }}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteBankAccountDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                    (click)="confirmDeleteBankAccount()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteBankAccountsDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span>Are you sure you want to delete selected bank accounts?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteBankAccountsDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                    (click)="confirmDeleteSelectedBankAccounts()"></button>
             </ng-template>
         </p-dialog>
     </div>
