@@ -16,9 +16,9 @@
                                 class="w-full" />
                         </span>
                         <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success ml-2"
-                            (click)="openNew()"></button>
+                            style="min-width: 8%;" (click)="openNew()"></button>
                         <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger ml-2"
-                            (click)="deleteSelectedChallenges()"
+                            style="min-width: 8%;" (click)="deleteSelectedChallenges()"
                             [disabled]="!selectedChallenges || !selectedChallenges.length"></button>
                     </div>
                 </ng-template>

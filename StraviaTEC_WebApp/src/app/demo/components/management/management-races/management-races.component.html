@@ -16,9 +16,9 @@
                                 class="w-full" />
                         </span>
                         <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success ml-2"
-                            (click)="openNew()"></button>
+                            style="min-width: 8%;" (click)="openNew()"></button>
                         <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger ml-2"
-                            (click)="deleteSelectedRaces()"
+                            style="min-width: 8%;" (click)="deleteSelectedRaces()"
                             [disabled]="!selectedRaces || !selectedRaces.length"></button>
                     </div>
                 </ng-template>
@@ -220,8 +220,8 @@
         <p-dialog [(visible)]="raceBankAccountDialog" [style]="{width: '50%'}" header="Bank Accounts" [modal]="true"
             class="p-fluid">
             <p-table #dt3 [value]="bankAccounts" responsiveLayout="scroll" [rows]="5"
-                [globalFilterFields]="['category1', 'minimumAge', 'maximumAge']" [paginator]="false"
-                [rowsPerPageOptions]="[5,10,20]" [showCurrentPageReport]="true"
+                [globalFilterFields]="['bankAccount1']" [paginator]="false" [rowsPerPageOptions]="[5,10,20]"
+                [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                 [(selection)]="selectedBankAccounts" selectionMode="multiple" [rowHover]="true" dataKey="bankAccount1">
                 <ng-template pTemplate="caption">
@@ -232,9 +232,9 @@
                                 class="w-full" />
                         </span>
                         <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success ml-2"
-                            (click)="openNewBankAccount()"></button>
+                            style="width: 15%;" (click)="openNewBankAccount()"></button>
                         <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger ml-2"
-                            (click)="deleteSelectedBankAccounts()"
+                            style="width: 15%;" (click)="deleteSelectedBankAccounts()"
                             [disabled]="!selectedBankAccounts || !selectedBankAccounts.length"></button>
                     </div>
                 </ng-template>
@@ -384,7 +384,8 @@
         <p-dialog [(visible)]="deleteBankAccountDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span *ngIf="race">Are you sure you want to delete bank account: <b>{{ bankAccount.bankAccount1 }}</b>?</span>
+                <span *ngIf="race">Are you sure you want to delete bank account: <b>{{ bankAccount.bankAccount1
+                        }}</b>?</span>
             </div>
             <ng-template pTemplate="footer">
                 <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
