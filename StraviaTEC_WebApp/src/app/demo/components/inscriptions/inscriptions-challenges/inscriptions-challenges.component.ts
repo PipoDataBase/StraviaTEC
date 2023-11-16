@@ -2,15 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { DataView } from 'primeng/dataview';
 
-export interface Challenge {
-  name: string,
-  goal: number,
-  private: boolean,
-  startDate: string,
-  endDate: string,
-  deep: boolean,
-  type: number
-}
+// Models imports
+import { AvailableChallenge } from 'src/app/models/views-models/vw-available-challenge.module';
+import { Challenge } from 'src/app/models/challenge.module';
+
+// Services imports
+import { ChallengesService } from 'src/app/services/challenges.service';
+import { SportmenService } from 'src/app/services/sportmen.service';
+import { SharedService } from 'src/app/services/shared.service';
+import { MessageService } from 'primeng/api';
 
 export interface ActivityType {
   id: number;
@@ -20,12 +20,12 @@ export interface ActivityType {
 @Component({
   selector: 'app-inscriptions-challenges',
   templateUrl: './inscriptions-challenges.component.html',
-  styleUrls: ['./inscriptions-challenges.component.scss']
+  styleUrls: ['./inscriptions-challenges.component.scss'],
+  providers: [MessageService]
 })
 export class InscriptionsChallengesComponent implements OnInit {
-  challenges: Challenge[] = [];
-
-  activities: ActivityType[] = []
+  challenges: AvailableChallenge[] = [];
+  participatingChallenges: Challenge[] = [];
 
   sortOptions: SelectItem[] = [];
 
@@ -33,68 +33,30 @@ export class InscriptionsChallengesComponent implements OnInit {
 
   sortField: string = '';
 
-  constructor() { }
+  constructor(private challengesService: ChallengesService, private sportmanService: SportmenService, private messageService: MessageService, private sharedService: SharedService) { }
 
   ngOnInit() {
     // Requests database for all challenges
-    this.challenges = [
-      {
-        name: 'Challenge1',
-        goal: 1000,
-        private: false,
-        startDate: '11/01/2023',
-        endDate: '11/30/2023',
-        deep: true,
-        type: 1
+    this.challengesService.getAvailableChallengesVw().subscribe({
+      next: (availableChallenges) => {
+        this.challenges = availableChallenges;
       },
-      {
-        name: 'Challenge2',
-        goal: 5000,
-        private: false,
-        startDate: '11/01/2023',
-        endDate: '11/30/2023',
-        deep: true,
-        type: 1
-      },
-      {
-        name: 'Challenge3',
-        goal: 10000,
-        private: false,
-        startDate: '11/01/2023',
-        endDate: '11/30/2023',
-        deep: true,
-        type: 1
-      },
-      {
-        name: 'Challenge4',
-        goal: 1000,
-        private: false,
-        startDate: '11/01/2023',
-        endDate: '11/30/2023',
-        deep: false,
-        type: 2
-      },
-      {
-        name: 'Challenge5',
-        goal: 2000,
-        private: false,
-        startDate: '11/01/2023',
-        endDate: '11/30/2023',
-        deep: false,
-        type: 2
-      },
-    ];
-
-    this.activities = [
-      {
-        id: 1,
-        type: 'Runnig'
-      },
-      {
-        id: 2,
-        type: 'Cycling'
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Challenges loaded wrong.' });
       }
-    ];
+    })
+
+    // Requests database for all user participating challenges
+    this.sportmanService.getSportmanParticipatingChallenges(this.sharedService.getUsername()).subscribe({
+      next: (participatingChallenges) => {
+        this.participatingChallenges = participatingChallenges;
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Challenges loaded wrong.' });
+      }
+    })
 
     this.sortOptions = [
       { label: 'Name descending', value: 'name' },
@@ -121,16 +83,36 @@ export class InscriptionsChallengesComponent implements OnInit {
     dv.filter((event.target as HTMLInputElement).value);
   }
 
-  joinChallengeButtonOnClick(challengeName: string) {
-    console.log("Joining Challenge " + challengeName)
+  getDateOnFormat(date: string): string {
+    return this.sharedService.formatDate2(date);
   }
 
-  getActivityType(id: number): string {
-    const typeFounded = this.activities.find((type) => type.id == id);
-    if (typeFounded) {
-      return typeFounded.type;
-    }
-    return "";
+  joinChallengeButtonOnClick(challengeName: string) {
+    this.sportmanService.postSportmanChallengeInscription(challengeName, this.sharedService.getUsername()).subscribe({
+      next: () => {
+        this.sportmanService.getSportmanParticipatingChallenges(this.sharedService.getUsername()).subscribe({
+          next: (participatingChallenges) => {
+            this.participatingChallenges = participatingChallenges;
+          },
+          error: (response) => {
+            console.log(response);
+            this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Challenges loaded wrong.' });
+          }
+        })
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Username or challenge name wrong.' });
+      }
+    })
+  }
+
+  leaveChallengeButtonOnClick(challengeName: string) {
+    console.log("Leaving challenge ", + challengeName);
+  }
+
+  isUserParticipatingOnChallenge(challengeName: string): boolean {
+    return this.participatingChallenges.some(participatingChallenge => participatingChallenge.name === challengeName);
   }
 
 }

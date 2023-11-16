@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Challenge } from '../models/challenge.module';
+import { AvailableChallenge } from '../models/views-models/vw-available-challenge.module';
 import { Sponsor } from '../demo/components/inscriptions/inscriptions-races/inscriptions-races.component';
 
 @Injectable({
@@ -47,5 +48,9 @@ export class ChallengesService {
 
   deleteChallengeSponsors(challengeName: string): Observable<boolean> {
     return this.http.delete<boolean>(this.baseApiUrl + '/api/Challenges/DeleteSponsors/' + challengeName);
+  }
+
+  getAvailableChallengesVw(): Observable<AvailableChallenge[]> {
+    return this.http.get<AvailableChallenge[]>(this.baseApiUrl + '/api/Challenges/vwAvailableChallenges');
   }
 }
