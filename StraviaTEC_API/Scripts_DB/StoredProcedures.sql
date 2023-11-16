@@ -684,7 +684,7 @@ CREATE PROCEDURE spInsertRace
 	@Date DATETIME,
 	@Private bit,
 	@RoutePath varchar(MAX),
-    @Type varchar(20),
+    @Type tinyint,
     @ManagerUsername varchar(20)
 AS
 BEGIN
@@ -771,7 +771,7 @@ CREATE PROCEDURE spUpdateRace
 	@Date DATETIME,
 	@Private bit,
 	@RoutePath varchar(MAX),
-    @Type varchar(20)
+    @Type tinyint
 AS
 BEGIN
     UPDATE Race

@@ -11,6 +11,7 @@ import { Sponsor } from 'src/app/models/sponsor.module';
 import { BankAccount } from 'src/app/models/bank-account.module';
 import { RacesService } from 'src/app/services/races.service';
 import { SponsorsService } from 'src/app/services/sponsors.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-management-races',
@@ -54,11 +55,29 @@ export class ManagementRacesComponent {
     this.racesService.getRacesByManager(this.sharedService.getUsername()).subscribe({
       next: (races) => {
         this.races = races;
+  
+        // We create an array of observables for the categories of each race
+        const categoryObservables = this.races.map(race =>
+          this.racesService.getRaceCategories(race.name)
+        );
+  
+        // We use forkJoin to combine all observables into one
+        forkJoin(categoryObservables).subscribe({
+          next: (categoriesArray) => {
+            // We assign the categories to each race in the same order as the races
+            categoriesArray.forEach((categories, index) => {
+              this.races[index].categories = categories;
+            });
+          },
+          error: (response) => {
+            console.log(response);
+          }
+        });
       },
       error: (response) => {
         console.log(response);
       }
-    })
+    });
   }
 
   ngOnInit() {
@@ -208,20 +227,36 @@ export class ManagementRacesComponent {
     this.submitted = true;
 
     if (!this.isNewRace) {
-      /*
       this.races = this.races.filter((race) => race.name !== this.race.name);
-      const challengeUpdated: Race = {
+      const raceUpdated: Race = {
         name: this.race.name,
-        goal: this.race.goal,
-        private: this.selectedPrivacy,
-        startDate: this.sharedService.formatDate(this.race.startDate),
-        endDate: this.sharedService.formatDate(this.race.endDate),
-        deep: this.selectedDeepHeight,
+        inscriptionPrice: this.race.inscriptionPrice,
+        date: this.race.date,
+        private: Boolean(String(this.selectedPrivacy) == "true"),
+        routePath: '',
         type: this.selectedActivityType
       }
-      this.races.push(challengeUpdated);
-      this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Challenge Updated', life: 3000 });
-      */
+
+      if (this.validateRace(raceUpdated)) {
+        // Put race
+        this.racesService.putRace(raceUpdated.name, raceUpdated).subscribe({
+          next: (response) => {
+            if (response) {
+              this.aboutCategories(raceUpdated.name);
+              this.updateRaces();
+              this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Race Updated.', life: 3000 });
+            }
+          },
+          error: (response) => {
+            console.log(response);
+            return;
+          }
+        })
+      }
+      else {
+        this.updateRaces();
+        return;
+      }
     }
     else {
       const newRace: Race = {
@@ -238,28 +273,7 @@ export class ManagementRacesComponent {
         this.racesService.postRace(this.sharedService.getUsername(), newRace).subscribe({
           next: (response) => {
             if (response) {
-              this.racesService.deleteRaceCategories(newRace.name).subscribe({
-                next: (response) => {
-                  if (response) {
-                    for (var category of this.selectedCategories) {
-                      this.racesService.postRaceCategory(newRace.name, category.id).subscribe({
-                        next: (response) => {
-                        },
-                        error: (response) => {
-                          console.log(response);
-                        }
-                      })
-                    }
-                  }
-
-                  this.selectedCategories = [];
-                  this.race = {}
-                },
-                error: (response) => {
-                  console.log(response);
-                }
-              })
-
+              this.aboutCategories(newRace.name);
               this.updateRaces();
               this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Race Created.', life: 3000 });
             }
@@ -315,5 +329,39 @@ export class ManagementRacesComponent {
     }
 
     return true;
+  }
+
+  aboutCategories(name: string) {
+    this.racesService.deleteRaceCategories(name).subscribe({
+      next: (response) => {
+        if (response) {
+          const postCategoryObservables = this.selectedCategories.map(category =>
+            this.racesService.postRaceCategory(name, category.id)
+          );
+  
+          forkJoin(postCategoryObservables).subscribe({
+            next: (response) => {
+            },
+            error: (response) => {
+              console.log(response);
+            }
+          });
+        }
+  
+        this.selectedCategories = [];
+        this.race = {};
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    });
+  }
+
+  setCategories(name: string): string {
+    const raceFounded = this.races.find((race) => race.name == name);
+    if (raceFounded) {
+      return this.sharedService.getCategories(raceFounded.categories)
+    }
+    return "";
   }
 }

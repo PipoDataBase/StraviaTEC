@@ -132,12 +132,13 @@ namespace StraviaTEC_API.Controllers
             try
             {
                 await _context.Database.ExecuteSqlRawAsync(
-                    "EXEC spUpdateRace @Name, @InscriptionPrice, @Date, @Private, @RoutePath",
+                    "EXEC spUpdateRace @Name, @InscriptionPrice, @Date, @Private, @RoutePath, @Type",
                     new SqlParameter("@Name", id),
                     new SqlParameter("@InscriptionPrice", race.InscriptionPrice),
                     new SqlParameter("@Date", race.Date),
                     new SqlParameter("@Private", race.Private),
-                    new SqlParameter("@RoutePath", race.RoutePath)
+                    new SqlParameter("@RoutePath", race.RoutePath),
+                    new SqlParameter("@Type", race.Type)
                     );
                 return Ok(true);
             }

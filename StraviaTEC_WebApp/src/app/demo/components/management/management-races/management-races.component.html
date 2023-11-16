@@ -31,8 +31,8 @@
                                 field="name"></p-sortIcon></th>
                         <th pSortableColumn="type" style="text-align: center;">Type <p-sortIcon
                                 field="type"></p-sortIcon></th>
-                        <th pSortableColumn="category" style="text-align: center;">Category <p-sortIcon
-                                field="category"></p-sortIcon></th>
+                        <th pSortableColumn="categories" style="text-align: center;">Categories <p-sortIcon
+                                field="categories"></p-sortIcon></th>
                         <th pSortableColumn="route" style="text-align: center;">Route</th>
                         <th pSortableColumn="moreInfo" style="text-align: center;">S/BA</th>
                         <th pSortableColumn="date" style="text-align: center;">Date <p-sortIcon
@@ -59,8 +59,8 @@
                             {{ sharedService.getActivityType(activityTypes, race.type) }}
                         </td>
                         <td style="width:11%; min-width:9rem; text-align: center;">
-                            <span class="p-column-title">Category</span>
-                            {{ 'Hola' }}
+                            <span class="p-column-title">Categories</span>
+                            {{ setCategories(race.name) }}
                         </td>
                         <td style="width:9%; min-width:5rem; text-align: center;">
                             <button pButton pRipple label="" icon="pi pi-map" class="p-button-rounded p-button-primary"

@@ -1,3 +1,5 @@
+import { Category } from "./category.module";
+
 export interface Race {
     name?: string;
     inscriptionPrice?: number;
@@ -5,4 +7,5 @@ export interface Race {
     private?: boolean;
     routePath?: string;
     type?: number;
+    categories?: Category[]
 }
