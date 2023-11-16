@@ -238,6 +238,28 @@ export class ManagementRacesComponent {
         this.racesService.postRace(this.sharedService.getUsername(), newRace).subscribe({
           next: (response) => {
             if (response) {
+              this.racesService.deleteRaceCategories(newRace.name).subscribe({
+                next: (response) => {
+                  if (response) {
+                    for (var category of this.selectedCategories) {
+                      this.racesService.postRaceCategory(newRace.name, category.id).subscribe({
+                        next: (response) => {
+                        },
+                        error: (response) => {
+                          console.log(response);
+                        }
+                      })
+                    }
+                  }
+
+                  this.selectedCategories = [];
+                  this.race = {}
+                },
+                error: (response) => {
+                  console.log(response);
+                }
+              })
+
               this.updateRaces();
               this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Race Created.', life: 3000 });
             }
@@ -252,8 +274,8 @@ export class ManagementRacesComponent {
         return;
       }
     }
+
     this.raceDialog = false;
-    this.race = {}
   }
 
   onGlobalFilter(table: Table, event: Event) {

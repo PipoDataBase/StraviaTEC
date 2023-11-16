@@ -58,4 +58,12 @@ export class RacesService {
   deleteRace(id: string): Observable<boolean> {
     return this.http.delete<boolean>(this.baseApiUrl + '/api/Races/' + id);
   }
+
+  deleteRaceCategories(raceName: string): Observable<boolean> {
+    return this.http.delete<boolean>(this.baseApiUrl + '/api/Races/DeleteCategories/' + raceName);
+  }
+
+  deleteRaceSponsors(raceName: string): Observable<boolean> {
+    return this.http.delete<boolean>(this.baseApiUrl + '/api/Races/DeleteSponsors/' + raceName);
+  }
 }
