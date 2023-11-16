@@ -249,7 +249,7 @@ namespace StraviaTEC_API.Controllers
                     new SqlParameter("@Name", id)
                     );
 
-            return Ok("Race Deleted");
+            return Ok(true);
         }
 
         [HttpDelete("DeleteCategories/{raceName}")]

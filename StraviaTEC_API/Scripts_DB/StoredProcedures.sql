@@ -789,6 +789,14 @@ CREATE PROCEDURE spDeleteRace
     @Name varchar(20)
 AS
 BEGIN
+	DELETE FROM RaceSportmanManager
+	WHERE RaceName = @Name;
+	DELETE FROM RaceCategory
+	WHERE RaceName = @Name;
+	DELETE FROM RaceSponsor
+	WHERE RaceName = @Name;
+	DELETE FROM BankAccount
+	WHERE RaceName = @Name;
     DELETE FROM Race
     WHERE Name = @Name;
 END;

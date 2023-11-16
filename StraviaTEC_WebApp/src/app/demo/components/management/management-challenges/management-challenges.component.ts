@@ -122,7 +122,7 @@ export class ManagementChallengesComponent {
       next: (response) => {
         if (response) {
           this.updateChallenges();
-          this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Challenge Deleted', life: 3000 });
+          this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Challenge Deleted.', life: 3000 });
         }
       },
       error: (response) => {
@@ -155,7 +155,7 @@ export class ManagementChallengesComponent {
       })
     }
 
-    this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Challenges Deleted', life: 3000 });
+    this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Challenges Deleted.', life: 3000 });
     this.selectedChallenges = [];
   }
 
@@ -190,7 +190,7 @@ export class ManagementChallengesComponent {
           next: (response) => {
             if (response) {
               this.updateChallenges();
-              this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Challenge Updated', life: 3000 });
+              this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Challenge Updated.', life: 3000 });
             }
           },
           error: (response) => {
@@ -221,7 +221,7 @@ export class ManagementChallengesComponent {
           next: (response) => {
             if (response) {
               this.updateChallenges();
-              this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Challenge Created', life: 3000 });
+              this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Challenge Created.', life: 3000 });
             }
           },
           error: (response) => {

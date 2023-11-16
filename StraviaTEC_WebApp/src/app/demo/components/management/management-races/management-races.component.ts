@@ -6,7 +6,6 @@ import { ActivityType } from 'src/app/models/activity-type.module';
 import { ActivityTypesService } from 'src/app/services/activity-types.service';
 import { CategoriesService } from 'src/app/services/categories.service';
 import { Category } from 'src/app/models/category.module';
-import { DomSanitizer } from '@angular/platform-browser';
 import { Race } from 'src/app/models/race.module';
 import { Sponsor } from 'src/app/models/sponsor.module';
 import { BankAccount } from 'src/app/models/bank-account.module';
@@ -38,7 +37,7 @@ export class ManagementRacesComponent {
 
   selectedRaces: Race[] = [];
   selectedSponsors: Sponsor[] = [];
-  selectedCategories: Category[];
+  selectedCategories: Category[] = [];
 
   race: Race = {};
   sponsor: Sponsor = {};
@@ -130,8 +129,16 @@ export class ManagementRacesComponent {
     this.raceDialog = true;
     this.isNewRace = false;
     this.selectedActivityType = race.type;
-    //this.selectedCategories = race.categories;
     this.selectedPrivacy = race.private;
+
+    this.racesService.getRaceCategories(this.race.name).subscribe({
+      next: (categories) => {
+        this.selectedCategories = categories;
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
   }
 
   deleteRace(race: Race) {
@@ -141,8 +148,20 @@ export class ManagementRacesComponent {
 
   confirmDelete() {
     this.deleteRaceDialog = false;
-    this.races = this.races.filter(val => val.name !== this.race.name);
-    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Race Deleted', life: 3000 });
+    // Delete race
+    this.racesService.deleteRace(this.race.name).subscribe({
+      next: (response) => {
+        if (response) {
+          this.updateRaces();
+          this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Race Deleted.', life: 3000 });
+        }
+      },
+      error: (response) => {
+        console.log(response);
+        return;
+      }
+    })
+
     this.race = {};
   }
 
@@ -152,14 +171,29 @@ export class ManagementRacesComponent {
 
   confirmDeleteSelected() {
     this.deleteRacesDialog = false;
-    this.races = this.races.filter(val => !this.selectedRaces.includes(val));
-    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Races Deleted', life: 3000 });
+    for (var race of this.selectedRaces) {
+      // Delete race
+      this.racesService.deleteRace(race.name).subscribe({
+        next: (response) => {
+          if (response) {
+            this.updateRaces();
+          }
+        },
+        error: (response) => {
+          console.log(response);
+          return;
+        }
+      })
+    }
+
+    this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Races Deleted.', life: 3000 });
     this.selectedRaces = [];
   }
 
   hideDialog() {
     this.raceDialog = false;
     this.submitted = false;
+    this.selectedCategories = [];
   }
 
   hideRaceRouteDialog() {
@@ -205,7 +239,7 @@ export class ManagementRacesComponent {
           next: (response) => {
             if (response) {
               this.updateRaces();
-              this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Race Created', life: 3000 });
+              this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Race Created.', life: 3000 });
             }
           },
           error: (response) => {
@@ -250,6 +284,11 @@ export class ManagementRacesComponent {
 
     if (race.type == -1) {
       this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'You have not selected an activity type.' });
+      return false;
+    }
+
+    if (this.selectedCategories.length == 0) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'You must select at least one category for the race.' });
       return false;
     }
 

@@ -433,13 +433,21 @@ EXEC spInsertRace 'End of Semester Race', 500, '2019-12-04T10:00:00.000Z', false
 Go
 EXEC spInsertRace 'Race 1', 26, '2023-11-26T10:00:00.000Z', false, '', 0, 'Emarin19';
 Go
-EXEC spInsertRace 'Race 2', 58, '2023-11-28T10:00:00.000Z', true, '', 2, 'Emarin19';
+EXEC spInsertRace 'Race 2', 58, '2023-11-28T14:00:00.000Z', true, '', 2, 'Emarin19';
 Go
 
 -- Add RaceCategory:
-EXEC spAddRaceCategory 'End of Semester Race', 0
+EXEC spAddRaceCategory 'End of Semester Race', 0;
 GO
-EXEC spAddRaceCategory 'End of Semester Race', 1
+EXEC spAddRaceCategory 'End of Semester Race', 1;
+Go
+EXEC spAddRaceCategory 'Race 1', 0;
+GO
+EXEC spAddRaceCategory 'Race 1', 1;
+Go
+EXEC spAddRaceCategory 'Race 2', 2;
+GO
+EXEC spAddRaceCategory 'Race 2', 3;
 Go
 
 -- ================================================
