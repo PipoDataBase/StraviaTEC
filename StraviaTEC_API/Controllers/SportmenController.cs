@@ -192,6 +192,28 @@ namespace StraviaTEC_API.Controllers
 
             return result;
         }
+
+        // GET: api/Sportmen
+        [HttpGet("GetJoinedRaces/{username}")]
+        public async Task<ActionResult<IEnumerable<VwRace>>> GetJoinedRaces(string username)
+        {
+            if (_context.Sportmen == null)
+            {
+                return NotFound();
+            }
+            var result = await _context.VwRaces.FromSqlRaw(
+                    "EXEC spGetJoinedRaces @Username",
+                    new SqlParameter("@Username", username)
+                    ).ToListAsync();
+
+            if (result.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+
+            return result;
+        }
+
         // GET: api/Sportmen
         [HttpGet("Login/{username}/{password}")]
         public async Task<IActionResult> Login (string username, string password)

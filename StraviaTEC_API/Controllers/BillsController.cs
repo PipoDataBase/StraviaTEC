@@ -90,6 +90,26 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
+
+        // PUT: api/Bills/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("AcceptBill/{id}")]
+        public async Task<IActionResult> PutAcceptBill(int id)
+        {
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC spAcceptBill @Id",
+                    new SqlParameter("@Id", id)
+                    );
+                return Ok(true);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+        }
+
         // POST: api/Bills
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]

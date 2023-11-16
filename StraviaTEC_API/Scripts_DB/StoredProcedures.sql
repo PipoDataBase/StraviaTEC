@@ -435,6 +435,19 @@ END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
+GO
+CREATE PROCEDURE spGetJoinedRaces
+    @Username varchar(20)
+AS
+BEGIN
+    SELECT vwR.Name, vwR.InscriptionPrice, vwR.Date, vwR.Private, vwR.RoutePath, vwR.Type, vwR.Manager 
+    FROM vwRaces vwR INNER JOIN Bill B
+    ON vwR.Name = B.RaceName
+    WHERE B.Username = @Username AND B.Accepted = 1;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
 Go
 -- ================================================
 --                  Nationality
@@ -1135,6 +1148,24 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spAcceptBill
+    @Id int
+AS
+BEGIN
+    BEGIN TRY 
+        UPDATE Bill
+        SET Accepted = 1
+        WHERE Id = @Id;
+    END TRY
+    BEGIN CATCH
+        THROW 51000, 'ERROR: Couldnt accept Bill', 1;
+    END CATCH;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
 Go
 CREATE PROCEDURE spDeleteBill
     @Id int

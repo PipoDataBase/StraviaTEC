@@ -2,16 +2,17 @@
 --                      Race
 -- ================================================
 
-CREATE VIEW vwFutureRaces 
-AS SELECT * FROM Race
-WHERE GETDATE() < Race.Date;
+GO
+CREATE VIEW vwRaces
+AS SELECT R.Name, R.InscriptionPrice, R.Date, R.Private, R.RoutePath, AT.Type, RSM.Username AS Manager
+FROM Race R 
+INNER JOIN ActivityType AT ON R.Type = AT.Id
+INNER JOIN RaceSportmanManager RSM ON R.Name = RSM.RaceName;
 
 
 -- ================================================
 --                    Challenge
 -- ================================================
-
--- <><><><><><><><><><><><><><><><><><><><><><><><>
 
 Go
 CREATE VIEW vwAvailableChallenges
@@ -19,33 +20,6 @@ AS SELECT Challenge.Name, Challenge.Goal, Challenge.Private, Challenge.StartDate
 FROM Challenge INNER JOIN ActivityType
 ON Challenge.Type = ActivityType.Id
 WHERE GETDATE() < Challenge.EndDate;
-
--- <><><><><><><><><><><><><><><><><><><><><><><><>
-
-Go
-CREATE VIEW vwFutureChallenges
-AS SELECT Challenge.Name, Challenge.Goal, Challenge.Private, Challenge.StartDate, Challenge.EndDate, Challenge.Deep, ActivityType.Type 
-FROM Challenge INNER JOIN ActivityType
-ON Challenge.Type = ActivityType.Id
-WHERE  GETDATE() < Challenge.StartDate;
-
--- <><><><><><><><><><><><><><><><><><><><><><><><>
-
-Go
-CREATE VIEW vwActiveChallenges
-AS SELECT Challenge.Name, Challenge.Goal, Challenge.Private, Challenge.StartDate, Challenge.EndDate, Challenge.Deep, ActivityType.Type 
-FROM Challenge INNER JOIN ActivityType
-ON Challenge.Type = ActivityType.Id
-WHERE Challenge.StartDate < GETDATE() AND  GETDATE() < Challenge.EndDate;
-
--- <><><><><><><><><><><><><><><><><><><><><><><><>
-
-Go
-CREATE VIEW vwPastChallenges
-AS SELECT Challenge.Name, Challenge.Goal, Challenge.Private, Challenge.StartDate, Challenge.EndDate, Challenge.Deep, ActivityType.Type 
-FROM Challenge INNER JOIN ActivityType
-ON Challenge.Type = ActivityType.Id
-WHERE Challenge.EndDate < GETDATE();
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 

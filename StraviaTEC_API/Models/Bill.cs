@@ -9,7 +9,7 @@ public partial class Bill
 
     public string? PhotoPath { get; set; }
 
-    public bool Accepted { get; set; }
+    public bool? Accepted { get; set; }
 
     public string Username { get; set; } = null!;
 
