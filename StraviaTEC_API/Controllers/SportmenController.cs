@@ -150,6 +150,49 @@ namespace StraviaTEC_API.Controllers
         }
 
         // GET: api/Sportmen
+        [HttpGet("GetManagingGroups/{username}")]
+        public async Task<ActionResult<IEnumerable<Group>>> GetManagingGroups(string username)
+        {
+            if (_context.Sportmen == null)
+            {
+                return NotFound();
+            }
+            var result = await _context.Groups.FromSqlRaw(
+                    "EXEC spGetManagingGroups @Username",
+                    new SqlParameter("@Username", username)
+                    ).ToListAsync();
+
+            if (result.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+
+            return result;
+        }
+
+
+
+        // GET: api/Sportmen
+        [HttpGet("GetParticipatingGroups/{username}")]
+        public async Task<ActionResult<IEnumerable<Group>>> GetParticipatingGroups(string username)
+        {
+            if (_context.Sportmen == null)
+            {
+                return NotFound();
+            }
+            var result = await _context.Groups.FromSqlRaw(
+                    "EXEC spGetParticipatingGroups @Username",
+                    new SqlParameter("@Username", username)
+                    ).ToListAsync();
+
+            if (result.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+
+            return result;
+        }
+        // GET: api/Sportmen
         [HttpGet("Login/{username}/{password}")]
         public async Task<IActionResult> Login (string username, string password)
         {
@@ -287,6 +330,30 @@ namespace StraviaTEC_API.Controllers
                 "EXEC spAddFriend @username, @friendUsername",
                     new SqlParameter("@username", username),
                     new SqlParameter("@friendUsername", friendUsername)
+                );
+                return Ok(true);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        // POST: api/Sportmen
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("JoinGroup/{username}/{groupName}")]
+        public async Task<IActionResult> PosAddToGroup(string username, string groupName)
+        {
+            if (_context.Sportmen == null)
+            {
+                return Problem("Entity set 'StraviaTecContext.Sportmen'  is null.");
+            }
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                "EXEC spAddToGroup @Username, @GroupName",
+                    new SqlParameter("@Username", username),
+                    new SqlParameter("@GroupName", groupName)
                 );
                 return Ok(true);
             }

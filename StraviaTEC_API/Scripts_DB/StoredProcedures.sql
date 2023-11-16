@@ -391,6 +391,50 @@ END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
+GO
+CREATE PROCEDURE spAddToGroup
+    @Username varchar(20),
+    @GroupName varchar(20)
+AS
+BEGIN
+    BEGIN TRY
+        INSERT INTO SportmanGroup(Username, GroupName)
+        VALUES (@Username, @GroupName)
+    END TRY
+    BEGIN CATCH
+        THROW 51000, 'ERROR: couldnt join group', 1;
+    END CATCH
+END;
+
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spGetManagingGroups
+    @Username varchar(20)
+AS
+BEGIN
+    SELECT G.Name 
+    FROM Group_ G INNER JOIN GroupManager GM
+    ON G.Name = GM.GroupName
+    WHERE GM.Username = @Username;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spGetParticipatingGroups
+    @Username varchar(20)
+AS
+BEGIN
+    SELECT G.Name 
+    FROM Group_ G INNER JOIN SportmanGroup SG
+    ON G.Name = SG.GroupName
+    WHERE SG.Username = @Username;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
 Go
 -- ================================================
 --                  Nationality
