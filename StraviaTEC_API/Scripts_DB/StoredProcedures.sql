@@ -196,17 +196,6 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
-Go
-CREATE PROCEDURE spDeleteChallengeSponsors
-    @ChallengeName varchar(20)
-AS
-BEGIN
-	DELETE FROM ChallengeSponsor
-	WHERE ChallengeName = @ChallengeName;
-END;
-
-
--- <><><><><><><><><><><><><><><><><><><><><><><><>
 
 GO
 CREATE PROCEDURE spGetChallengeParticipants
