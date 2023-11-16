@@ -624,7 +624,7 @@ CREATE PROCEDURE spGetRacesByManager
 AS
 BEGIN
     SELECT R.Name, R.InscriptionPrice, R.Date, R.Private, R.RoutePath, R.Type
-    FROM Race R INNER JOIN RaceSportman RS
+    FROM Race R INNER JOIN RaceSportmanManager RS
     ON R.Name = RS.RaceName
     WHERE RS.Username = @Username
 END;
@@ -702,7 +702,7 @@ BEGIN
         BEGIN TRY
             INSERT INTO Race (Name, InscriptionPrice, Date, Private, RoutePath, Type)
             VALUES (@Name, @InscriptionPrice, @Date, @Private, @RoutePath, @Type);
-            INSERT INTO RaceSportman (Username, RaceName)
+            INSERT INTO RaceSportmanManager (Username, RaceName)
             VALUES (@ManagerUsername, @Name);
             RETURN;
         END TRY
@@ -792,6 +792,27 @@ BEGIN
     DELETE FROM Race
     WHERE Name = @Name;
 END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spDeleteRaceCategories
+    @RaceName varchar(20)
+AS
+BEGIN
+	DELETE FROM RaceCategory
+	WHERE RaceName = @RaceName;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spDeleteRaceSponsors
+    @RaceName varchar(20)
+AS
+BEGIN
+	DELETE FROM RaceSponsor
+	WHERE RaceName = @RaceName;
+END;
+
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 Go
 -- ================================================

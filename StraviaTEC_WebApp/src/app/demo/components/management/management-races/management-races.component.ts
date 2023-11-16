@@ -7,28 +7,11 @@ import { ActivityTypesService } from 'src/app/services/activity-types.service';
 import { CategoriesService } from 'src/app/services/categories.service';
 import { Category } from 'src/app/models/category.module';
 import { DomSanitizer } from '@angular/platform-browser';
-
-export interface Race {
-  name?: string;
-  inscriptionPrice?: number;
-  date?: string;
-  private?: boolean;
-  routePath?: string;
-  type?: number;
-  categories?: Category[];
-}
-
-export interface BankAccount {
-  raceName?: string;
-  bankAccount1?: string;
-}
-
-export interface Sponsor {
-  tradeName?: string;
-  legalRepresentant?: string;
-  phone?: number;
-  logoPath?: string;
-}
+import { Race } from 'src/app/models/race.module';
+import { Sponsor } from 'src/app/models/sponsor.module';
+import { BankAccount } from 'src/app/models/bank-account.module';
+import { RacesService } from 'src/app/services/races.service';
+import { SponsorsService } from 'src/app/services/sponsors.service';
 
 @Component({
   selector: 'app-management-races',
@@ -46,25 +29,42 @@ export class ManagementRacesComponent {
   deleteRacesDialog: boolean = false;
 
   selectedActivityType: number = -1;
-  selectedCategory: number = -1;
   selectedPrivacy: boolean = false;
   routePath: any;
 
   races: Race[] = [];
-  selectedRaces: Race[] = [];
-  race: Race = {};
-  activityTypes: ActivityType[] = [];
+  sponsors: Sponsor[] = [];
   categories: Category[] = [];
+
+  selectedRaces: Race[] = [];
+  selectedSponsors: Sponsor[] = [];
   selectedCategories: Category[];
 
+  race: Race = {};
+  sponsor: Sponsor = {};
+  category: Category = {};
+
+  activityTypes: ActivityType[] = [];
   bankAccounts: BankAccount[] = [];
-  sponsors: Sponsor[] = [];
 
   submitted: boolean = false;
 
-  constructor(private messageService: MessageService, public sharedService: SharedService, private activityTypesService: ActivityTypesService, private categoriesService: CategoriesService, private sanitizer: DomSanitizer) { }
+  constructor(private messageService: MessageService, public sharedService: SharedService, private activityTypesService: ActivityTypesService, private racesService: RacesService, private categoriesService: CategoriesService, private sponsorsService: SponsorsService) { }
+
+  updateRaces() {
+    this.racesService.getRacesByManager(this.sharedService.getUsername()).subscribe({
+      next: (races) => {
+        this.races = races;
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
+  }
 
   ngOnInit() {
+    this.updateRaces();
+
     this.activityTypesService.getActivityTypes().subscribe({
       next: (activityTypes) => {
         this.activityTypes = activityTypes;
@@ -83,73 +83,14 @@ export class ManagementRacesComponent {
       }
     })
 
-    this.races = [
-      {
-        name: 'Race 1',
-        inscriptionPrice: 20,
-        date: '2023-11-06T01:30',
-        private: false,
-        routePath: 'https://www.google.com/maps/d/embed?mid=1cQv-iSgDnNCLG_jrQyX5emwZZDzLbixd&hl=es-419',
-        type: 0, //running
-        categories: [
-          {
-            id: 0,
-            minimumAge: 0,
-            maximumAge: 14,
-            category1: 'Junior'
-          },
-          {
-            id: 1,
-            minimumAge: 15,
-            maximumAge: 23,
-            category1: 'Sub-23'
-          }
-        ]
+    this.sponsorsService.getSponsors().subscribe({
+      next: (sponsors) => {
+        this.sponsors = sponsors;
       },
-      {
-        name: 'Race 2',
-        inscriptionPrice: 25,
-        date: '2023-11-06T12:30',
-        private: true,
-        routePath: 'https://www.google.com/maps/d/embed?mid=18RcpszqRsKd-Gy4Q6N7PRl5eaPa1bzqL&hl=es-419',
-        type: 2, //cycling
-        categories: [
-          {
-            id: 2,
-            minimumAge: 24,
-            maximumAge: 30,
-            category1: 'Open'
-          },
-          {
-            id: 3,
-            minimumAge: 0,
-            maximumAge: 99,
-            category1: 'Elite'
-          },
-          {
-            id: 4,
-            minimumAge: 31,
-            maximumAge: 40,
-            category1: 'Master A'
-          }
-        ]
+      error: (response) => {
+        console.log(response);
       }
-    ]
-
-    this.sponsors = [
-      {
-        tradeName: 'Red Bull',
-        legalRepresentant: 'Kimberly Brooks',
-        phone: 22186442,
-        logoPath: '../../../../../assets/straviatec/red-bull-logo.png'
-      },
-      {
-        tradeName: 'The North Face',
-        legalRepresentant: 'Bracken Darrell',
-        phone: 22245312,
-        logoPath: '../../../../../assets/straviatec/the-north-face-logo.png'
-      }
-    ]
+    })
 
     this.bankAccounts = [
       {
@@ -184,16 +125,12 @@ export class ManagementRacesComponent {
     this.isViewMoreInfo = true;
   }
 
-  deleteSelectedRaces() {
-    this.deleteRacesDialog = true;
-  }
-
   editRace(race: Race) {
     this.race = { ...race };
     this.raceDialog = true;
     this.isNewRace = false;
     this.selectedActivityType = race.type;
-    this.selectedCategories = race.categories;
+    //this.selectedCategories = race.categories;
     this.selectedPrivacy = race.private;
   }
 
@@ -202,18 +139,22 @@ export class ManagementRacesComponent {
     this.race = { ...race };
   }
 
-  confirmDeleteSelected() {
-    this.deleteRacesDialog = false;
-    this.races = this.races.filter(val => !this.selectedRaces.includes(val));
-    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Races Deleted', life: 3000 });
-    this.selectedRaces = [];
-  }
-
   confirmDelete() {
     this.deleteRaceDialog = false;
     this.races = this.races.filter(val => val.name !== this.race.name);
     this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Race Deleted', life: 3000 });
     this.race = {};
+  }
+
+  deleteSelectedRaces() {
+    this.deleteRacesDialog = true;
+  }
+
+  confirmDeleteSelected() {
+    this.deleteRacesDialog = false;
+    this.races = this.races.filter(val => !this.selectedRaces.includes(val));
+    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Races Deleted', life: 3000 });
+    this.selectedRaces = [];
   }
 
   hideDialog() {
@@ -230,14 +171,10 @@ export class ManagementRacesComponent {
   }
 
   saveRace() {
-    console.log(this.race.date);
-    console.log(this.selectedCategories);
-    /*
     this.submitted = true;
 
     if (!this.isNewRace) {
-      //validate data
-
+      /*
       this.races = this.races.filter((race) => race.name !== this.race.name);
       const challengeUpdated: Race = {
         name: this.race.name,
@@ -250,26 +187,72 @@ export class ManagementRacesComponent {
       }
       this.races.push(challengeUpdated);
       this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Challenge Updated', life: 3000 });
+      */
     }
     else {
-      const newrace: Race = {
+      const newRace: Race = {
         name: this.race.name,
-        goal: this.race.goal,
-        private: this.selectedPrivacy,
-        startDate: this.sharedService.formatDate(this.race.startDate),
-        endDate: this.sharedService.formatDate(this.race.endDate),
-        deep: this.selectedDeepHeight,
+        inscriptionPrice: this.race.inscriptionPrice,
+        date: this.race.date,
+        private: Boolean(String(this.selectedPrivacy) == "true"),
+        routePath: '',
         type: this.selectedActivityType
       }
-      this.races.push(newChallenge);
-      this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Challenge Created', life: 3000 });
+
+      if (this.validateRace(newRace)) {
+        // Post race
+        this.racesService.postRace(this.sharedService.getUsername(), newRace).subscribe({
+          next: (response) => {
+            if (response) {
+              this.updateRaces();
+              this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Race Created', life: 3000 });
+            }
+          },
+          error: (response) => {
+            console.log(response);
+            return;
+          }
+        })
+      }
+      else {
+        return;
+      }
     }
     this.raceDialog = false;
     this.race = {}
-    */
   }
 
   onGlobalFilter(table: Table, event: Event) {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+  }
+
+  validateRace(race: Race): boolean {
+    if (!race.name) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'The race name must not be empty.' });
+      return false;
+    }
+
+    const raceFound = this.races.find((r) => r.name == race.name);
+    if (raceFound) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Race name: ' + race.name + ' already exists or it was created by another organizer.' });
+      return false;
+    }
+
+    if (!race.inscriptionPrice || race.inscriptionPrice <= 0) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'The inscription price must be greater than zero.' });
+      return false;
+    }
+
+    if (!race.date) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Date not selected.' });
+      return false;
+    }
+
+    if (race.type == -1) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'You have not selected an activity type.' });
+      return false;
+    }
+
+    return true;
   }
 }

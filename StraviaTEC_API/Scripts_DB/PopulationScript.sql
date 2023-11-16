@@ -414,7 +414,6 @@ Go
 --                  Challenges
 -- ================================================
 
-GO
 EXEC spInsertChallenge  'TEC Challenge 2019', 68, false, '2019-11-11T00:00:00.000Z', '2019-12-12T00:00:00.000Z', true, 0, 'Jose216';
 GO
 EXEC spInsertChallenge  'TEC Challenge 2023', 68, false, '2023-11-11T00:00:00.000Z', '2023-12-12T00:00:00.000Z', true, 0, 'Jose216';
@@ -430,10 +429,14 @@ Go
 --                    Races
 -- ================================================
 
-GO
 EXEC spInsertRace 'End of Semester Race', 500, '2019-12-04T10:00:00.000Z', false, 'GpxPath', 0, 'Seballoll';
+Go
+EXEC spInsertRace 'Race 1', 26, '2023-11-26T10:00:00.000Z', false, '', 0, 'Emarin19';
+Go
+EXEC spInsertRace 'Race 2', 58, '2023-11-28T10:00:00.000Z', true, '', 2, 'Emarin19';
+Go
+
 -- Add RaceCategory:
-GO
 EXEC spAddRaceCategory 'End of Semester Race', 0
 GO
 EXEC spAddRaceCategory 'End of Semester Race', 1

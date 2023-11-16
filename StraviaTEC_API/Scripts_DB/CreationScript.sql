@@ -95,7 +95,7 @@ CREATE TABLE Race (
 	PRIMARY KEY (Name)
 );
 
-CREATE TABLE RaceSportman (
+CREATE TABLE RaceSportmanManager (
 	Username varchar(20) NOT NULL,
 	RaceName varchar(20) NOT NULL,
 	PRIMARY KEY (Username,RaceName)
@@ -184,8 +184,8 @@ ALTER TABLE ChallengeSportmanParticipant ADD CONSTRAINT ChallengeSportmanPartici
 
 ALTER TABLE Race ADD CONSTRAINT Race_fk0 FOREIGN KEY (Type) REFERENCES ActivityType(Id);
 
-ALTER TABLE RaceSportman ADD CONSTRAINT RaceSportman_fk0 FOREIGN KEY (Username) REFERENCES Sportman(Username);
-ALTER TABLE RaceSportman ADD CONSTRAINT RaceSportman_fk1 FOREIGN KEY (RaceName) REFERENCES Race(Name);
+ALTER TABLE RaceSportmanManager ADD CONSTRAINT RaceSportmanManager_fk0 FOREIGN KEY (Username) REFERENCES Sportman(Username);
+ALTER TABLE RaceSportmanManager ADD CONSTRAINT RaceSportmanManager_fk1 FOREIGN KEY (RaceName) REFERENCES Race(Name);
 
 ALTER TABLE Bill ADD CONSTRAINT Bill_fk0 FOREIGN KEY (RaceName) REFERENCES Race(Name);
 

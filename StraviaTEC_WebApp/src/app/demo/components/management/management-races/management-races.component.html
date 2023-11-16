@@ -1,7 +1,7 @@
 <div class="grid">
     <div class="col-12">
         <div class="card px-6 py-6">
-            <p-toast></p-toast>
+            <p-toast position="top-center" key="tc"></p-toast>
             <h1>Races</h1>
             <p-table #dt [value]="races" responsiveLayout="scroll" [rows]="5"
                 [globalFilterFields]="['name', 'date', 'inscriptionPrice']" [paginator]="true"
@@ -60,7 +60,7 @@
                         </td>
                         <td style="width:11%; min-width:9rem; text-align: center;">
                             <span class="p-column-title">Category</span>
-                            {{ sharedService.getCategories(race.categories)}}
+                            {{ 'Hola' }}
                         </td>
                         <td style="width:9%; min-width:5rem; text-align: center;">
                             <button pButton pRipple label="" icon="pi pi-map" class="p-button-rounded p-button-primary"
@@ -98,13 +98,12 @@
         <p-dialog [(visible)]="raceDialog" [style]="{width: '50%'}" header="Race Details" [modal]="true"
             class="p-fluid">
             <ng-template pTemplate="content" style="gap: 10px;">
-                <div class="field">
-                    <label for="name">Name</label>
-                    <input type="text" pInputText id="name" disabled="{{ !isNewRace }}" [(ngModel)]="race.name"
-                        class="form-control shadow-sm px-4" />
-                </div>
-
                 <div class="formgrid grid">
+                    <div class="field col">
+                        <label for="name">Name</label>
+                        <input type="text" pInputText id="name" disabled="{{ !isNewRace }}" [(ngModel)]="race.name"
+                            class="form-control shadow-sm px-4" />
+                    </div>
                     <div class="field col">
                         <label for="type">Type</label>
                         <select [(ngModel)]="selectedActivityType" name="activityType" required
@@ -112,11 +111,6 @@
                             <option *ngFor="let activityType of activityTypes" [value]="activityType.id">{{
                                 activityType.type }}</option>
                         </select>
-                    </div>
-                    <div class="field col">
-                        <label for="goal">Category</label>
-                        <p-multiSelect [options]="categories" [(ngModel)]="selectedCategories"
-                            optionLabel="category1"></p-multiSelect>
                     </div>
                 </div>
 
@@ -127,7 +121,7 @@
                             class="form-control shadow-sm px-4" />
                     </div>
                     <div class="field col">
-                        <label for="startDate">Start Date</label>
+                        <label for="startDate">Date</label>
                         <input type="datetime-local" [(ngModel)]="race.date" id="date" placeholder="{{ race.date }}"
                             required class="form-control shadow-sm px-4">
                     </div>
@@ -148,6 +142,57 @@
                         </select>
                     </div>
                 </div>
+
+                <p-toast></p-toast>
+                <h3 style="margin-bottom: 0;">Categories</h3>
+                <p-table #dt2 [value]="categories" responsiveLayout="scroll" [rows]="5"
+                    [globalFilterFields]="['category1', 'minimumAge', 'maximumAge']" [paginator]="false"
+                    [rowsPerPageOptions]="[5,10,20]" [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                    [(selection)]="selectedCategories" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                    <ng-template pTemplate="caption">
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                            <span class="block mt-2 md:mt-0 p-input-icon-left" style="width: 100%;">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="onGlobalFilter(dt2, $event)"
+                                    placeholder="Search..." class="w-full" />
+                            </span>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 3rem">
+                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                            </th>
+                            <th pSortableColumn="category1" style="text-align: center;">Category <p-sortIcon
+                                    field="category1"></p-sortIcon></th>
+                            <th pSortableColumn="minimumAge" style="text-align: center;">Minimum age <p-sortIcon
+                                    field="minimumAge"></p-sortIcon></th>
+                            <th pSortableColumn="maximumAge" style="text-align: center;">Maximum age <p-sortIcon
+                                    field="maximumAge"></p-sortIcon>
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-category>
+                        <tr>
+                            <td>
+                                <p-tableCheckbox [value]="category"></p-tableCheckbox>
+                            </td>
+                            <td style="width:33%; min-width:10rem; text-align: center;">
+                                <span class="p-column-title">Category</span>
+                                {{ category.category1 }}
+                            </td>
+                            <td style="width:33%; min-width:10rem; text-align: center;">
+                                <span class="p-column-title">Minimum age</span>
+                                {{ category.minimumAge }}
+                            </td>
+                            <td style="width:33%; min-width:10rem; text-align: center;">
+                                <span class="p-column-title">Maximum age</span>
+                                {{ category.maximumAge }}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
             </ng-template>
 
             <ng-template pTemplate="footer">

@@ -29,10 +29,13 @@ export class ManagementChallengesComponent {
 
   challenges: Challenge[] = [];
   sponsors: Sponsor[] = [];
+
   selectedChallenges: Challenge[] = [];
   selectedSponsors: Sponsor[] = [];
+
   challenge: Challenge = {};
   sponsor: Sponsor = {};
+
   activityTypes: ActivityType[] = [];
 
   submitted: boolean = false;

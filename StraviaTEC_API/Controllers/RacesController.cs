@@ -252,6 +252,52 @@ namespace StraviaTEC_API.Controllers
             return Ok("Race Deleted");
         }
 
+        [HttpDelete("DeleteCategories/{raceName}")]
+        public async Task<IActionResult> DeleteRaceCategories(string raceName)
+        {
+            if (_context.Races == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                   "EXEC spDeleteRaceCategories @RaceName",
+                   new SqlParameter("@RaceName", raceName)
+                   );
+
+                return Ok(true);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        [HttpDelete("DeleteSponsors/{raceName}")]
+        public async Task<IActionResult> DeleteRaceSponsors(string raceName)
+        {
+            if (_context.Races == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                   "EXEC spDeleteRaceSponsors @RaceName",
+                   new SqlParameter("@RaceName", raceName)
+                   );
+
+                return Ok(true);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
         private bool RaceExists(string id)
         {
             return (_context.Races?.Any(e => e.Name == id)).GetValueOrDefault();
