@@ -88,6 +88,27 @@ namespace StraviaTEC_API.Controllers
         }
 
         // GET: api/Sportmen
+        [HttpGet("SportmanNationViewChallenges/{username}")]
+        public async Task<ActionResult<IEnumerable<Challenge>>> GetSportmanChallenges(string username)
+        {
+            if (_context.Sportmen == null)
+            {
+                return NotFound();
+            }
+            var result = await _context.Challenges.FromSqlRaw(
+                    "EXEC spGetSportmanChallenges @Username",
+                    new SqlParameter("@Username", username)
+                    ).ToListAsync();
+
+            if (result.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+
+            return result;
+        }
+
+        // GET: api/Sportmen
         [HttpGet("Login/{username},{password}")]
         public async Task<IActionResult> Login (string username, string password)
         {
@@ -183,6 +204,30 @@ namespace StraviaTEC_API.Controllers
                 {
                     throw;
                 }
+            }
+        }
+
+        // POST: api/Sportmen
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("AddToChallenge/{challengeName},{username}")]
+        public async Task<IActionResult> PostChallengeSportmanParticipant(string challengeName, string username)
+        {
+            if (_context.Sportmen == null)
+            {
+                return Problem("Entity set 'StraviaTecContext.Sportmen'  is null.");
+            }
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                "EXEC spAddChallengeSportmanParticipant @ChallengeName, @SportmanUsername",
+                    new SqlParameter("@ChallengeName", challengeName),
+                    new SqlParameter("@SportmanUsername", username)
+                );
+                return Ok(true);
+            }
+            catch
+            {
+                throw;
             }
         }
 

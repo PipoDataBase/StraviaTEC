@@ -99,6 +99,27 @@ namespace StraviaTEC_API.Controllers
             return Ok(result);
         }
 
+        // GET: api/Challenges
+        [HttpGet("Participants/{challengeName}")]
+        public async Task<ActionResult<IEnumerable<VwSportmanNationality>>> GetChallengeParticipants(string challengeName)
+        {
+            if (_context.Challenges == null)
+            {
+                return NotFound();
+            }
+            var result = await _context.VwSportmanNationalities.FromSqlRaw(
+                "EXEC spGetChallengeParticipants @ChallengeName",
+                new SqlParameter("@ChallengeName", challengeName)
+                ).ToListAsync();
+
+            if (result.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
         // PUT: api/Challenges/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

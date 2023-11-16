@@ -195,6 +195,32 @@ BEGIN
 	WHERE ChallengeName = @ChallengeName;
 END;
 
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spDeleteChallengeSponsors
+    @ChallengeName varchar(20)
+AS
+BEGIN
+	DELETE FROM ChallengeSponsor
+	WHERE ChallengeName = @ChallengeName;
+END;
+
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spGetChallengeParticipants
+    @ChallengeName varchar(20)
+AS
+BEGIN
+    SELECT VwS.Username, VwS.Name, VwS.LastName1, VwS.LastName2, 
+           VwS.BirthDate, VwS.PhotoPath, VwS.Nationality
+    FROM vwSportmanNationality VwS INNER JOIN ChallengeSportmanParticipant CSP 
+    ON VwS.Username = CSP.SportmanUsername
+    WHERE CSP.ChallengeName = @ChallengeName;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
 
 Go
 -- ================================================
@@ -304,6 +330,38 @@ BEGIN
     DELETE FROM Sportman
     WHERE Username = @Username;
 END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spAddChallengeSportmanParticipant
+    @ChallengeName varchar(20),
+	@SportmanUsername varchar(20)
+AS
+BEGIN
+    BEGIN TRY
+        INSERT INTO ChallengeSportmanParticipant (ChallengeName, SportmanUsername)
+        VALUES (@ChallengeName, @SportmanUsername);
+    END TRY
+    BEGIN CATCH
+        THROW 51000, 'ERROR: couldnt add the Sportman to the Challenge', 1;
+    END CATCH
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spGetSportmanChallenges
+    @Username varchar(20)
+AS
+BEGIN
+    SELECT C.Name, C.Goal, C.Private, C.StartDate, C.EndDate, C.Deep, C.Type
+    FROM Challenge C INNER JOIN ChallengeSportmanParticipant CSP
+    ON C.Name = CSP.ChallengeName
+    WHERE CSP.SportmanUsername = @Username;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
 
 Go
 -- ================================================
