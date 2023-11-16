@@ -108,7 +108,7 @@ namespace StraviaTEC_API.Controllers
         }
 
         // GET: api/Sportmen
-        [HttpGet("SportmanNationViewChallenges/{username}")]
+        [HttpGet("participatingChallenges/{username}")]
         public async Task<ActionResult<IEnumerable<Challenge>>> GetSportmanChallenges(string username)
         {
             if (_context.Sportmen == null)

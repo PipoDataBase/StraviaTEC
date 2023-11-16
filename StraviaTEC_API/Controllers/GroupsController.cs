@@ -82,8 +82,8 @@ namespace StraviaTEC_API.Controllers
 
         // POST: api/Groups
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Group>> PostGroup(Group group)
+        [HttpPost("{groupName}/{managerUsername}")]
+        public async Task<ActionResult<Group>> PostGroup(string groupName, string managerUsername)
         {
             if (_context.Groups == null)
             {
@@ -93,10 +93,10 @@ namespace StraviaTEC_API.Controllers
             {
                 await _context.Database.ExecuteSqlRawAsync(
                     "EXEC spInsertGroup @Name, @ManagerUsername",
-                    new SqlParameter("@Name", group.Name),
-                    new SqlParameter("@ManagerUsername", group.UsernamesNavigation.ElementAt(0).Username)
+                    new SqlParameter("@Name", groupName),
+                    new SqlParameter("@ManagerUsername", managerUsername)
                     );
-                return Ok("Group Created");
+                return Ok(true);
             }
             catch (DbUpdateException)
             {
