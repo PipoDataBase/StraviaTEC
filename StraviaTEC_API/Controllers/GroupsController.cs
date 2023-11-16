@@ -55,7 +55,30 @@ namespace StraviaTEC_API.Controllers
             return Ok(result[0]);
         }
 
-        
+
+        // GET: api/Groups/5
+        [HttpGet("Search/{id}")]
+        public async Task<ActionResult<IEnumerable<Group>>> GetGroupSearch(string id)
+        {
+            if (_context.Groups == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _context.Groups.FromSqlRaw(
+                    "EXEC spGetGroup @Name",
+                    new SqlParameter("@Name", id)
+                    ).ToListAsync();
+
+            if (result.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+
+            return result;
+        }
+
+
 
         // POST: api/Groups
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

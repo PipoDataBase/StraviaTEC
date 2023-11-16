@@ -67,6 +67,26 @@ namespace StraviaTEC_API.Controllers
         }
 
         // GET: api/Sportmen
+        [HttpGet("SportmenNationView/{username}")]
+        public async Task<ActionResult<IEnumerable<VwSportmanNationality>>> GetSportmenNationViewByName(string username)
+        {
+            if (_context.Sportmen == null)
+            {
+                return NotFound();
+            }
+            var result = await _context.VwSportmanNationalities.FromSqlRaw(
+                    "EXEC spGetSportmanNationView @Username",
+                    new SqlParameter("@Username", username)
+                    ).ToListAsync();
+
+            if (result.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+            return result;
+        }
+
+        // GET: api/Sportmen
         [HttpGet("SportmanNationView/{username}")]
         public async Task<ActionResult<VwSportmanNationality>> GetSportmanNationView(string username)
         {
@@ -109,7 +129,7 @@ namespace StraviaTEC_API.Controllers
         }
 
         // GET: api/Sportmen
-        [HttpGet("Login/{username},{password}")]
+        [HttpGet("Login/{username}/{password}")]
         public async Task<IActionResult> Login (string username, string password)
         {
             if (_context.Sportmen == null)
@@ -209,7 +229,7 @@ namespace StraviaTEC_API.Controllers
 
         // POST: api/Sportmen
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("AddToChallenge/{challengeName},{username}")]
+        [HttpPost("AddToChallenge/{challengeName}/{username}")]
         public async Task<IActionResult> PostChallengeSportmanParticipant(string challengeName, string username)
         {
             if (_context.Sportmen == null)

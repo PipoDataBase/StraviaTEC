@@ -88,7 +88,7 @@ namespace StraviaTEC_API.Controllers
 
         // PUT: api/BankAccounts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("{bankAccount},{raceName}, {newBankAccount}")]
+        [HttpPost("{bankAccount}/{raceName}/{newBankAccount}")]
         public async Task<ActionResult<BankAccount>> PutBankAccount(string bankAccount, string raceName, string newBankAccount)
         {
             if (_context.BankAccounts == null)
