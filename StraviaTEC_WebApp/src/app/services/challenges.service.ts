@@ -26,7 +26,7 @@ export class ChallengesService {
   }
 
   getChallengeSponsors(challengeName: string): Observable<Sponsor[]> {
-    return this.http.get<Sponsor[]>(this.baseApiUrl + '/api/Challenges/GetSponsors/' + challengeName);
+    return this.http.get<Sponsor[]>(this.baseApiUrl + '/api/Challenges/Sponsors/' + challengeName);
   }
 
   postChallenge(username: string, challenge: Challenge): Observable<boolean> {

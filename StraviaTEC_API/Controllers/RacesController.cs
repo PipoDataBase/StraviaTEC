@@ -34,7 +34,7 @@ namespace StraviaTEC_API.Controllers
         }
 
         // GET: api/Races
-        [HttpGet("byManager/{username}")]
+        [HttpGet("ByManager/{username}")]
         public async Task<ActionResult<IEnumerable<Race>>> GetRacesByManager(string username)
         {
             if (_context.Races == null)
@@ -49,14 +49,14 @@ namespace StraviaTEC_API.Controllers
 
         // GET: api/Races
         [HttpGet("Categories/{raceName}")]
-        public async Task<ActionResult<IEnumerable<Category>>> GetRaceCategoriesByName(string raceName)
+        public async Task<ActionResult<IEnumerable<Category>>> GetRaceCategories(string raceName)
         {
             if (_context.Races == null)
             {
                 return NotFound();
             }
             return await _context.Categories.FromSqlRaw(
-                    "EXEC spGetRaceCategoriesByName @RaceName",
+                    "EXEC spGetRaceCategories @RaceName",
                     new SqlParameter("@RaceName", raceName)
                     ).ToListAsync();
         }
@@ -185,7 +185,7 @@ namespace StraviaTEC_API.Controllers
 
         // POST: api/Races
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("addRaceCategory/{raceName},{categoryId}")]
+        [HttpPost("AddCategory/{raceName}/{categoryId}")]
         public async Task<ActionResult<Race>> PostRaceCategory(string raceName, int categoryId)
         {
             if (_context.Races == null)
@@ -209,8 +209,8 @@ namespace StraviaTEC_API.Controllers
 
         // POST: api/Races
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("addRaceSponsor/{SponsorTradeName},{RaceName}")]
-        public async Task<ActionResult<Race>> PostRaceSponsor(string SponsorTradeName, string RaceName)
+        [HttpPost("AddSponsor/{sponsorTradeName}/{raceName}")]
+        public async Task<ActionResult<Race>> PostRaceSponsor(string sponsorTradeName, string raceName)
         {
             if (_context.Races == null)
             {
@@ -220,8 +220,8 @@ namespace StraviaTEC_API.Controllers
             {
                 await _context.Database.ExecuteSqlRawAsync(
                                     "EXEC spAddRaceSponsor @SponsorTradeName, @RaceName",
-                                    new SqlParameter("@SponsorTradeName", SponsorTradeName),
-                                    new SqlParameter("@RaceName", RaceName)
+                                    new SqlParameter("@SponsorTradeName", sponsorTradeName),
+                                    new SqlParameter("@RaceName", raceName)
                                     );
                 return Ok(true);
             }

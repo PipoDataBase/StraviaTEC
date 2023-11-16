@@ -632,7 +632,7 @@ END;
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
 Go
-CREATE PROCEDURE spGetRaceCategoriesByName
+CREATE PROCEDURE spGetRaceCategories
     @RaceName varchar(20)
 AS
 BEGIN

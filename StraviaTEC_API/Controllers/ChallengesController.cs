@@ -79,7 +79,7 @@ namespace StraviaTEC_API.Controllers
         }
 
         // GET: api/Challenges
-        [HttpGet("GetSponsors/{challengeName}")]
+        [HttpGet("Sponsors/{challengeName}")]
         public async Task<ActionResult<IEnumerable<Sponsor>>> GetChallengeSponsors(string challengeName)
         {
             if (_context.Challenges == null)
