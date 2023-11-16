@@ -67,7 +67,7 @@ namespace StraviaTEC_API.Controllers
         }
 
         // GET: api/Sportmen
-        [HttpGet("SportmenNationView/{username}")]
+        [HttpGet("Search/{username}")]
         public async Task<ActionResult<IEnumerable<VwSportmanNationality>>> GetSportmenNationViewByName(string username)
         {
             if (_context.Sportmen == null)
