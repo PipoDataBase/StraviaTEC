@@ -257,7 +257,7 @@ CREATE PROCEDURE spGetSportmanNationView
 AS
 BEGIN
     SELECT * FROM vwSportmanNationality 
-    WHERE Username = @Username;
+    WHERE Username LIKE '%' + @Username + '%';
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
@@ -736,7 +736,7 @@ CREATE PROCEDURE spGetGroup
     @Name varchar(20)
 AS
 BEGIN
-    SELECT * FROM Group_ WHERE Name = @Name;
+    SELECT * FROM Group_ WHERE Name LIKE '%' + @Name + '%';
 END;
 
 Go
