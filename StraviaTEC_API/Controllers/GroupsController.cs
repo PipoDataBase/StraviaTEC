@@ -93,11 +93,6 @@ namespace StraviaTEC_API.Controllers
                     new SqlParameter("@Name", id)
                     ).ToListAsync();
 
-            if (result.IsNullOrEmpty())
-            {
-                return NotFound();
-            }
-
             return result;
         }
 

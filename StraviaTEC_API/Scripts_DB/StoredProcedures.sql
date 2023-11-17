@@ -348,6 +348,24 @@ END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
+GO 
+CREATE PROCEDURE spDeleteChallengeSportmanParticipant
+    @ChallengeName varchar(20),
+	@SportmanUsername varchar(20)
+AS
+BEGIN
+    BEGIN TRY
+        DELETE FROM ChallengeSportmanParticipant 
+        WHERE ChallengeName = @ChallengeName AND SportmanUsername = @SportmanUsername
+    END TRY
+    BEGIN CATCH
+        THROW 51000, 'ERROR leaving Challenge', 1;
+    END CATCH;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+
 GO
 CREATE PROCEDURE spGetSportmanChallenges
     @Username varchar(20)
@@ -1111,6 +1129,17 @@ CREATE PROCEDURE spGetBill
 AS
 BEGIN
     SELECT * FROM Bill WHERE Id = @Id;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+Go
+CREATE PROCEDURE spGetBillToDelete
+@Username varchar(20),
+@RaceName varchar(20)
+AS
+BEGIN
+    SELECT * FROM Bill WHERE Username = @Username AND RaceName = @RaceName;
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>

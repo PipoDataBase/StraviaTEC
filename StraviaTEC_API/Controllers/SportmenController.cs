@@ -343,6 +343,61 @@ namespace StraviaTEC_API.Controllers
             return Ok(true);
         }
 
+        // DELETE: api/Sportmen/5
+        [HttpDelete("LeaveChallenge/{challengeName}/{sportmanUsername}")]
+        public async Task<IActionResult> LeaveChallenge (string challengeName, string sportmanUsername)
+        {
+            if (_context.Sportmen == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                "EXEC spDeleteChallengeSportmanParticipant @ChallengeName, @SportmanUsername",
+                    new SqlParameter("@ChallengeName", challengeName),
+                    new SqlParameter("@SportmanUsername", sportmanUsername)
+                );
+                return Ok(true);
+            }
+            catch 
+            { 
+                throw; 
+            }
+        }
+
+
+        // DELETE: api/Sportmen/5
+        [HttpDelete("LeaveRace/{raceName}/{sportmanUsername}")]
+        public async Task<IActionResult> LeaveRace(string raceName, string sportmanUsername)
+        {
+            if (_context.Sportmen == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                var bill = await _context.Bills.FromSqlRaw(
+                        "EXEC spGetBillToDelete @Username, @RaceName",
+                        new SqlParameter("@Username", sportmanUsername),
+                        new SqlParameter("@RaceName", raceName)
+                        ).ToListAsync();
+
+                await _context.Database.ExecuteSqlRawAsync(
+                "EXEC spDeleteBill @Id",
+                    new SqlParameter("@Id", bill.ElementAt(0).Id)
+                );
+                return Ok(true);
+            }
+            catch 
+            { 
+                throw; 
+            }
+
+        }
+
         private bool SportmanExists(string id)
         {
             return (_context.Sportmen?.Any(e => e.Username == id)).GetValueOrDefault();
