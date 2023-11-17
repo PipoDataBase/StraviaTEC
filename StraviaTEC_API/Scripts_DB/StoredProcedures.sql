@@ -13,7 +13,7 @@ CREATE PROCEDURE spGetActivityType
 @Id tinyint
 AS
 BEGIN
-    SELECT * FROM ActivityType where Id = @Id;
+    SELECT * FROM ActivityType WHERE Id = @Id;
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
@@ -64,7 +64,7 @@ CREATE PROCEDURE spGetChallenge
 @Name varchar(20)
 AS
 BEGIN
-    SELECT * FROM Challenge where Name = @Name;
+    SELECT * FROM Challenge WHERE Name = @Name;
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
@@ -79,7 +79,7 @@ END;
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
 Go
-CREATE PROCEDURE spGetChallengeByManager
+CREATE PROCEDURE spGetChallengesByManager
 @Username varchar(20)
 AS
 BEGIN
@@ -237,7 +237,7 @@ CREATE PROCEDURE spGetSportman
 @Username varchar(20)
 AS
 BEGIN
-    SELECT * FROM Sportman where Username = @Username;
+    SELECT * FROM Sportman WHERE Username = @Username;
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
@@ -465,7 +465,7 @@ CREATE PROCEDURE spGetNationality
     @Id tinyint
 AS
 BEGIN
-    SELECT * FROM Nationality where Id = @Id;
+    SELECT * FROM Nationality WHERE Id = @Id;
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
@@ -517,7 +517,7 @@ CREATE PROCEDURE spGetActivity
 @Id int
 AS
 BEGIN
-    SELECT * FROM Activity where Id = @Id;
+    SELECT * FROM Activity WHERE Id = @Id;
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
@@ -640,7 +640,7 @@ CREATE PROCEDURE spGetSponsor
 @TradeName varchar(20)
 AS
 BEGIN
-    SELECT * FROM Sponsor where TradeName = @TradeName;
+    SELECT * FROM Sponsor WHERE TradeName = @TradeName;
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
@@ -699,7 +699,17 @@ CREATE PROCEDURE spGetGroup
     @Name varchar(20)
 AS
 BEGIN
-    SELECT * FROM Group_ where Name = @Name;
+    SELECT * FROM Group_ WHERE Name = @Name;
+END;
+
+Go
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+CREATE PROCEDURE spGetGroupsByManager
+    @Username varchar(20)
+AS
+BEGIN
+    SELECT * FROM GroupManager WHERE Username = @Username;
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
@@ -745,6 +755,8 @@ CREATE PROCEDURE spDeleteGroup
     @Name varchar(20)
 AS
 BEGIN
+	DELETE FROM GroupManager
+	WHERE GroupName = @Name;
     DELETE FROM Group_
     WHERE Name = @Name;
 END;
@@ -805,7 +817,7 @@ CREATE PROCEDURE spGetRace
     @Name varchar(20)
 AS
 BEGIN
-    SELECT * FROM Race where Name = @Name;
+    SELECT * FROM Race WHERE Name = @Name;
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
@@ -982,7 +994,7 @@ CREATE PROCEDURE spGetCategory
     @Id tinyint
 AS
 BEGIN
-    SELECT * FROM Category where Id = @Id;
+    SELECT * FROM Category WHERE Id = @Id;
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
@@ -1042,7 +1054,7 @@ CREATE PROCEDURE spGetBankAccount
     @RaceName varchar(20)
 AS
 BEGIN
-    SELECT * FROM BankAccount where RaceName = @RaceName;
+    SELECT * FROM BankAccount WHERE RaceName = @RaceName;
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
@@ -1109,7 +1121,7 @@ CREATE PROCEDURE spGetBill
 @Id INT
 AS
 BEGIN
-    SELECT * FROM Bill where Id = @Id;
+    SELECT * FROM Bill WHERE Id = @Id;
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>

@@ -1,1 +1,253 @@
-<p>management-groups works!</p>
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast position="top-center" key="tc"></p-toast>
+            <h1>Groups</h1>
+            <p-table #dt [value]="challenges" responsiveLayout="scroll" [rows]="5" [globalFilterFields]="['name']"
+                [paginator]="true" [rowsPerPageOptions]="[5,10,20]" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [(selection)]="selectedChallenges" selectionMode="multiple" [rowHover]="true" dataKey="name">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <span class="block mt-2 md:mt-0 p-input-icon-left" style="width: 100%;">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."
+                                class="w-full" />
+                        </span>
+                        <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success ml-2"
+                            style="min-width: 8%;" (click)="openNew()"></button>
+                        <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger ml-2"
+                            style="min-width: 8%;" (click)="deleteSelectedChallenges()"
+                            [disabled]="!selectedChallenges || !selectedChallenges.length"></button>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="name" style="text-align: center;">Name <p-sortIcon
+                                field="name"></p-sortIcon></th>
+                        <th pSortableColumn="type" style="text-align: center;">Type <p-sortIcon
+                                field="type"></p-sortIcon></th>
+                        <th pSortableColumn="goal" style="text-align: center;">Goal <p-sortIcon
+                                field="goal"></p-sortIcon></th>
+                        <th pSortableColumn="startDate" style="text-align: center;">Start Date <p-sortIcon
+                                field="startDate"></p-sortIcon></th>
+                        <th pSortableColumn="endDate" style="text-align: center;">End Date <p-sortIcon
+                                field="endDate"></p-sortIcon></th>
+                        <th pSortableColumn="deep" style="text-align: center;">Deep/Height <p-sortIcon
+                                field="deep"></p-sortIcon></th>
+                        <th pSortableColumn="private" style="text-align: center;">Privacy <p-sortIcon
+                                field="private"></p-sortIcon></th>
+                        <th pSortableColumn="action" style="text-align: center;">Action</th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-challenge>
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="challenge"></p-tableCheckbox>
+                        </td>
+                        <td style="width:12%; min-width:10rem; text-align: center;"><span
+                                class="p-column-title">Name</span>
+                            {{ challenge.name }}
+                        </td>
+                        <td style="width:12%; min-width:10rem; text-align: center;">
+                            <span class="p-column-title">Type</span>
+                            {{ sharedService.getActivityType(activityTypes, challenge.type) }}
+                        </td>
+                        <td style="width:12%; min-width:10rem; text-align: center;">
+                            <span class="p-column-title">Goal</span>
+                            {{ challenge.goal + ' km' }}
+                        </td>
+                        <td style="width:12%; min-width:10rem; text-align: center;">
+                            <span class="p-column-title">Start Date</span>
+                            {{ sharedService.formatDate2(challenge.startDate) }}
+                        </td>
+                        <td style="width:12%; min-width:10rem; text-align: center;">
+                            <span class="p-column-title">End Date</span>
+                            {{ sharedService.formatDate2(challenge.endDate) }}
+                        </td>
+                        <td style="width:12%; min-width:10rem; text-align: center;">
+                            <span class="p-column-title">Deep/Height</span>
+                            {{ challenge.deep ? 'Deep' : 'Height' }}
+                        </td>
+                        <td style="width:12%; min-width:10rem; text-align: center;">
+                            <span class="p-column-title">Privacy</span>
+                            {{ challenge.private ? 'Private' : 'Public' }}
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-info"
+                                    class="p-button-rounded p-button-secondary mr-2"
+                                    (click)="challengeSponsor(challenge)"></button>
+                                <button pButton pRipple icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-primary mr-2"
+                                    (click)="editChallenge(challenge)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                                    (click)="deleteChallenge(challenge)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog [(visible)]="challengeDialog" [style]="{width: '50%'}" header="Challenge Details" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content" style="gap: 10px;">
+                <div class="field">
+                    <label for="name">Name</label>
+                    <input type="text" pInputText id="name" disabled="{{ !isNewChallenge }}"
+                        [(ngModel)]="challenge.name" class="form-control shadow-sm px-4" />
+                </div>
+
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <label for="type">Type</label>
+                        <select [(ngModel)]="selectedActivityType" name="activityType" required
+                            class="form-control shadow-sm px-4">
+                            <option *ngFor="let activityType of activityTypes" [value]="activityType.id">{{
+                                activityType.type }}</option>
+                        </select>
+                    </div>
+                    <div class="field col">
+                        <label for="goal">Goal (km)</label>
+                        <input type="number" class="form-control shadow-sm px-4" pInputText id="goal" min="0" required
+                            [(ngModel)]="challenge.goal" />
+                    </div>
+                </div>
+
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <label for="startDate">Start Date</label>
+                        <input type="date" [(ngModel)]="challenge.startDate" id="startDate"
+                            placeholder="{{ challenge.startDate }}" required class="form-control shadow-sm px-4">
+                    </div>
+                    <div class="field col">
+                        <label for="endDate">End Date</label>
+                        <input type="date" [(ngModel)]="challenge.endDate" id="endDate"
+                            placeholder="{{ challenge.endDate }}" required class="form-control shadow-sm px-4">
+                    </div>
+                </div>
+
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <label for="deep">Deep/Height</label>
+                        <select [(ngModel)]="selectedDeepHeight" name="deep_height" required
+                            class="form-control shadow-sm px-4">
+                            <option value="true">Deep</option>
+                            <option value="false">Height</option>
+                        </select>
+                    </div>
+                    <div class="field col">
+                        <label for="privacy">Privacy</label>
+                        <select [(ngModel)]="selectedPrivacy" name="privacy" required
+                            class="form-control shadow-sm px-4">
+                            <option value="true">Private</option>
+                            <option value="false">Public</option>
+                        </select>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                    (click)="saveChallenge()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="challengeSponsorDialog" [style]="{width: '50%'}" header="Sponsors" [modal]="true"
+            class="p-fluid">
+            <p-table #dt2 [value]="sponsors" responsiveLayout="scroll" [rows]="5"
+                [globalFilterFields]="['tradeName', 'legalRepresentant', 'phone']" [paginator]="true"
+                [rowsPerPageOptions]="[5,10,20]" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [(selection)]="selectedSponsors" selectionMode="multiple" [rowHover]="true" dataKey="tradeName">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <span class="block mt-2 md:mt-0 p-input-icon-left" style="width: 100%;">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt2, $event)" placeholder="Search..."
+                                class="w-full" />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="logo" style="text-align: center;">Logo</th>
+                        <th pSortableColumn="tradeName" style="text-align: center;">Trade Name <p-sortIcon
+                                field="tradeName"></p-sortIcon></th>
+                        <th pSortableColumn="legalRepresentant" style="text-align: center;">Legal Representant
+                            <p-sortIcon field="legalRepresentant"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="phone" style="text-align: center;">Phone <p-sortIcon
+                                field="phone"></p-sortIcon></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-sponsor>
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="sponsor"></p-tableCheckbox>
+                        </td>
+                        <td style="width:26%; min-width:10rem; text-align: center;"><span
+                                class="p-column-title">Logo</span>
+                            <img [src]="sponsor.logoPath" [alt]="logo" width="100" class="shadow-4" />
+                        </td>
+                        <td style="width:26%; min-width:10rem; text-align: center;">
+                            <span class="p-column-title">Trade Name</span>
+                            {{ sponsor.tradeName }}
+                        </td>
+                        <td style="width:26%; min-width:10rem; text-align: center;">
+                            <span class="p-column-title">Legal Representant</span>
+                            {{ sponsor.legalRepresentant }}
+                        </td>
+                        <td style="width:26%; min-width:10rem; text-align: center;">
+                            <span class="p-column-title">Phone</span>
+                            {{ sponsor.phone }}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideChallengeSponsorDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                    (click)="saveChallengeSponsor()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteChallengeDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="challenge">Are you sure you want to delete <b>{{ challenge.name }}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteChallengeDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                    (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteChallengesDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span>Are you sure you want to delete selected challenges?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
+                    (click)="deleteChallengesDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+                    (click)="confirmDeleteSelected()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

@@ -77,7 +77,7 @@ namespace StraviaTEC_API.Controllers
 
             try {
                 var result = await _context.Challenges.FromSqlRaw(
-                    "EXEC spGetChallengeByManager @Username",
+                    "EXEC spGetChallengesByManager @Username",
                     new SqlParameter("@Username", username)
                     ).ToListAsync();
 

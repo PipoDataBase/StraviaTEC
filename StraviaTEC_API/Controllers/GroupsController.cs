@@ -55,6 +55,29 @@ namespace StraviaTEC_API.Controllers
             return Ok(result[0]);
         }
 
+        [HttpGet("ByManager/{username}")]
+        public async Task<dynamic> GetGroupsByManager(string username)
+        {
+            if (_context.Challenges == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                var result = await _context.Groups.FromSqlRaw(
+                    "EXEC spGetGroupsByManager @Username",
+                    new SqlParameter("@Username", username)
+                    ).ToListAsync();
+
+                return Ok(result);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
 
         // GET: api/Groups/5
         [HttpGet("Search/{id}")]
@@ -82,8 +105,8 @@ namespace StraviaTEC_API.Controllers
 
         // POST: api/Groups
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("{groupName}/{managerUsername}")]
-        public async Task<ActionResult<Group>> PostGroup(string groupName, string managerUsername)
+        [HttpPost("{groupName}/{username}")]
+        public async Task<ActionResult<Group>> PostGroup(string groupName, string username)
         {
             if (_context.Groups == null)
             {
@@ -94,7 +117,7 @@ namespace StraviaTEC_API.Controllers
                 await _context.Database.ExecuteSqlRawAsync(
                     "EXEC spInsertGroup @Name, @ManagerUsername",
                     new SqlParameter("@Name", groupName),
-                    new SqlParameter("@ManagerUsername", managerUsername)
+                    new SqlParameter("@ManagerUsername", username)
                     );
                 return Ok(true);
             }
