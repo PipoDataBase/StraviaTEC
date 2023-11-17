@@ -257,7 +257,7 @@ CREATE PROCEDURE spGetSportmanNationView
 AS
 BEGIN
     SELECT * FROM vwSportmanNationality 
-    WHERE Username = @Username;
+    WHERE Username LIKE '%' + @Username + '%';
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
@@ -736,7 +736,7 @@ CREATE PROCEDURE spGetGroup
     @Name varchar(20)
 AS
 BEGIN
-    SELECT * FROM Group_ WHERE Name = @Name;
+    SELECT * FROM Group_ WHERE Name LIKE '%' + @Name + '%';
 END;
 
 Go
@@ -751,6 +751,20 @@ BEGIN
     ON G.Name = GM.GroupName
     WHERE GM.Username = @Username;
 END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spGetGroupMembers
+    @GroupName varchar(20)
+AS
+BEGIN
+    SELECT S.Username, S.Name, S.LastName1, S.LastName2, S.BirthDate, S.PhotoPath, S.Nationality
+    FROM vwSportmanNationality S INNER JOIN SportmanGroup SG
+    ON S.Username = SG.Username
+    WHERE SG.GroupName = @GroupName;
+END;
+
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 -- Checks if the user exists and the name isnt taken. Then creates the group and sets its manager

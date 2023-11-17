@@ -96,6 +96,22 @@ namespace StraviaTEC_API.Controllers
             return result;
         }
 
+        [HttpGet("GetMembers/{groupName}")]
+        public async Task<ActionResult<IEnumerable<Group>>> GetMembers(string groupName)
+        {
+            if (_context.Groups == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _context.Groups.FromSqlRaw(
+                    "EXEC spGetGroupMembers @GroupName",
+                    new SqlParameter("@GroupName", groupName)
+                    ).ToListAsync();
+
+            return result;
+        }
+
 
 
         // POST: api/Groups
