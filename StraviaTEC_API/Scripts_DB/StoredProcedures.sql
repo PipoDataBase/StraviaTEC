@@ -70,10 +70,15 @@ END;
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
 GO
-CREATE PROCEDURE spGetAvailableChallenges
+CREATE PROCEDURE spGetAvailableVwChallenges
+    @Username varchar(20)
 AS
 BEGIN
-    SELECT * FROM vwAvailableChallenges;
+    SELECT DISTINCT C.Name, C.Goal, C.Private, C.StartDate, C.EndDate, C.Deep, C.Type, C.Manager
+    FROM vwChallenges C
+    LEFT JOIN ChallengeGroup CG ON C.Name = CG.ChallengeName
+    LEFT JOIN SportmanGroup SG ON SG.GroupName = CG.GroupName
+    WHERE GETDATE() < EndDate AND (Private = 0 OR SG.Username = @Username);
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>

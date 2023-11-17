@@ -29,6 +29,18 @@ AS SELECT Challenge.Name, Challenge.Goal, Challenge.Private, Challenge.StartDate
 FROM Challenge 
 INNER JOIN ChallengeSportmanManager ON Challenge.Name = ChallengeSportmanManager.ChallengeName;
 
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE VIEW vwChallenges
+AS SELECT C.Name, C.Goal, C.Private, C.StartDate, C.EndDate, C.Deep, AT.Type, CSM.SportmanUsername AS Manager
+FROM Challenge C 
+INNER JOIN ActivityType AT ON C.Type = AT.Id
+INNER JOIN ChallengeSportmanManager CSM ON C.Name = CSM.ChallengeName;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
 -- ================================================
 --                    Sportmen
 -- ================================================

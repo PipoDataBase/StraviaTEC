@@ -39,6 +39,8 @@ public partial class StraviaTecContext : DbContext
 
     public virtual DbSet<VwAvailableChallenge> VwAvailableChallenges { get; set; }
 
+    public virtual DbSet<VwChallenge> VwChallenges { get; set; }
+
     public virtual DbSet<VwChallengesByManager> VwChallengesByManagers { get; set; }
 
     public virtual DbSet<VwRace> VwRaces { get; set; }
@@ -53,7 +55,7 @@ public partial class StraviaTecContext : DbContext
     {
         modelBuilder.Entity<Activity>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Activity__3214EC0791857120");
+            entity.HasKey(e => e.Id).HasName("PK__Activity__3214EC071B14F8A9");
 
             entity.ToTable("Activity");
 
@@ -94,7 +96,7 @@ public partial class StraviaTecContext : DbContext
 
         modelBuilder.Entity<ActivityType>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Activity__3214EC075E4A93BE");
+            entity.HasKey(e => e.Id).HasName("PK__Activity__3214EC07A3F6441D");
 
             entity.ToTable("ActivityType");
 
@@ -106,7 +108,7 @@ public partial class StraviaTecContext : DbContext
 
         modelBuilder.Entity<BankAccount>(entity =>
         {
-            entity.HasKey(e => new { e.BankAccount1, e.RaceName }).HasName("PK__BankAcco__019ADEDBA313E570");
+            entity.HasKey(e => new { e.BankAccount1, e.RaceName }).HasName("PK__BankAcco__019ADEDBFE3DF31E");
 
             entity.ToTable("BankAccount");
 
@@ -126,7 +128,7 @@ public partial class StraviaTecContext : DbContext
 
         modelBuilder.Entity<Bill>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Bill__3214EC07F0C348FA");
+            entity.HasKey(e => e.Id).HasName("PK__Bill__3214EC07DBEC1775");
 
             entity.ToTable("Bill");
 
@@ -152,7 +154,7 @@ public partial class StraviaTecContext : DbContext
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Category__3214EC07D663F58B");
+            entity.HasKey(e => e.Id).HasName("PK__Category__3214EC078CC900E7");
 
             entity.ToTable("Category");
 
@@ -165,7 +167,7 @@ public partial class StraviaTecContext : DbContext
 
         modelBuilder.Entity<Challenge>(entity =>
         {
-            entity.HasKey(e => e.Name).HasName("PK__Challeng__737584F7215C50D7");
+            entity.HasKey(e => e.Name).HasName("PK__Challeng__737584F733277B5E");
 
             entity.ToTable("Challenge");
 
@@ -193,7 +195,7 @@ public partial class StraviaTecContext : DbContext
                         .HasConstraintName("ChallengeGroup_fk0"),
                     j =>
                     {
-                        j.HasKey("ChallengeName", "GroupName").HasName("PK__Challeng__D61F757922801C0D");
+                        j.HasKey("ChallengeName", "GroupName").HasName("PK__Challeng__D61F75798A39E3B7");
                         j.ToTable("ChallengeGroup");
                         j.IndexerProperty<string>("ChallengeName")
                             .HasMaxLength(20)
@@ -216,7 +218,7 @@ public partial class StraviaTecContext : DbContext
                         .HasConstraintName("ChallengeSportmanManager_fk0"),
                     j =>
                     {
-                        j.HasKey("ChallengeName", "SportmanUsername").HasName("PK__Challeng__970EF6F7B2EE0B0C");
+                        j.HasKey("ChallengeName", "SportmanUsername").HasName("PK__Challeng__970EF6F7D9A8876E");
                         j.ToTable("ChallengeSportmanManager");
                         j.IndexerProperty<string>("ChallengeName")
                             .HasMaxLength(20)
@@ -239,7 +241,7 @@ public partial class StraviaTecContext : DbContext
                         .HasConstraintName("ChallengeSportmanParticipant_fk0"),
                     j =>
                     {
-                        j.HasKey("ChallengeName", "SportmanUsername").HasName("PK__Challeng__970EF6F7741796AE");
+                        j.HasKey("ChallengeName", "SportmanUsername").HasName("PK__Challeng__970EF6F75BEDCA2B");
                         j.ToTable("ChallengeSportmanParticipant");
                         j.IndexerProperty<string>("ChallengeName")
                             .HasMaxLength(20)
@@ -252,7 +254,7 @@ public partial class StraviaTecContext : DbContext
 
         modelBuilder.Entity<Group>(entity =>
         {
-            entity.HasKey(e => e.Name).HasName("PK__Group___737584F71C7C60B1");
+            entity.HasKey(e => e.Name).HasName("PK__Group___737584F750EE35E0");
 
             entity.ToTable("Group_");
 
@@ -263,7 +265,7 @@ public partial class StraviaTecContext : DbContext
 
         modelBuilder.Entity<Nationality>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__National__3214EC074C8D021F");
+            entity.HasKey(e => e.Id).HasName("PK__National__3214EC07D4D3E5AF");
 
             entity.ToTable("Nationality");
 
@@ -276,7 +278,7 @@ public partial class StraviaTecContext : DbContext
 
         modelBuilder.Entity<Race>(entity =>
         {
-            entity.HasKey(e => e.Name).HasName("PK__Race__737584F71E4EB010");
+            entity.HasKey(e => e.Name).HasName("PK__Race__737584F7392357CE");
 
             entity.ToTable("Race");
 
@@ -305,7 +307,7 @@ public partial class StraviaTecContext : DbContext
                         .HasConstraintName("RaceCategory_fk0"),
                     j =>
                     {
-                        j.HasKey("RaceName", "CategoryId").HasName("PK__RaceCate__AE58EABF5917B57B");
+                        j.HasKey("RaceName", "CategoryId").HasName("PK__RaceCate__AE58EABFF35900E0");
                         j.ToTable("RaceCategory");
                         j.IndexerProperty<string>("RaceName")
                             .HasMaxLength(20)
@@ -325,7 +327,7 @@ public partial class StraviaTecContext : DbContext
                         .HasConstraintName("RaceGroup_fk0"),
                     j =>
                     {
-                        j.HasKey("RaceName", "GroupName").HasName("PK__RaceGrou__4927B45CE73170F1");
+                        j.HasKey("RaceName", "GroupName").HasName("PK__RaceGrou__4927B45CE964DF08");
                         j.ToTable("RaceGroup");
                         j.IndexerProperty<string>("RaceName")
                             .HasMaxLength(20)
@@ -338,7 +340,7 @@ public partial class StraviaTecContext : DbContext
 
         modelBuilder.Entity<Sponsor>(entity =>
         {
-            entity.HasKey(e => e.TradeName).HasName("PK__Sponsor__6675EB9C21E58240");
+            entity.HasKey(e => e.TradeName).HasName("PK__Sponsor__6675EB9CBB5441AF");
 
             entity.ToTable("Sponsor");
 
@@ -364,7 +366,7 @@ public partial class StraviaTecContext : DbContext
                         .HasConstraintName("ChallengeSponsor_fk0"),
                     j =>
                     {
-                        j.HasKey("SponsorTradeName", "ChallengeName").HasName("PK__Challeng__DEC4BC7C532346B1");
+                        j.HasKey("SponsorTradeName", "ChallengeName").HasName("PK__Challeng__DEC4BC7CA2405545");
                         j.ToTable("ChallengeSponsor");
                         j.IndexerProperty<string>("SponsorTradeName")
                             .HasMaxLength(20)
@@ -387,7 +389,7 @@ public partial class StraviaTecContext : DbContext
                         .HasConstraintName("RaceSponsor_fk0"),
                     j =>
                     {
-                        j.HasKey("SponsorTradeName", "RaceName").HasName("PK__RaceSpon__8737306E9C9E1C47");
+                        j.HasKey("SponsorTradeName", "RaceName").HasName("PK__RaceSpon__8737306E3A9BF7E8");
                         j.ToTable("RaceSponsor");
                         j.IndexerProperty<string>("SponsorTradeName")
                             .HasMaxLength(20)
@@ -400,7 +402,7 @@ public partial class StraviaTecContext : DbContext
 
         modelBuilder.Entity<Sportman>(entity =>
         {
-            entity.HasKey(e => e.Username).HasName("PK__Sportman__536C85E5C60DB337");
+            entity.HasKey(e => e.Username).HasName("PK__Sportman__536C85E5BB2454AD");
 
             entity.ToTable("Sportman");
 
@@ -440,7 +442,7 @@ public partial class StraviaTecContext : DbContext
                         .HasConstraintName("Friend_fk0"),
                     j =>
                     {
-                        j.HasKey("Username", "FriendUsername").HasName("PK__Friend__22FE87B43CCBB9A9");
+                        j.HasKey("Username", "FriendUsername").HasName("PK__Friend__22FE87B4933DC5C0");
                         j.ToTable("Friend");
                         j.IndexerProperty<string>("Username")
                             .HasMaxLength(20)
@@ -463,7 +465,7 @@ public partial class StraviaTecContext : DbContext
                         .HasConstraintName("GroupManager_fk0"),
                     j =>
                     {
-                        j.HasKey("Username", "GroupName").HasName("PK__GroupMan__158348A604D064F7");
+                        j.HasKey("Username", "GroupName").HasName("PK__GroupMan__158348A69488B8AE");
                         j.ToTable("GroupManager");
                         j.IndexerProperty<string>("Username")
                             .HasMaxLength(20)
@@ -486,7 +488,7 @@ public partial class StraviaTecContext : DbContext
                         .HasConstraintName("SportmanGroup_fk0"),
                     j =>
                     {
-                        j.HasKey("Username", "GroupName").HasName("PK__Sportman__158348A6B1337700");
+                        j.HasKey("Username", "GroupName").HasName("PK__Sportman__158348A6DCBF5668");
                         j.ToTable("SportmanGroup");
                         j.IndexerProperty<string>("Username")
                             .HasMaxLength(20)
@@ -509,7 +511,7 @@ public partial class StraviaTecContext : DbContext
                         .HasConstraintName("RaceSportmanManager_fk0"),
                     j =>
                     {
-                        j.HasKey("Username", "RaceName").HasName("PK__RaceSpor__B3900274443DF1D6");
+                        j.HasKey("Username", "RaceName").HasName("PK__RaceSpor__B3900274EFB94BAE");
                         j.ToTable("RaceSportmanManager");
                         j.IndexerProperty<string>("Username")
                             .HasMaxLength(20)
@@ -532,7 +534,7 @@ public partial class StraviaTecContext : DbContext
                         .HasConstraintName("Friend_fk1"),
                     j =>
                     {
-                        j.HasKey("Username", "FriendUsername").HasName("PK__Friend__22FE87B43CCBB9A9");
+                        j.HasKey("Username", "FriendUsername").HasName("PK__Friend__22FE87B4933DC5C0");
                         j.ToTable("Friend");
                         j.IndexerProperty<string>("Username")
                             .HasMaxLength(20)
@@ -551,6 +553,26 @@ public partial class StraviaTecContext : DbContext
 
             entity.Property(e => e.EndDate).HasColumnType("datetime");
             entity.Property(e => e.Goal).HasColumnType("numeric(12, 3)");
+            entity.Property(e => e.Name)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.StartDate).HasColumnType("datetime");
+            entity.Property(e => e.Type)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<VwChallenge>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vwChallenges");
+
+            entity.Property(e => e.EndDate).HasColumnType("datetime");
+            entity.Property(e => e.Goal).HasColumnType("numeric(12, 3)");
+            entity.Property(e => e.Manager)
+                .HasMaxLength(20)
+                .IsUnicode(false);
             entity.Property(e => e.Name)
                 .HasMaxLength(20)
                 .IsUnicode(false);
