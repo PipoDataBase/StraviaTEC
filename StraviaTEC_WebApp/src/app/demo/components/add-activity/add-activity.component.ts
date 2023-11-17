@@ -16,7 +16,7 @@ export class AddActivityComponent {
   activityTypes: ActivityType[] = [];
   activity: Activity = {
     id: -1,
-    kilometers: -1,
+    kilometers: 0,
     duration: '',
     date: '',
     routePath: '',
@@ -28,6 +28,7 @@ export class AddActivityComponent {
   }
 
   selectedActivityType: number;
+  selectedRoute: any;
 
   constructor(private messageService: MessageService, private sharedService: SharedService, private activityTypesService: ActivityTypesService, private activitiesService: ActivitiesService) { }
 
@@ -42,14 +43,7 @@ export class AddActivityComponent {
     })
   }
 
-  addActivity(description: string, date: string, duration: string, kilometers: number, route: any) {
-    this.activity.description = description;
-    this.activity.date = date;
-    this.activity.type = this.selectedActivityType;
-    this.activity.duration = duration;
-    this.activity.kilometers = kilometers;
-    this.activity.routePath = route; // Improve this
-
+  addActivity() {
     if (this.validateActivity()) {
       this.activity.username = this.sharedService.getUsername();
       console.log(this.activity);
@@ -57,6 +51,7 @@ export class AddActivityComponent {
         next: (response) => {
           if (response) {
             this.activity = {};
+            this.selectedActivityType = -1;
             this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Activity Added.', life: 3000 });
           }
         },
@@ -86,6 +81,7 @@ export class AddActivityComponent {
       this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'You have not selected an activity type.' });
       return false;
     }
+    this.activity.type = this.selectedActivityType;
 
     const validFormat = /^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d$/.test(this.activity.duration);
     if (!validFormat) {
@@ -98,10 +94,11 @@ export class AddActivityComponent {
       return false;
     }
 
-    if (!this.activity.routePath) {
+    if (!this.selectedRoute) {
       this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'You have not added the .gpx file.' });
       return false;
     }
+    this.activity.routePath = this.selectedRoute;
 
     return true;
   }
