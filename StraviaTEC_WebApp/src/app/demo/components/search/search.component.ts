@@ -9,6 +9,7 @@ import { SportmenService } from 'src/app/services/sportmen.service';
 import { GroupsService } from 'src/app/services/groups.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
 
 /*
 export interface Sportman {
@@ -77,7 +78,7 @@ export class SearchComponent implements OnInit {
 
 
   // Constructor
-  constructor(private sportmenService: SportmenService, private groupsService: GroupsService, private sharedService: SharedService, private messageService: MessageService) { }
+  constructor(private sportmenService: SportmenService, private router: Router, private groupsService: GroupsService, private sharedService: SharedService, private messageService: MessageService) { }
 
   ngOnInit() {
 
@@ -209,7 +210,7 @@ export class SearchComponent implements OnInit {
   }
 
   goToProfileButtonOnClick() {
-
+    this.router.navigate(["dashboard", "profile"]);
   }
 
   unfollowUserButtonOnClick(username: string) {

@@ -426,6 +426,15 @@ EXEC spInsertChallenge  'Challenge 2', 25, true, '2023-11-16T00:00:00.000Z', '20
 Go
 
 -- ================================================
+--                  Join Challenges
+-- ================================================
+
+EXEC spAddChallengeSportmanParticipant 'Challenge 1', 'Emarin19';
+Go
+EXEC spAddChallengeSportmanParticipant 'Challenge 2', 'Emarin19';
+Go
+
+-- ================================================
 --                    Races
 -- ================================================
 
