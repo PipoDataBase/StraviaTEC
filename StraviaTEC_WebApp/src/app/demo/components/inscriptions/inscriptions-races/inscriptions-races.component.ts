@@ -6,7 +6,36 @@ import { MessageService } from 'primeng/api';
 import { SharedService } from 'src/app/services/shared.service';
 import { DomSanitizer } from '@angular/platform-browser';
 
+// Models imports
+import { AvailableRace } from 'src/app/models/views-models/vw-available-race.module';
+import { Category } from 'src/app/models/category.module';
+import { Sponsor } from 'src/app/models/sponsor.module';
+import { Bill } from 'src/app/models/bill.module';
 
+
+// Services imports
+import { RacesService } from 'src/app/services/races.service';
+import { SportmenService } from 'src/app/services/sportmen.service';
+import { SponsorsService } from 'src/app/services/sponsors.service';
+import { CategoriesService } from 'src/app/services/categories.service';
+import { BillService } from 'src/app/services/bill.service';
+
+export interface RaceCategory {
+  raceName: string,
+  category: string
+}
+
+export interface RaceBankAccount {
+  raceName: string,
+  bankAccount: string
+}
+
+export interface RaceSponsor {
+  raceName: string,
+  sponsorTradeName: string
+}
+
+/*
 export interface Race {
   name?: string,
   inscriptionPrice?: number,
@@ -21,22 +50,7 @@ export interface ActivityType {
   type: string;
 }
 
-export interface RaceCategory {
-  raceName: string,
-  categoryId: number
-}
 
-export interface Category {
-  id: number,
-  minimunAge: number,
-  maximumAge: number,
-  category: string
-}
-
-export interface BankAccount {
-  raceName: string,
-  bankAccount: string
-}
 
 export interface Sponsor {
   tradeName: string,
@@ -45,10 +59,7 @@ export interface Sponsor {
   logoPath: string
 }
 
-export interface RaceSponsor {
-  sponsorTradeName: string,
-  raceName: string
-}
+*/
 
 @Component({
   selector: 'app-inscriptions-races',
@@ -65,21 +76,27 @@ export class InscriptionsRacesComponent {
 
   raceReceiptUploaded: File | null = null;
 
-  races: Race[] = [];
+  races: AvailableRace[] = [];
 
-  race: Race = {};
+  race: AvailableRace = {};
 
-  activities: ActivityType[] = []
+  joinedRaces: AvailableRace[] = [];
+
+  sponsors: Sponsor[] = [];
+  categories: Category[] = [];
 
   raceCategory: RaceCategory[] = []
-
-  category: Category[] = []
-
   raceSponsor: RaceSponsor[] = []
-
-  sponsors: Sponsor[] = []
-
-  bankAccounts: BankAccount[] = [];
+  raceBankAccount: RaceBankAccount[] = [];
+  /*
+    category: Category[] = []
+  
+    raceSponsor: RaceSponsor[] = []
+  
+    sponsors: Sponsor[] = []
+  
+    bankAccounts: RaceBankAccount[] = [];
+    */
 
   sortOptions: SelectItem[] = [];
 
@@ -87,10 +104,106 @@ export class InscriptionsRacesComponent {
 
   sortField: string = '';
 
-  constructor(public sharedService: SharedService, private sanitizer: DomSanitizer, private messageService: MessageService) { }
+  selectedInscriptionCategory: string = '';
+
+  constructor(private racesService: RacesService, private sportmanService: SportmenService, private sponsorsService: SponsorsService, private categoriesService: CategoriesService, private billsService: BillService, public sharedService: SharedService, private sanitizer: DomSanitizer, private messageService: MessageService) { }
 
   ngOnInit() {
     // Requests database for all races
+    this.racesService.getAvailableRacesVw(this.sharedService.getUsername()).subscribe({
+      next: (availableRaces) => {
+        this.races = availableRaces;
+
+        for (let i = 0; i < this.races.length; i++) {
+          // Requests all races categories to database
+          this.racesService.getRaceCategories(this.races[i].name).subscribe({
+            next: (raceCategories) => {
+              var raceCategoryToInsert: RaceCategory;
+              for (let j = 0; j < raceCategories.length; j++) {
+                raceCategoryToInsert = { raceName: this.races[i].name, category: raceCategories[j].category1 }
+                this.raceCategory.push(raceCategoryToInsert);
+              }
+            },
+            error: (response) => {
+              console.log(response);
+              this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Races loaded wrong.' });
+            }
+          })
+
+          // Requests all race bank accounts to database
+          this.racesService.getRaceBankAccounts(this.races[i].name).subscribe({
+            next: (bankAccounts) => {
+              var raceBankAccountToInsert: RaceBankAccount;
+              for (let j = 0; j < bankAccounts.length; j++) {
+                raceBankAccountToInsert = { raceName: this.races[i].name, bankAccount: bankAccounts[j].bankAccount1 }
+                this.raceBankAccount.push(raceBankAccountToInsert);
+              }
+            },
+            error: (response) => {
+              console.log(response);
+              this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Races loaded wrong.' });
+            }
+          })
+
+          // Requests all race sponsors to database
+          this.racesService.getRaceSponsors(this.races[i].name).subscribe({
+            next: (sponsors) => {
+              var raceSponsorToInsert: RaceSponsor;
+              for (let j = 0; j < sponsors.length; j++) {
+                raceSponsorToInsert = { raceName: this.races[i].name, sponsorTradeName: sponsors[j].tradeName }
+                this.raceSponsor.push(raceSponsorToInsert);
+              }
+            },
+            error: (response) => {
+              console.log(response);
+              this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Races loaded wrong.' });
+            }
+          })
+
+        }
+
+
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Races loaded wrong.' });
+      }
+    })
+
+    // Requests database for all user participating races
+    this.sportmanService.getSportmanJoinedRaces(this.sharedService.getUsername()).subscribe({
+      next: (joinedRaces) => {
+        this.joinedRaces = joinedRaces;
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Joined races loaded wrong.' });
+      }
+    })
+
+    // Requests database for all sponsors
+    this.sponsorsService.getSponsors().subscribe({
+      next: (sponsors) => {
+        this.sponsors = sponsors;
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Sponosrs loaded wrong.' });
+      }
+    })
+
+    // Requests database for all categories
+    this.categoriesService.getCategories().subscribe({
+      next: (categories) => {
+        this.categories = categories;
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Categories loaded wrong.' });
+      }
+    })
+
+    /*
     this.races = [
       {
         name: 'Race1',
@@ -264,7 +377,7 @@ export class InscriptionsRacesComponent {
         raceName: 'Race3',
         bankAccount: 'CR05 0152 0200 1026 2840 88'
       }
-    ]
+    ]*/
 
     this.sortOptions = [
       { label: 'Name descending', value: 'name' },
@@ -297,14 +410,66 @@ export class InscriptionsRacesComponent {
     }
   }
 
-  submitRaceButtonOnClick() {
-    console.log("Submiting race " + this.race.name)
-    this.hideSubmitRaceDailogButtonOnClick()
-    this.messageService.add({ key: 'tst', severity: 'success', summary: 'Race Submitted!', detail: 'Race and inscription receipt submitted succesfuly!' });
-    
+  getDateOnFormat(date: string): string {
+    return this.sharedService.formatDate2(date);
   }
 
-  showRaceMoreInfoDialogButtonOnClick(race: Race) {
+  submitRaceButtonOnClick() {
+    var selectedInscriptionCategoryId: number;
+
+    for (let i = 0; i < this.categories.length; i++) {
+      if (this.categories[i].category1 == this.selectedInscriptionCategory) {
+        selectedInscriptionCategoryId = this.categories[i].id
+      }
+    }
+
+    var billToPost: Bill = { photoPath: '', accepted: false, username: this.sharedService.getUsername(), raceName: this.race.name, categoryId: selectedInscriptionCategoryId }
+
+    this.billsService.postBill(billToPost).subscribe({
+      next: (categories) => {
+        // Requests database for all user participating races
+        this.sportmanService.getSportmanJoinedRaces(this.sharedService.getUsername()).subscribe({
+          next: (joinedRaces) => {
+            this.joinedRaces = joinedRaces;
+          },
+          error: (response) => {
+            console.log(response);
+            this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Joined races loaded wrong.' });
+          }
+        })
+        this.hideSubmitRaceDailogButtonOnClick()
+        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Race Submitted!', detail: 'Race and inscription receipt submitted succesfuly!' });
+
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Categories loaded wrong.' });
+      }
+    })
+  }
+
+  leaveRaceButtonOnClick(raceName: string) {
+    this.sportmanService.deleteLeaveRace(raceName, this.sharedService.getUsername()).subscribe({
+      next: (joinedRaces) => {
+        // Requests database for all user participating races
+        this.sportmanService.getSportmanJoinedRaces(this.sharedService.getUsername()).subscribe({
+          next: (joinedRaces) => {
+            this.joinedRaces = joinedRaces;
+          },
+          error: (response) => {
+            console.log(response);
+            this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Joined races loaded wrong.' });
+          }
+        })
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Race leaving wrong.' });
+      }
+    })
+  }
+
+  showRaceMoreInfoDialogButtonOnClick(race: AvailableRace) {
     this.race = { ...race };
     this.raceMoreInfoDialog = true;
     this.isViewMoreInfo = true;
@@ -315,7 +480,7 @@ export class InscriptionsRacesComponent {
     this.race = {};
   }
 
-  showRaceRouteDialogButtonOnClick(race: Race) {
+  showRaceRouteDialogButtonOnClick(race: AvailableRace) {
     this.race = { ...race };
     this.raceRouteDialog = true;
   }
@@ -325,7 +490,9 @@ export class InscriptionsRacesComponent {
     this.race = {};
   }
 
-  showSubmitRaceDailogButtonOnClick(race: Race) {
+  showSubmitRaceDailogButtonOnClick(race: AvailableRace) {
+    this.raceReceiptUploaded = null;
+    this.selectedInscriptionCategory = '';
     this.race = { ...race };
     this.submitRaceDialog = true;
   }
@@ -335,6 +502,10 @@ export class InscriptionsRacesComponent {
     this.race = {};
   }
 
+  isUserJoinedOnRace(raceName: string): boolean {
+    return this.joinedRaces.some(joinedRace => joinedRace.name === raceName);
+  }
+
   isSponsorOfRace(sponsorTradeName: string, raceName: string): boolean {
     for (let i = 0; i < this.raceSponsor.length; i++) {
       if (this.raceSponsor[i].raceName === raceName && this.raceSponsor[i].sponsorTradeName === sponsorTradeName) {
@@ -342,20 +513,5 @@ export class InscriptionsRacesComponent {
       }
     }
     return false;
-  }
-
-  getActivityType(id: number): string {
-    const typeFounded = this.activities.find((type) => type.id == id);
-    if (typeFounded) {
-      return typeFounded.type;
-    }
-    return "";
-  }
-  getCategoryOfId(id: number): string {
-    const categoryFounded = this.category.find((category) => category.id == id);
-    if (categoryFounded) {
-      return categoryFounded.category;
-    }
-    return "";
   }
 }

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Challenge } from '../models/challenge.module';
 import { AvailableChallenge } from '../models/views-models/vw-available-challenge.module';
-import { Sponsor } from '../demo/components/inscriptions/inscriptions-races/inscriptions-races.component';
+import { Sponsor } from '../models/sponsor.module';
 
 @Injectable({
   providedIn: 'root'

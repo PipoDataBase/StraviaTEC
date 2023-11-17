@@ -24,17 +24,17 @@
                             class="my-4 md:my-0 w-9 md:w-10rem shadow-2 mr-5" />
                         <div class="flex-1 flex flex-column align-items-center text-center md:text-left">
                             <div class="text-2xl font-bold mb-3">{{ race.name }}</div>
-                            <div class="h6 mb-3">On {{ race.date }}</div>
+                            <div class="h6 mb-3">On {{ getDateOnFormat(race.date) }}</div>
                             <div class="h6 mb-3">${{ race.inscriptionPrice }}</div>
                             <div class="flex flex-wrap align-items-center mb-3">
-                                <p-chip label="{{ getActivityType(race.type) }}" styleClass="m-1"></p-chip>
+                                <p-chip label="{{ race.type }}" styleClass="m-1"></p-chip>
                                 <p-chip label="{{ race.private ? 'Private' : 'Public' }}" styleClass="m-1"></p-chip>
                             </div>
                             <div class="flex flex-wrap align-items-center mb-2">
                                 <div *ngFor="let category of raceCategory"
                                     class="flex flex-wrap align-items-center mb-3">
                                     <p-tag class=" ml-1 mr-1 mt-1 mb-1" *ngIf="race.name === category.raceName"
-                                        value="{{ getCategoryOfId(category.categoryId) }}"></p-tag>
+                                        value="{{ category.category }}"></p-tag>
                                 </div>
                             </div>
                             <div class="h6 mb-3" style="font-size: x-small">Organized by {{ race.manager }}</div>
@@ -48,8 +48,12 @@
                                     class="p-button-rounded p-button-text ml-1 mb-2"
                                     (click)="showRaceRouteDialogButtonOnClick(race)"></button>
                             </div>
-                            <p-button #showSubmitRaceDialogButton label="Submit Race"
-                                (onClick)="showSubmitRaceDailogButtonOnClick(race); showSubmitRaceDialogButton.label='Submitted'; showSubmitRaceDialogButton.disabled=true"></p-button>
+                            <p-button label="Join Race" *ngIf="!isUserJoinedOnRace(race.name)"
+                                (onClick)="showSubmitRaceDailogButtonOnClick(race)"></p-button>
+                            <p-button label="Leave Race" styleClass="p-button-danger"
+                                *ngIf="isUserJoinedOnRace(race.name)"
+                                (onClick)="leaveRaceButtonOnClick(race.name)"></p-button>
+
                         </div>
                     </div>
                 </div>
@@ -62,24 +66,27 @@
                             <img [src]="'../../../../assets/straviatec/ChallengeDefaultImage.png'" [alt]="race.name"
                                 class="w-10 shadow-2 my-3 mx-0 mb-3" />
                             <div class="text-2xl font-bold mb-3">{{ race.name }}</div>
-                            <div class="h6 mb-3">On {{ race.date }}</div>
+                            <div class="h6 mb-3">On {{ getDateOnFormat(race.date) }}</div>
                             <div class="h6 mb-3">${{ race.inscriptionPrice }}</div>
                             <div class="flex flex-wrap align-items-center mb-3">
-                                <p-chip label="{{ getActivityType(race.type) }}" styleClass="m-1"></p-chip>
+                                <p-chip label="{{ race.type }}" styleClass="m-1"></p-chip>
                                 <p-chip label="{{ race.private ? 'Private' : 'Public' }}" styleClass="m-1"></p-chip>
                             </div>
                             <div class="flex flex-wrap align-items-center mb-2">
                                 <div *ngFor="let category of raceCategory" class="flex flex-wrap align-items-center">
                                     <p-tag class="ml-1 mr-1 mt-1 mb-1" *ngIf="race.name === category.raceName"
-                                        value="{{ getCategoryOfId(category.categoryId) }}"></p-tag>
+                                        value="{{ category.category }}"></p-tag>
                                 </div>
                             </div>
                             <div class="flex flex-row align-items-center text-center">
                                 <button pButton pRipple class="mb-3" label="" icon="pi pi-info-circle"
                                     class="p-button-rounded p-button-text mr-2"
                                     (click)="showRaceMoreInfoDialogButtonOnClick(race)"></button>
-                                <p-button #showSubmitRaceDialogButton class="mb-3" label="Submit Race"
-                                    (onClick)="showSubmitRaceDailogButtonOnClick(race); showSubmitRaceDialogButton.label='Submitted'; showSubmitRaceDialogButton.disabled=true"></p-button>
+                                <p-button class="mb-3" label="Join Race" *ngIf="!isUserJoinedOnRace(race.name)"
+                                    (onClick)="showSubmitRaceDailogButtonOnClick(race)"></p-button>
+                                <p-button label="Leave Race" styleClass="p-button-danger"
+                                    *ngIf="isUserJoinedOnRace(race.name)"
+                                    (onClick)="leaveRaceButtonOnClick(race.name)"></p-button>
                                 <button pButton pRipple class="mb-3" label="" icon="pi pi-map"
                                     class="p-button-rounded p-button-text ml-2"
                                     (click)="showRaceRouteDialogButtonOnClick(race)"></button>
@@ -108,7 +115,8 @@
         <div class="mb-5">
             <h3>Bank Accounts</h3>
             <p-toast></p-toast>
-            <p-table [value]="bankAccounts" dataKey="bankAccount" editMode="row" [tableStyle]="{'min-width': '50rem'}">
+            <p-table [value]="raceBankAccount" dataKey="bankAccount" editMode="row"
+                [tableStyle]="{'min-width': '50rem'}">
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width:100%; text-align: center;">Bank Account</th>
@@ -196,7 +204,8 @@
         <div class="mb-5">
             <h3>Bank Accounts</h3>
             <p-toast></p-toast>
-            <p-table [value]="bankAccounts" dataKey="bankAccount" editMode="row" [tableStyle]="{'min-width': '50rem'}">
+            <p-table [value]="raceBankAccount" dataKey="bankAccount" editMode="row"
+                [tableStyle]="{'min-width': '50rem'}">
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width:100%; text-align: center;">Bank Account</th>
@@ -221,15 +230,23 @@
         </div>
 
         <div>
-            <h3>Inscription Receipt</h3>
+            <h3>Inscription Details</h3>
             <p-toast></p-toast>
             <div class="card">
+                <h5 class="mb-1">Inscription Category</h5>
+                <select [(ngModel)]="selectedInscriptionCategory" name="inscriptionCategory" required class="form-control shadow-sm px-4 mb-3">
+                    <option *ngFor="let category of raceCategory" [value]="category.category">{{
+                        category.category }}</option>
+                </select>
+                <h5 class="mb-1">Inscription Receipt</h5>
                 <input type="file" (change)="onReceiptChanged($event)" accept="image/*" required
-                    class="form-control shadow-sm px-4" />
+                    class="form-control shadow-sm px-4 mb-3" />
+
             </div>
             <div class="col-md-12">
                 <div class="flex flex-column align-items-center text-center">
-                    <p-button #submitRaceButton label="Submit Race" (onClick)="submitRaceButtonOnClick()"></p-button>
+                    <p-button #submitRaceButton label="Submit Race" (onClick)="submitRaceButtonOnClick()"
+                        [disabled]="raceReceiptUploaded == null || selectedInscriptionCategory == ''"></p-button>
                 </div>
             </div>
         </div>

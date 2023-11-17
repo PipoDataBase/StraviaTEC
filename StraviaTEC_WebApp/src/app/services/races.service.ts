@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { Sponsor } from '../models/sponsor.module';
 import { Category } from '../models/category.module';
 import { BankAccount } from '../models/bank-account.module';
+import { AvailableRace } from '../models/views-models/vw-available-race.module';
 
 @Injectable({
   providedIn: 'root'
@@ -65,5 +66,9 @@ export class RacesService {
 
   deleteRaceSponsors(raceName: string): Observable<boolean> {
     return this.http.delete<boolean>(this.baseApiUrl + '/api/Races/DeleteSponsors/' + raceName);
+  }
+
+  getAvailableRacesVw(username: string): Observable<AvailableRace[]> {
+    return this.http.get<AvailableRace[]>(this.baseApiUrl + '/api/Races/GetAvailableVwRaces/' + username);
   }
 }
