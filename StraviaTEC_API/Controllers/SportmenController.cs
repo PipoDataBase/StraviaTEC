@@ -398,6 +398,56 @@ namespace StraviaTEC_API.Controllers
 
         }
 
+        // DELETE: api/Sportmen/5
+        [HttpDelete("LeaveGroup/{username}/{groupName}")]
+        public async Task<IActionResult> LeaveGroup(string username, string groupName)
+        {
+            if (_context.Sportmen == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                "EXEC spDeleteSportmanGroup @Username, @GroupName",
+                    new SqlParameter("@Username", username),
+                    new SqlParameter("@GroupName", groupName)
+                );
+                return Ok(true);
+            }
+            catch
+            {
+                throw;
+            }
+
+        }
+
+        // DELETE: api/Sportmen/5
+        [HttpDelete("Unfollow/{username}/{friendName}")]
+        public async Task<IActionResult> Unfollow(string username, string friendName)
+        {
+            if (_context.Sportmen == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                "EXEC spDeleteFriend @Username, @FriendName",
+                    new SqlParameter("@Username", username),
+                    new SqlParameter("@FriendName", friendName)
+                );
+                return Ok(true);
+            }
+            catch
+            {
+                throw;
+            }
+
+        }
+
         private bool SportmanExists(string id)
         {
             return (_context.Sportmen?.Any(e => e.Username == id)).GetValueOrDefault();

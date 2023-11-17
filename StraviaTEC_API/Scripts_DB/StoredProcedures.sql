@@ -365,6 +365,39 @@ END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
+GO 
+CREATE PROCEDURE spDeleteSportmanGroup
+    @Username varchar(20),
+	@GroupName varchar(20)
+AS
+BEGIN
+    BEGIN TRY
+        DELETE FROM SportmanGroup 
+        WHERE Username = @Username AND GroupName = @GroupName
+    END TRY
+    BEGIN CATCH
+        THROW 51000, 'ERROR leaving Group', 1;
+    END CATCH;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO 
+CREATE PROCEDURE spDeleteFriend
+    @Username varchar(20),
+	@FriendName varchar(20)
+AS
+BEGIN
+    BEGIN TRY
+        DELETE FROM Friend 
+        WHERE Username = @Username AND FriendUsername = @FriendName
+    END TRY
+    BEGIN CATCH
+        THROW 51000, 'ERROR trying to unfollow', 1;
+    END CATCH;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
 
 GO
 CREATE PROCEDURE spGetSportmanChallenges
