@@ -709,7 +709,10 @@ CREATE PROCEDURE spGetGroupsByManager
     @Username varchar(20)
 AS
 BEGIN
-    SELECT Username, GroupName FROM GroupManager WHERE Username = @Username;
+    SELECT G.Name 
+    FROM Group_ G INNER JOIN GroupManager GM
+    ON G.Name = GM.GroupName
+    WHERE GM.Username = @Username;
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
