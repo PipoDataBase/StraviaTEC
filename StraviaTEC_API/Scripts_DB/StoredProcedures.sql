@@ -903,8 +903,8 @@ AS
 BEGIN
     SELECT DISTINCT R.Name, R.InscriptionPrice, R.Date, R.Private, R.RoutePath, R.Type, R.Manager 
     FROM vwRaces R
-    INNER JOIN RaceGroup RG ON R.Name = RG.RaceName
-    INNER JOIN SportmanGroup SG ON SG.GroupName = RG.GroupName
+    LEFT JOIN RaceGroup RG ON R.Name = RG.RaceName
+    LEFT JOIN SportmanGroup SG ON SG.GroupName = RG.GroupName
     WHERE GETDATE() < Date AND (Private = 0 OR SG.Username = @Username);
 END;
 
