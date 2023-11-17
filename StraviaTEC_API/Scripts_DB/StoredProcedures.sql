@@ -827,6 +827,16 @@ END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
+GO
+CREATE PROCEDURE spGetAvailableVwRaces
+AS
+BEGIN
+    SELECT * FROM vwRaces
+    WHERE GETDATE() < Date;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
 Go
 CREATE PROCEDURE spGetRacesByManager
     @Username varchar(20)
