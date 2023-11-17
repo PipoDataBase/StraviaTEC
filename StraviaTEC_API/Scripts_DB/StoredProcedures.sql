@@ -406,20 +406,6 @@ BEGIN
     END CATCH
 END;
 
-
--- <><><><><><><><><><><><><><><><><><><><><><><><>
-
-GO
-CREATE PROCEDURE spGetManagingGroups
-    @Username varchar(20)
-AS
-BEGIN
-    SELECT G.Name 
-    FROM Group_ G INNER JOIN GroupManager GM
-    ON G.Name = GM.GroupName
-    WHERE GM.Username = @Username;
-END;
-
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
 GO
