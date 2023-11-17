@@ -26,9 +26,10 @@
                         <th style="width: 3rem">
                             <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                         </th>
-                        <th pSortableColumn="groupName" style="text-align: center;">Group Name <p-sortIcon
-                                field="groupName"></p-sortIcon></th>
+                        <th pSortableColumn="name" style="text-align: center;">Group Name <p-sortIcon
+                                field="name"></p-sortIcon></th>
                         <th pSortableColumn="action" style="text-align: center;">Action</th>
+                        <th></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-group>
@@ -36,75 +37,30 @@
                         <td>
                             <p-tableCheckbox [value]="group"></p-tableCheckbox>
                         </td>
-                        <td style="width:50%; min-width:10rem; text-align: center;">
+                        <td style="width:85%; min-width:10rem; text-align: center;">
                             <span class="p-column-title">Group Name</span>
-                            <span class="pi pi-dollar"></span>
+                            <span class="pi pi-users"></span>
                             {{ group.name }}
                         </td>
-                        <td style="width:50%; min-width:10rem; text-align: center;">
+                        <td style="width:15%; min-width:10rem; text-align: center;">
+                            <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-secondary mr-2"
+                                (click)="seeGroup(group)"></button>
                             <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
-                                (click)="deleteBankAccount(bankAccount)"></button>
+                                (click)="deleteGroup(group)"></button>
                         </td>
+                        <td></td>
                     </tr>
                 </ng-template>
             </p-table>
         </div>
 
-        <p-dialog [(visible)]="groupDialog" [style]="{width: '50%'}" header="Challenge Details" [modal]="true"
-            class="p-fluid">
+        <p-dialog [(visible)]="groupDialog" [style]="{width: '40%'}" header="Add Group" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content" style="gap: 10px;">
-                <div class="field">
-                    <label for="name">Name</label>
-                    <input type="text" pInputText id="name" disabled="{{ !isNewChallenge }}"
-                        [(ngModel)]="challenge.name" class="form-control shadow-sm px-4" />
-                </div>
-
-                <div class="formgrid grid">
-                    <div class="field col">
-                        <label for="type">Type</label>
-                        <select [(ngModel)]="selectedActivityType" name="activityType" required
-                            class="form-control shadow-sm px-4">
-                            <option *ngFor="let activityType of activityTypes" [value]="activityType.id">{{
-                                activityType.type }}</option>
-                        </select>
-                    </div>
-                    <div class="field col">
-                        <label for="goal">Goal (km)</label>
-                        <input type="number" class="form-control shadow-sm px-4" pInputText id="goal" min="0" required
-                            [(ngModel)]="challenge.goal" />
-                    </div>
-                </div>
-
-                <div class="formgrid grid">
-                    <div class="field col">
-                        <label for="startDate">Start Date</label>
-                        <input type="date" [(ngModel)]="challenge.startDate" id="startDate"
-                            placeholder="{{ challenge.startDate }}" required class="form-control shadow-sm px-4">
-                    </div>
-                    <div class="field col">
-                        <label for="endDate">End Date</label>
-                        <input type="date" [(ngModel)]="challenge.endDate" id="endDate"
-                            placeholder="{{ challenge.endDate }}" required class="form-control shadow-sm px-4">
-                    </div>
-                </div>
-
-                <div class="formgrid grid">
-                    <div class="field col">
-                        <label for="deep">Deep/Height</label>
-                        <select [(ngModel)]="selectedDeepHeight" name="deep_height" required
-                            class="form-control shadow-sm px-4">
-                            <option value="true">Deep</option>
-                            <option value="false">Height</option>
-                        </select>
-                    </div>
-                    <div class="field col">
-                        <label for="privacy">Privacy</label>
-                        <select [(ngModel)]="selectedPrivacy" name="privacy" required
-                            class="form-control shadow-sm px-4">
-                            <option value="true">Private</option>
-                            <option value="false">Public</option>
-                        </select>
-                    </div>
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon">
+                        <i class="pi pi-users"></i>
+                    </span>
+                    <input pInputText placeholder="Group Name" [(ngModel)]="group.name" />
                 </div>
             </ng-template>
 
@@ -112,18 +68,32 @@
                 <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
                     (click)="hideDialog()"></button>
                 <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
-                    (click)="saveChallenge()"></button>
+                    (click)="saveGroup()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="groupMembersDialog" [style]="{width: '50%'}" header="Members" [modal]="true"
+            class="p-fluid">
+            <ng-template pTemplate="content" style="gap: 10px;">
+
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideGroupMembersDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                    (click)="saveGroupMembers()"></button>
             </ng-template>
         </p-dialog>
 
         <p-dialog [(visible)]="deleteGroupDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span *ngIf="group">Are you sure you want to delete <b>{{ group.name }}</b>?</span>
+                <span *ngIf="group">Are you sure you want to delete group: <b>{{ group.name }}</b>?</span>
             </div>
             <ng-template pTemplate="footer">
                 <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
-                    (click)="deleteChallengeDialog = false"></button>
+                    (click)="deleteGroupDialog = false"></button>
                 <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
                     (click)="confirmDelete()"></button>
             </ng-template>
@@ -136,7 +106,7 @@
             </div>
             <ng-template pTemplate="footer">
                 <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
-                    (click)="deleteChallengesDialog = false"></button>
+                    (click)="deleteGroupsDialog = false"></button>
                 <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
                     (click)="confirmDeleteSelected()"></button>
             </ng-template>

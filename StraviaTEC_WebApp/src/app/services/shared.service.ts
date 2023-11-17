@@ -42,9 +42,9 @@ export class SharedService {
   }
 
   getActivityType(activityTypes: ActivityType[], id: number): string {
-    const typeFounded = activityTypes.find((type) => type.id == id);
-    if (typeFounded) {
-      return typeFounded.type;
+    const typeFound = activityTypes.find((type) => type.id == id);
+    if (typeFound) {
+      return typeFound.type;
     }
     return "";
   }
@@ -60,36 +60,6 @@ export class SharedService {
     }
 
     return result;
-  }
-
-  getCategoryDescription(categories: Category[], id: number): string {
-    const categoryFounded = categories.find((category) => category.id == id);
-    if (categoryFounded) {
-      var result = categoryFounded.category1 + ' ('
-      if (categoryFounded.category1 == 'Junior') {
-        result += 'less than ' + categoryFounded.maximumAge + ' years)'
-      }
-      else if (categoryFounded.category1 == 'Sub-23') {
-        result += 'from ' + categoryFounded.minimumAge + ' to ' + categoryFounded.maximumAge + ' years)';
-      }
-      else if (categoryFounded.category1 == 'Open') {
-        result += 'from ' + categoryFounded.minimumAge + ' to ' + categoryFounded.maximumAge + ' years)';
-      }
-      else if (categoryFounded.category1 == 'Elite') {
-        result += 'anyone who wants to sign up)';
-      }
-      else if (categoryFounded.category1 == 'Master A') {
-        result += 'from ' + categoryFounded.minimumAge + ' to ' + categoryFounded.maximumAge + ' years)';
-      }
-      else if (categoryFounded.category1 == 'Master B') {
-        result += 'from ' + categoryFounded.minimumAge + ' to ' + categoryFounded.maximumAge + ' years)';
-      }
-      else {
-        result += 'more than ' + categoryFounded.minimumAge + ' years)';
-      }
-      return result;
-    }
-    return "";
   }
 
   getSafeResourceUrl(route: string) {

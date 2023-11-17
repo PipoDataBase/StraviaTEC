@@ -462,7 +462,7 @@ export class ManagementRacesComponent {
 
     const raceFound = this.races.find((r) => r.name == race.name);
     if (raceFound) {
-      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Race name: ' + race.name + ' already exists or it was created by another organizer.' });
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Race name: ' + race.name + ' already exists.' });
       return false;
     }
 
@@ -523,9 +523,9 @@ export class ManagementRacesComponent {
   }
 
   setCategories(name: string): string {
-    const raceFounded = this.races.find((race) => race.name == name);
-    if (raceFounded) {
-      return this.sharedService.getCategories(raceFounded.categories)
+    const raceFound = this.races.find((race) => race.name == name);
+    if (raceFound) {
+      return this.sharedService.getCategories(raceFound.categories)
     }
     return "";
   }

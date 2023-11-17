@@ -13,6 +13,7 @@ import { GroupsService } from 'src/app/services/groups.service';
 })
 export class ManagementGroupsComponent {
   groupDialog: boolean = false;
+  groupMembersDialog: boolean = false;
   deleteGroupDialog: boolean = false;
   deleteGroupsDialog: boolean = false;
 
@@ -45,9 +46,9 @@ export class ManagementGroupsComponent {
     this.groupDialog = true;
   }
 
-  editGroup(group: Group) {
+  seeGroup(group: Group) {
     this.group = { ...group };
-    this.groupDialog = true;
+    this.groupMembersDialog = true;
   }
 
   deleteGroup(group: Group) {
@@ -104,76 +105,44 @@ export class ManagementGroupsComponent {
     this.submitted = false;
   }
 
+  hideGroupMembersDialog() {
+    this.groupMembersDialog = false;
+  }
+
   saveGroup() {
     this.submitted = true;
 
-    /*
-    if (!this.isNewChallenge) {
-      this.challenges = this.challenges.filter((challenge) => challenge.name !== this.challenge.name);
-      const challengeUpdated: Challenge = {
-        name: this.challenge.name,
-        goal: this.challenge.goal,
-        private: Boolean(String(this.selectedPrivacy) == "true"),
-        startDate: this.challenge.startDate,
-        endDate: this.challenge.endDate,
-        deep: Boolean(String(this.selectedDeepHeight) == "true"),
-        type: this.selectedActivityType
-      }
-
-      if (this.validateChallenge(challengeUpdated)) {
-        // Put challenge
-        this.challengesService.putChallenge(challengeUpdated.name, challengeUpdated).subscribe({
-          next: (response) => {
-            if (response) {
-              this.updateChallenges();
-              this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Challenge Updated.', life: 3000 });
-            }
-          },
-          error: (response) => {
-            console.log(response);
-            return;
-          }
-        })
-      }
-      else {
-        this.updateChallenges();
-        return;
-      }
-    }
-    else {
-      const newChallenge: Challenge = {
-        name: this.challenge.name,
-        goal: this.challenge.goal,
-        private: Boolean(String(this.selectedPrivacy) == "true"),
-        startDate: this.challenge.startDate,
-        endDate: this.challenge.endDate,
-        deep: Boolean(String(this.selectedDeepHeight) == "true"),
-        type: this.selectedActivityType
-      }
-
-      if (this.validateChallenge(newChallenge)) {
-        // Post challenge
-        this.challengesService.postChallenge(this.sharedService.getUsername(), newChallenge).subscribe({
-          next: (response) => {
-            if (response) {
-              this.updateChallenges();
-              this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Challenge Created.', life: 3000 });
-            }
-          },
-          error: (response) => {
-            console.log(response);
-            return;
-          }
-        })
-      }
-      else {
-        return;
-      }
+    if (!this.group.name) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'The group name must not be empty.' });
+      return;
     }
 
-    this.challengeDialog = false;
-    this.challenge = {}
-    */
+    const groupFound = this.groups.find((g) => g.name == this.group.name);
+    if (groupFound) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Group: ' + this.group.name + ' already exists.' });
+      return;
+    }
+
+    // Post group
+    this.groupsService.postGroup(this.group.name, this.sharedService.getUsername()).subscribe({
+      next: (response) => {
+        if (response) {
+          this.updateGroups();
+          this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Group Created.', life: 3000 });
+        }
+      },
+      error: (response) => {
+        console.log(response);
+        return;
+      }
+    })
+
+    this.groupDialog = false;
+    this.group = {};
+  }
+
+  saveGroupMembers() {
+    this.groupMembersDialog = false;
   }
 
   onGlobalFilter(table: Table, event: Event) {

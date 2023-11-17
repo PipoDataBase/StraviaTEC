@@ -93,6 +93,7 @@
                                     (click)="deleteRace(race)"></button>
                             </div>
                         </td>
+                        <td></td>
                     </tr>
                 </ng-template>
             </p-table>
@@ -246,6 +247,7 @@
                         <th pSortableColumn="bankAccount" style="text-align: center;">Bank Account <p-sortIcon
                                 field="bankAccount"></p-sortIcon></th>
                         <th pSortableColumn="action" style="text-align: center;">Action</th>
+                        <th></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-bankAccount>
@@ -253,15 +255,16 @@
                         <td>
                             <p-tableCheckbox [value]="bankAccount"></p-tableCheckbox>
                         </td>
-                        <td style="width:50%; min-width:10rem; text-align: center;">
+                        <td style="width:78%; min-width:10rem; text-align: center;">
                             <span class="p-column-title">Bank Account</span>
                             <span class="pi pi-dollar"></span>
                             {{ bankAccount.bankAccount1 }}
                         </td>
-                        <td style="width:50%; min-width:10rem; text-align: center;">
+                        <td style="width:22%; min-width:10rem; text-align: center;">
                             <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
                                 (click)="deleteBankAccount(bankAccount)"></button>
                         </td>
+                        <td></td>
                     </tr>
                 </ng-template>
             </p-table>

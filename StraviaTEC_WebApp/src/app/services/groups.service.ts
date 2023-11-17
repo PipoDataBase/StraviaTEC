@@ -29,6 +29,6 @@ export class GroupsService {
   }
 
   deleteGroup(id: string): Observable<boolean> {
-    return this.http.delete<boolean>(this.baseApiUrl + '/api/Challenges/' + id);
+    return this.http.delete<boolean>(this.baseApiUrl + '/api/Groups/' + id);
   }
 }

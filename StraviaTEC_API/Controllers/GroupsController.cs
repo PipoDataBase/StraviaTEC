@@ -145,7 +145,7 @@ namespace StraviaTEC_API.Controllers
                 new SqlParameter("@Name", id)
                 );
 
-            return Ok("Group Deleted");
+            return Ok(true);
         }
 
         private bool GroupExists(string id)
