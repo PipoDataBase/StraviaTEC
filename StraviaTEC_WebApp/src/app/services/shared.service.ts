@@ -8,7 +8,7 @@ import { Category } from '../models/category.module';
   providedIn: 'root'
 })
 export class SharedService {
-
+  
   constructor(private datePipe: DatePipe, private sanitizer: DomSanitizer) { }
 
   getUsername(): string {
