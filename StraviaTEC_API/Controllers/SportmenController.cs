@@ -99,11 +99,6 @@ namespace StraviaTEC_API.Controllers
                     new SqlParameter("@Username", username)
                     ).ToListAsync();
 
-            if (result.IsNullOrEmpty())
-            {
-                return NotFound();
-            }
-
             return result.ElementAt(0);
         }
 
@@ -119,11 +114,6 @@ namespace StraviaTEC_API.Controllers
                     "EXEC spGetSportmanChallenges @Username",
                     new SqlParameter("@Username", username)
                     ).ToListAsync();
-
-            if (result.IsNullOrEmpty())
-            {
-                return NotFound();
-            }
 
             return result;
         }
@@ -141,35 +131,8 @@ namespace StraviaTEC_API.Controllers
                     new SqlParameter("@Username", username)
                     ).ToListAsync();
 
-            if (result.IsNullOrEmpty())
-            {
-                return NotFound();
-            }
-
             return result;
         }
-
-        // GET: api/Sportmen
-        [HttpGet("GetManagingGroups/{username}")]
-        public async Task<ActionResult<IEnumerable<Group>>> GetManagingGroups(string username)
-        {
-            if (_context.Sportmen == null)
-            {
-                return NotFound();
-            }
-            var result = await _context.Groups.FromSqlRaw(
-                    "EXEC spGetManagingGroups @Username",
-                    new SqlParameter("@Username", username)
-                    ).ToListAsync();
-
-            if (result.IsNullOrEmpty())
-            {
-                return NotFound();
-            }
-
-            return result;
-        }
-
 
 
         // GET: api/Sportmen
@@ -184,12 +147,6 @@ namespace StraviaTEC_API.Controllers
                     "EXEC spGetParticipatingGroups @Username",
                     new SqlParameter("@Username", username)
                     ).ToListAsync();
-
-            if (result.IsNullOrEmpty())
-            {
-                return NotFound();
-            }
-
             return result;
         }
 
@@ -205,11 +162,6 @@ namespace StraviaTEC_API.Controllers
                     "EXEC spGetJoinedRaces @Username",
                     new SqlParameter("@Username", username)
                     ).ToListAsync();
-
-            if (result.IsNullOrEmpty())
-            {
-                return NotFound();
-            }
 
             return result;
         }
@@ -265,14 +217,7 @@ namespace StraviaTEC_API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!SportmanExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
         }
 
@@ -302,14 +247,7 @@ namespace StraviaTEC_API.Controllers
             }
             catch (DbUpdateException)
             {
-                if (SportmanExists(sportman.Username))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
         }
 
@@ -402,7 +340,7 @@ namespace StraviaTEC_API.Controllers
             "EXEC spDeleteSportman @Username",
                 new SqlParameter("@Username", id)
             );
-            return Ok("Challenge Deleted");
+            return Ok(true);
         }
 
         private bool SportmanExists(string id)
