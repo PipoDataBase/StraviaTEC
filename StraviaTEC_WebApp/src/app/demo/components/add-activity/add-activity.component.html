@@ -5,11 +5,9 @@
     <div class="card-body">
       <form>
         <div class="row mb-3">
-          <div class="col-md-12">
-            <div class="form-group">
-              <label>Description</label>
-              <input #description type="text" class="form-control">
-            </div>
+          <div class="form-group">
+            <label>Description</label>
+            <input #description type="text" class="form-control">
           </div>
         </div>
 
@@ -17,23 +15,7 @@
           <div class="col-md-6 pr-1">
             <div class="form-group">
               <label>Activity Date</label>
-              <input #activityDate type="date" required class="form-control">
-            </div>
-          </div>
-
-          <div class="col-md-6 pl-1">
-            <div class="form-group">
-              <label>Start Time</label>
-              <input #startTime type="time" required class="form-control">
-            </div>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <div class="col-md-6 pr-1">
-            <div class="form-group">
-              <label>Duration (minutes)</label>
-              <input #duration type="number" min="0" value="0" required class="form-control">
+              <input #activityDate type="datetime-local" required class="form-control">
             </div>
           </div>
 
@@ -51,12 +33,21 @@
         <div class="row mb-3">
           <div class="col-md-6 pr-1">
             <div class="form-group">
-              <label>Kilometers</label>
-              <input #kilometers type="number" min="0" value="0" required class="form-control">
+              <label>Duration (minutes)</label>
+              <input #duration type="number" min="0" value="0" required class="form-control">
             </div>
           </div>
 
           <div class="col-md-6 pl-1">
+            <div class="form-group">
+              <label>Kilometers</label>
+              <input #kilometers type="number" min="0" value="0" required class="form-control">
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6 pr-1">
             <div class="form-group">
               <label>Route (.gpx)</label>
               <input #route type="file" accept=".gpx" class="form-control shadow-sm px-4" />
@@ -66,8 +57,7 @@
 
         <div class="row" style="text-align: center;">
           <div class="update ml-auto mr-auto">
-            <button type="button" style="width: 30%;"
-              (click)="addActivity(description.value, activityDate.value, startTime.value, duration.value, activityType.value, kilometers.value, route.value)"
+            <button type="button" style="width: 30%;" (click)="addActivity(description.value, activityDate.value, duration.value, activityType.value, kilometers.value, route.value)"
               class="btn btn-primary btn-round text-uppercase shadow-sm">Add Activity</button>
           </div>
         </div>

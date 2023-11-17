@@ -6,30 +6,30 @@ using StraviaTEC_API.Services;
 
 namespace StraviaTEC_API.Controllers;
 
-    [Controller]
-    [Route("api/[controller]")]
-    public class CommentController : Controller {
-        private readonly MongoDBService _mongoDBService;
-        public CommentController(MongoDBService mongoDBService)
-        {
-            _mongoDBService = mongoDBService;
-        }
-        [HttpGet]
-        public async Task<List<Comment>> GetComment() {
-            var comments = await _mongoDBService.GetComment();
-        //Console.WriteLine("Comments retrieved");
-        return comments  ;
-        }
+[Controller]
+[Route("api/[controller]")]
+public class CommentController : Controller {
+    private readonly MongoDBService _mongoDBService;
+    public CommentController(MongoDBService mongoDBService)
+    {
+        _mongoDBService = mongoDBService;
+    }
+    [HttpGet]
+    public async Task<List<Comment>> GetComments() {
+        var comments = await _mongoDBService.GetComment();
+    //Console.WriteLine("Comments retrieved");
+    return comments  ;
+    }
 
 
-    [HttpGet("{Id}")]
+    [HttpGet("{activityId}")]
     public async Task<List<Comment>> GetCommentsByActivity(string activityId)
     {
         var comments = await _mongoDBService.GetComment();
         //Console.WriteLine("activityId= " + activityId);
         //Console.WriteLine("amount of comments:" + comments.Count);
 
-         List<Comment> filteredComments = new List<Comment>();
+            List<Comment> filteredComments = new List<Comment>();
 
         for (int i = 0; i < comments.Count; i++)
         {
@@ -47,13 +47,13 @@ namespace StraviaTEC_API.Controllers;
     }
 
     [HttpPost]
-        public async Task<IActionResult> PostComment([FromBody] Comment comment)
-        {
+    public async Task<IActionResult> PostComment([FromBody] Comment comment)
+    {
 
-            await _mongoDBService.CreateComment(comment);
-            return CreatedAtAction(nameof(GetComment), new {id = comment._id }, comment);
+        await _mongoDBService.CreateComment(comment);
+        return CreatedAtAction(nameof(GetComments), new {id = comment._id }, comment);
 
-        }
+    }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> PutComment(string id, [FromBody] string movieId)
@@ -68,5 +68,5 @@ namespace StraviaTEC_API.Controllers;
         await _mongoDBService.DeleteComment(id);
         return NoContent();
     }
-    }
+}
 

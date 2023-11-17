@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivityType } from 'src/app/models/activity-type.module';
+import { Activity } from 'src/app/models/activity.module';
 import { ActivityTypesService } from 'src/app/services/activity-types.service';
 
 @Component({
@@ -9,6 +10,7 @@ import { ActivityTypesService } from 'src/app/services/activity-types.service';
 })
 export class AddActivityComponent {
   activityTypes: ActivityType[] = [];
+  activity: Activity = {}
 
   constructor(private activityTypesService: ActivityTypesService) { }
 
@@ -23,8 +25,8 @@ export class AddActivityComponent {
     })
   }
 
-  addActivity(description: string, activityDate: string, startTime: string, duration: string, activityType: string, kilometers: string, route: string) {
+  addActivity(description: string, activityDate: string, duration: string, activityType: string, kilometers: string, route: string) {
     //validate data
-    console.log(description, activityDate, startTime, duration, activityType, kilometers, route)
+    console.log(description, activityDate, duration, activityType, kilometers, route)
   }
 }
