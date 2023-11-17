@@ -15,5 +15,9 @@ public partial class Bill
 
     public string RaceName { get; set; } = null!;
 
+    public byte CategoryId { get; set; }
+
+    public virtual Category? Category { get; set; } = null!;
+
     public virtual Race? RaceNameNavigation { get; set; } = null!;
 }

@@ -92,7 +92,7 @@ Race {
 	Type tinyint *> ActivityType.Id
 }
 
-RaceSportman {
+RaceSportmanManager {
 	Username varchar(20) pk *>* Sportman.Username
 	RaceName varchar(20) pk *>* Race.Name
 }
@@ -103,6 +103,7 @@ Bill {
 	Accepted boolean
 	Username varchar(20) *> Sportman.Username
 	RaceName varchar(20) *> Race.Name
+	CategoryId tinyint *> Category.Id
 }
 
 RaceCategory {
@@ -130,4 +131,9 @@ RaceSponsor {
 Nationality {
 	Id tinyint pk increments
 	Nationality varchar(20)
+}
+
+RaceGroup {
+	RaceName varchar(20) pk *>* Race.Name
+	GroupName varchar(20) pk *>* Group_.Name
 }

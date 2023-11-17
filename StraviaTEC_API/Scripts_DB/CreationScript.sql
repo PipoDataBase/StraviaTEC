@@ -107,6 +107,7 @@ CREATE TABLE Bill (
 	Accepted bit DEFAULT 0,
 	Username varchar(20) NOT NULL,
 	RaceName varchar(20) NOT NULL,
+	CategoryId tinyint NOT NULL,
 	PRIMARY KEY (Id)
 );
 
@@ -155,6 +156,12 @@ CREATE TABLE ChallengeSportmanParticipant (
 	PRIMARY KEY (ChallengeName,SportmanUsername)
 );
 
+CREATE TABLE RaceGroup (
+	RaceName varchar(20) NOT NULL,
+	GroupName varchar(20) NOT NULL,
+	PRIMARY KEY (RaceName,GroupName)
+);
+
 ALTER TABLE Friend ADD CONSTRAINT Friend_fk0 FOREIGN KEY (Username) REFERENCES Sportman(Username);
 ALTER TABLE Friend ADD CONSTRAINT Friend_fk1 FOREIGN KEY (FriendUsername) REFERENCES Sportman(Username);
 
@@ -188,6 +195,7 @@ ALTER TABLE RaceSportmanManager ADD CONSTRAINT RaceSportmanManager_fk0 FOREIGN K
 ALTER TABLE RaceSportmanManager ADD CONSTRAINT RaceSportmanManager_fk1 FOREIGN KEY (RaceName) REFERENCES Race(Name);
 
 ALTER TABLE Bill ADD CONSTRAINT Bill_fk0 FOREIGN KEY (RaceName) REFERENCES Race(Name);
+ALTER TABLE Bill ADD CONSTRAINT Bill_fk1 FOREIGN KEY (CategoryId) REFERENCES Category(Id);
 
 ALTER TABLE RaceCategory ADD CONSTRAINT RaceCategory_fk0 FOREIGN KEY (RaceName) REFERENCES Race(Name);
 ALTER TABLE RaceCategory ADD CONSTRAINT RaceCategory_fk1 FOREIGN KEY (CategoryId) REFERENCES Category(Id);
@@ -198,3 +206,6 @@ ALTER TABLE RaceSponsor ADD CONSTRAINT RaceSponsor_fk0 FOREIGN KEY (SponsorTrade
 ALTER TABLE RaceSponsor ADD CONSTRAINT RaceSponsor_fk1 FOREIGN KEY (RaceName) REFERENCES Race(Name);
 
 ALTER TABLE Sportman ADD CONSTRAINT Sportman_fk0 FOREIGN KEY (Nationality) REFERENCES Nationality(Id);
+
+ALTER TABLE RaceGroup ADD CONSTRAINT RaceGroup_fk0 FOREIGN KEY (RaceName) REFERENCES Race(Name);
+ALTER TABLE RaceGroup ADD CONSTRAINT RaceGroup_fk1 FOREIGN KEY (GroupName) REFERENCES Group_(Name);

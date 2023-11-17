@@ -27,6 +27,8 @@ public partial class Race
 
     public virtual ICollection<Category>? Categories { get; set; } = new List<Category>();
 
+    public virtual ICollection<Group>? GroupNames { get; set; } = new List<Group>();
+
     public virtual ICollection<Sponsor>? SponsorTradeNames { get; set; } = new List<Sponsor>();
 
     public virtual ICollection<Sportman>? Usernames { get; set; } = new List<Sportman>();

@@ -9,6 +9,8 @@ public partial class Group
 
     public virtual ICollection<Challenge>? ChallengeNames { get; set; } = new List<Challenge>();
 
+    public virtual ICollection<Race>? RaceNames { get; set; } = new List<Race>();
+
     public virtual ICollection<Sportman>? Usernames { get; set; } = new List<Sportman>();
 
     public virtual ICollection<Sportman>? UsernamesNavigation { get; set; } = new List<Sportman>();

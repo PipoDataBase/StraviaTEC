@@ -68,12 +68,13 @@ namespace StraviaTEC_API.Controllers
             try
             {
                 await _context.Database.ExecuteSqlRawAsync(
-                    "EXEC spUpdateBill @Id, @PhotoPath, @Accepted, @Username, @RaceName",
+                    "EXEC spUpdateBill @Id, @PhotoPath, @Accepted, @Username, @RaceName, @CategoryId",
                     new SqlParameter("@Id", id),
                     new SqlParameter("@PhotoPath", bill.PhotoPath),
                     new SqlParameter("@Accepted", bill.Accepted),
                     new SqlParameter("@Username", bill.Username),
-                    new SqlParameter("@RaceName", bill.RaceName)
+                    new SqlParameter("@RaceName", bill.RaceName),
+                    new SqlParameter("@CategoryId", bill.CategoryId)
                     );
                 return Ok("Bill Updated");
             }
@@ -122,10 +123,11 @@ namespace StraviaTEC_API.Controllers
             try
             {
                 await _context.Database.ExecuteSqlRawAsync(
-                    "EXEC spInsertBill @PhotoPath, @Username, @RaceName",
+                    "EXEC spInsertBill @PhotoPath, @Username, @RaceName, @CategoryId",
                     new SqlParameter("@PhotoPath", bill.PhotoPath),
                     new SqlParameter("@Username", bill.Username),
-                    new SqlParameter("@RaceName", bill.RaceName)
+                    new SqlParameter("@RaceName", bill.RaceName),
+                    new SqlParameter("@CategoryId", bill.CategoryId)
                     );
                 return Ok(true);
             }

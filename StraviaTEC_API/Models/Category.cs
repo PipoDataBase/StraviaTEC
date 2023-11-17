@@ -13,5 +13,7 @@ public partial class Category
 
     public string Category1 { get; set; } = null!;
 
+    public virtual ICollection<Bill>? Bills { get; set; } = new List<Bill>();
+
     public virtual ICollection<Race>? RaceNames { get; set; } = new List<Race>();
 }
