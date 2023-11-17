@@ -7,6 +7,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { RippleModule } from 'primeng/ripple';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
     imports: [
@@ -16,7 +18,9 @@ import { InputNumberModule } from 'primeng/inputnumber';
         ReactiveFormsModule,
         FormsModule,
         InputTextModule,
-        InputNumberModule
+        InputNumberModule,
+        RippleModule,
+        ToastModule
     ],
     declarations: [AddActivityComponent]
 })

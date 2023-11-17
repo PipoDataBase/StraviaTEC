@@ -574,8 +574,8 @@ CREATE PROCEDURE spInsertActivity
 	@Type tinyint
 AS
 BEGIN
-    INSERT INTO Activity (Kilometers, Duration, Date, Description, Username, RaceName, ChallengeName, Type)
-    VALUES (@Kilometers, @Duration, @Date, @Description, @Username, NULL, NULL, @Type);
+    INSERT INTO Activity (Kilometers, Duration, Date, RoutePath, Description, Username, RaceName, ChallengeName, Type)
+    VALUES (@Kilometers, @Duration, @Date, @RoutePath, @Description, @Username, NULL, NULL, @Type);
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
