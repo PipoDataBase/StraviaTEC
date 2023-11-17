@@ -49,11 +49,110 @@
                         </div>
                     </div>
 
-                    <div>
+                    <div class="mb-3">
                         <div class="z-depth-1-half map-container">
                             <iframe id="mapFrame" [src]="sharedService.getSafeResourceUrl(activity.routePath)"
                                 width="100%" height="450px"></iframe>
                         </div>
+                    </div>
+
+                    <div class="extension-panel">
+                        <mat-accordion>
+                            <mat-expansion-panel hideToggle>
+                                <mat-expansion-panel-header style="background-color: #F2F2F2;">
+                                    <mat-panel-title>
+                                        Comments
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div>
+                                    <div class="row">
+                                        <div class="col-md-1 text-right" style="margin-top: 1%;">
+                                            <span style="margin-bottom: 0%;">
+                                                <img src="{{ sportman.photoPath }}" alt="Avatar" class="rounded-circle"
+                                                    style="width: 38px; height: 38px;">
+                                            </span>
+                                        </div>
+                                        <div class="flex col-md-10 text-left" style="margin-top: 1%;">
+                                            <textarea rows="1" cols="50" placeholder="Add a comment..." pInputTextarea
+                                                [autoResize]="false" [(ngModel)]="value"></textarea>
+                                            <button style="margin-left: 1%;" pButton pRipple icon="pi pi-send"
+                                                class="p-button-secondary mr-2" (click)="seeMoreInfo(race)"></button>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                </div>
+
+                                <p-divider></p-divider>
+
+                                <div style="margin-top: 1%;">
+                                    <div class="row">
+                                        <div class="col-md-1 text-right">
+                                            <span>
+                                                <img src="{{ sportman.photoPath }}" alt="Avatar" class="rounded-circle"
+                                                    style="width: 30px; height: 30px;">
+                                            </span>
+                                        </div>
+                                        <div class="col-md-10 text-left">
+                                            <span style="color: #fa4a01;">
+                                                {{ ' @' + sportman.username }}
+                                            </span>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-1"></div>
+                                        <div class="col-md-10 text-left">
+                                            <p>
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                                                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                                                commodo
+                                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+                                                esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+                                                cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
+                                                id est laborum.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                </div>
+
+                                <p-divider></p-divider>
+
+                                <div style="margin-top: 1%;">
+                                    <div class="row">
+                                        <div class="col-md-1 text-right">
+                                            <span>
+                                                <img src="{{ sportman.photoPath }}" alt="Avatar" class="rounded-circle"
+                                                    style="width: 30px; height: 30px;">
+                                            </span>
+                                        </div>
+                                        <div class="col-md-10 text-left">
+                                            <span style="color: #fa4a01;">
+                                                {{ ' @' + sportman.username }}
+                                            </span>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-1"></div>
+                                        <div class="col-md-10 text-left">
+                                            <p>
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                                                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                                                commodo
+                                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+                                                esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+                                                cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
+                                                id est laborum.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
                     </div>
                 </div>
             </div>

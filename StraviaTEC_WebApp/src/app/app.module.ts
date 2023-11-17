@@ -35,6 +35,11 @@ import { TabMenuModule } from 'primeng/tabmenu';
 import { SkeletonModule } from 'primeng/skeleton';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ToastModule } from 'primeng/toast';
+import { FieldsetModule } from 'primeng/fieldset';
+import { PanelModule } from 'primeng/panel';
+import { CardModule } from 'primeng/card';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { DividerModule } from 'primeng/divider';
 
 import { DatePipe } from '@angular/common';
 import { environment } from 'src/environments/environment';
@@ -51,6 +56,11 @@ import { environment } from 'src/environments/environment';
         SkeletonModule,
         MultiSelectModule,
         ToastModule,
+        FieldsetModule,
+        PanelModule,
+        CardModule,
+        InputTextareaModule,
+        DividerModule,
         BrowserAnimationsModule,
         AngularMaterialModule,
         MatInputModule,

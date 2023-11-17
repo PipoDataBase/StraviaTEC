@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivityType } from 'src/app/models/activity-type.module';
+import { Sportman } from 'src/app/models/sportman.module';
 import { ActivityTypesService } from 'src/app/services/activity-types.service';
 import { SharedService } from 'src/app/services/shared.service';
 
@@ -16,17 +17,6 @@ export interface Activity {
   type: number;
 }
 
-export interface Sportman {
-  username: string;
-  name: string;
-  lastName1: string;
-  lastName2: string;
-  birthDate: string;
-  photoPath: string;
-  password: string;
-  nationality: number;
-}
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -37,13 +27,17 @@ export class HomeComponent {
   activities: Activity[] = [];
   activityTypes: ActivityType[] = [];
 
+  comments: { user: string; text: string }[] = [];
+  newComment: string = '';
+  value!: string;
+
   sportman: Sportman = {
     username: 'MarinGE23',
     name: 'Emanuel',
     lastName1: 'Marín',
     lastName2: 'Gutiérrez',
     birthDate: '2000-01-21',
-    photoPath: '../../../../assets/straviatec/default-avatar.png',
+    photoPath: 'https://firebasestorage.googleapis.com/v0/b/straviatec-942e3.appspot.com/o/profile%2FEmanuel.png?alt=media&token=4ef35ab0-380f-4d0b-8271-6d13a734887e',
     password: 'abc123de',
     nationality: 18 // Costa Rican
   }
@@ -107,4 +101,13 @@ export class HomeComponent {
   //hideContent() {
   //  this.showContent = false;
   //}
+
+  addComment() {
+    if (this.newComment.trim() !== '') {
+      // Agregar el nuevo comentario a la lista
+      this.comments.push({ user: 'Usuario', text: this.newComment });
+      // Limpiar el área de comentarios
+      this.newComment = '';
+    }
+  }
 }
