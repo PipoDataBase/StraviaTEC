@@ -34,14 +34,17 @@ namespace StraviaTEC_API.Controllers
         }
 
         // GET: api/Races
-        [HttpGet("GetAvailableVwRaces")]
-        public async Task<ActionResult<IEnumerable<VwRace>>> GetAvailableVwRaces()
+        [HttpGet("GetAvailableVwRaces/{username}")]
+        public async Task<ActionResult<IEnumerable<VwRace>>> GetAvailableVwRaces(string username)
         {
             if (_context.Races == null)
             {
                 return NotFound();
             }
-            return await _context.VwRaces.FromSqlRaw("EXEC spGetAvailableVwRaces").ToListAsync();
+            return await _context.VwRaces.FromSqlRaw(
+                    "EXEC spGetAvailableVwRaces @Username",
+                    new SqlParameter("@Username", username)
+                    ).ToListAsync();
         }
 
         // GET: api/Races

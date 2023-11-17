@@ -138,6 +138,55 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
+
+        // POST: api/Groups
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("AddToChallenge/{challengeName}/{groupName}")]
+        public async Task<ActionResult<Group>> PostChallengeGroup(string challengeName, string groupName)
+        {
+            if (_context.Groups == null)
+            {
+                return Problem("Entity set 'StraviaTecContext.Groups'  is null.");
+            }
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC spAddChallengeGroup @ChallengeName, @GroupName",
+                    new SqlParameter("@ChallengeName", challengeName),
+                    new SqlParameter("@GroupName", groupName)
+                    );
+                return Ok(true);
+            }
+            catch (DbUpdateException)
+            {
+                throw;
+            }
+        }
+
+        // POST: api/Groups
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("AddToRace/{raceName}/{groupName}")]
+        public async Task<ActionResult<Group>> PostRaceGroup(string raceName, string groupName)
+        {
+            if (_context.Groups == null)
+            {
+                return Problem("Entity set 'StraviaTecContext.Groups'  is null.");
+            }
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC spAddRaceGroup @RaceName, @GroupName",
+                    new SqlParameter("@RaceName", raceName),
+                    new SqlParameter("@GroupName", groupName)
+                    );
+                return Ok(true);
+            }
+            catch (DbUpdateException)
+            {
+                throw;
+            }
+        }
+
         // DELETE: api/Groups/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGroup(string id)
@@ -154,6 +203,48 @@ namespace StraviaTEC_API.Controllers
             await _context.Database.ExecuteSqlRawAsync(
                 "EXEC spDeleteGroup @Name",
                 new SqlParameter("@Name", id)
+                );
+
+            return Ok(true);
+        }
+
+        // DELETE: api/Groups/5
+        [HttpDelete("LeaveChallenge/{challengeName}/{groupName}")]
+        public async Task<IActionResult> DeleteChallengeGroup(string challengeName, string groupName)
+        {
+            if (_context.Groups == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                    "EXEC spDeleteChallengeGroup @ChallengeName, @GroupName",
+                    new SqlParameter("@ChallengeName", challengeName),
+                    new SqlParameter("@GroupName", groupName)
+                    );
+
+                return Ok(true);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        // DELETE: api/Groups/5
+        [HttpDelete("LeaveRace/{RaceName}/{groupName}")]
+        public async Task<IActionResult> DeleteRaceGroup(string RaceName, string groupName)
+        {
+            if (_context.Groups == null)
+            {
+                return NotFound();
+            }
+
+            await _context.Database.ExecuteSqlRawAsync(
+                "EXEC spDeleteRaceGroup @RaceName, @GroupName",
+                new SqlParameter("@RaceName", RaceName),
+                new SqlParameter("@GroupName", groupName)
                 );
 
             return Ok(true);

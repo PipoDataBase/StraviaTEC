@@ -791,6 +791,40 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spAddChallengeGroup
+    @ChallengeName varchar(20),
+    @GroupName varchar(20)
+AS
+BEGIN 
+    BEGIN TRY
+        INSERT INTO ChallengeGroup (ChallengeName, GroupName)
+        VALUES (@ChallengeName, @GroupName)
+    END TRY 
+    BEGIN CATCH
+        THROW 51000, 'ERROR: couldnt Add ChallengeGroup', 1; 
+    END CATCH;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spAddRaceGroup
+    @RaceName varchar(20),
+    @GroupName varchar(20)
+AS
+BEGIN 
+    BEGIN TRY
+        INSERT INTO RaceGroup (RaceName, GroupName)
+        VALUES (@RaceName, @GroupName)
+    END TRY 
+    BEGIN CATCH
+        THROW 51000, 'ERROR: couldnt Add RaceGroup', 1; 
+    END CATCH;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
 -- Si quiero implementar bien el updated; crear nueva tabla, migrar relaciones y eliminar esta tabla
 Go
 CREATE PROCEDURE spUpdateGroup
@@ -814,7 +848,42 @@ BEGIN
     DELETE FROM Group_
     WHERE Name = @Name;
 END;
+
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spDeleteChallengeGroup
+    @ChallengeName varchar(20),
+    @GroupName varchar(20)
+AS 
+BEGIN
+    BEGIN TRY
+        DELETE FROM ChallengeGroup WHERE ChallengeName = @ChallengeName AND GroupName = @GroupName
+    END TRY
+    BEGIN CATCH
+        THROW 51000, 'ERROR deleting ChallengeGroup', 1; 
+    END CATCH;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spDeleteRaceGroup
+    @RaceName varchar(20),
+    @GroupName varchar(20)
+AS 
+BEGIN
+    BEGIN TRY
+        DELETE FROM RaceGroup WHERE RaceName = @RaceName AND GroupName = @GroupName
+    END TRY
+    BEGIN CATCH
+        THROW 51000, 'ERROR deleting RaceGroup', 1; 
+    END CATCH;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+
 Go
 -- ================================================
 --                  Race
@@ -829,10 +898,14 @@ END;
 
 GO
 CREATE PROCEDURE spGetAvailableVwRaces
+    @Username varchar(20)
 AS
 BEGIN
-    SELECT * FROM vwRaces
-    WHERE GETDATE() < Date;
+    SELECT DISTINCT R.Name, R.InscriptionPrice, R.Date, R.Private, R.RoutePath, R.Type, R.Manager 
+    FROM vwRaces R
+    INNER JOIN RaceGroup RG ON R.Name = RG.RaceName
+    INNER JOIN SportmanGroup SG ON SG.GroupName = RG.GroupName
+    WHERE GETDATE() < Date AND (Private = 0 OR SG.Username = @Username);
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
