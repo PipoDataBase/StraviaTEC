@@ -2,11 +2,11 @@
     <div class="card">
         <div class="grid formgrid">
             <div class="flex gap-2 col-md-12">
-                <span class="p-input-icon-right" style="width: 100%;">
-                    <input #searchInput style="width: 100%;" type="text" pInputText placeholder="Search" required />
-                    <i class="pi pi-search"></i>
+                <span style="width: 100%;">
+                    <input #searchInput style="width: 100%;" type="text" pInputText placeholder="Search" required
+                        (keydown.enter)="searchButtonOnClick(searchInput.value)" />
                 </span>
-                <p-button label="Search" [loading]="getLoadingAnimation()"
+                <p-button label="Search" icon="pi pi-search" [loading]="getLoadingAnimation()"
                     (onClick)="searchButtonOnClick(searchInput.value)"></p-button>
             </div>
         </div>
@@ -20,23 +20,33 @@
             <div class="col-md-12">
                 <div class="card">
                     <p-carousel [value]="getFoundUsers()" [numVisible]="5" [numScroll]="5" [circular]="true"
-                        [responsiveOptions]="carouselResponsiveOptions">
+                        [responsiveOptions]="carouselResponsiveOptions" *ngIf="!isFoundUsersEmpty">
                         <ng-template let-user pTemplate="item">
                             <div class="border-round m-2 text-center p-2" style="border: 1px solid var(--surface-d)">
                                 <div class="my-5">
                                     <img src="{{ user.photoPath }}" [alt]="user.username" class="shadow-4"
-                                        width="50%" />
+                                        style="max-width: 150px; width: 50%;" />
                                 </div>
                                 <div>
                                     <h2 class="mb-1">{{ user.username }}</h2>
                                     <h4 class="mb-1">{{ user.name + " " + user.lastName1 }}</h4>
-                                    <h4 class="mt-0 mb-3">{{ user.nationalityId }}</h4>
-                                    <p-button #followButton label="Follow"
-                                        (onClick)="followUserButtonOnClick(user.username); followButton.label='Following'; followButton.disabled=true"></p-button>
+                                    <h4 class="mt-0 mb-3">{{ user.nationality }}</h4>
+                                    <p-button label="This is you!" *ngIf="foundUserIsCurrentUser(user.username)"
+                                        (onClick)="goToProfileButtonOnClick()"></p-button>
+                                    <p-button label="Unfollow" styleClass="p-button-danger"
+                                        *ngIf="isUserAlreadyFriend(user.username) && !foundUserIsCurrentUser(user.username)"
+                                        (onClick)="unfollowUserButtonOnClick(user.username)"></p-button>
+                                    <p-button label="Follow"
+                                        *ngIf="!isUserAlreadyFriend(user.username) && !foundUserIsCurrentUser(user.username)"
+                                        (onClick)="followUserButtonOnClick(user.username)"></p-button>
                                 </div>
                             </div>
                         </ng-template>
                     </p-carousel>
+                    <div *ngIf="isFoundUsersEmpty" style="text-align: center;">
+                        <i class="pi pi-ban my-5" style="font-size: 2.5rem; color: 'var(--primary-color)';"></i>
+                        <h4>Sorry, we can't find that user...</h4>
+                    </div>
                 </div>
             </div>
         </mat-tab>
@@ -47,21 +57,29 @@
             <div class="col-md-12">
                 <div class="card">
                     <p-carousel [value]="getFoundGroups()" [numVisible]="5" [numScroll]="5" [circular]="true"
-                        [responsiveOptions]="carouselResponsiveOptions">
+                        [responsiveOptions]="carouselResponsiveOptions" *ngIf="!isFoundGroupsEmpty">
                         <ng-template let-group pTemplate="item">
                             <div class="border-round m-2 text-center p-2" style="border: 1px solid var(--surface-d)">
                                 <div class="my-5">
                                     <img src="../../../../assets/straviatec/default-avatar.png" [alt]="group.name"
-                                        class="shadow-4" width="50%" />
+                                        class="shadow-4" style="max-width: 150px; width: 50%;" />
                                 </div>
                                 <div>
                                     <h2 class="mb-1">{{ group.name }}</h2>
-                                    <p-button #submitButtton type="button" label="Submit"
-                                        (onClick)="submitGroupButtonOnClick(group.name); submitButtton.label='Submitted'; submitButtton.disabled=true;"></p-button>
+                                    <p-button styleClass="p-button-danger" type="button" label="Leave"
+                                        *ngIf="isUserParticipatingOnGroup(group.name)"
+                                        (onClick)="leaveGroupButtonOnClick(group.name)"></p-button>
+                                    <p-button type="button" label="Submit"
+                                        *ngIf="!isUserParticipatingOnGroup(group.name)"
+                                        (onClick)="submitGroupButtonOnClick(group.name)"></p-button>
                                 </div>
                             </div>
                         </ng-template>
                     </p-carousel>
+                    <div *ngIf="isFoundGroupsEmpty" style="text-align: center;">
+                        <i class="pi pi-ban my-5" style="font-size: 2.5rem; color: 'var(--primary-color)';"></i>
+                        <h4 >Sorry, we can't find that group...</h4>
+                    </div>
                 </div>
             </div>
         </mat-tab>

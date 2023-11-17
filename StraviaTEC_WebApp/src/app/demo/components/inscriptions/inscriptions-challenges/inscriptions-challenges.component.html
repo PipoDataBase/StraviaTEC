@@ -23,7 +23,7 @@
                             class="my-4 md:my-0 w-9 md:w-10rem shadow-2 mr-5" />
                         <div class="flex-1 flex flex-column align-items-center text-center md:text-left">
                             <div class="text-2xl font-bold mb-3">{{ challenge.name }}</div>
-                            <div class="h6 mb-3">Complete {{ challenge.goal }} meters</div>
+                            <div class="h6 mb-3">Complete {{ challenge.goal }} km</div>
                             <div class="h6 mb-3">From {{ getDateOnFormat(challenge.startDate) }} to {{
                                 getDateOnFormat(challenge.endDate) }}</div>
                             <div class="flex flex-wrap align-items-center mb-3">
@@ -51,7 +51,7 @@
                             <img [src]="'../../../../assets/straviatec/ChallengeDefaultImage.png'"
                                 [alt]="challenge.name" class="w-10 shadow-2 my-3 mx-0 mb-3" />
                             <div class="text-2xl font-bold mb-3">{{challenge.name}}</div>
-                            <div class="h6 mb-3">Complete {{challenge.goal}} meters</div>
+                            <div class="h6 mb-3">Complete {{challenge.goal}} km</div>
                             <div class="h6 mb-3">From {{ getDateOnFormat(challenge.startDate) }} to {{
                                 getDateOnFormat(challenge.endDate) }}</div>
                             <div class="flex flex-wrap align-items-center mb-3">

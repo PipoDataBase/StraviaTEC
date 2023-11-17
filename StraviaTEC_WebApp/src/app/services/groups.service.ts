@@ -31,4 +31,8 @@ export class GroupsService {
   deleteGroup(id: string): Observable<boolean> {
     return this.http.delete<boolean>(this.baseApiUrl + '/api/Groups/' + id);
   }
+
+  getSearchGroups(groupName: string): Observable<Group[]> {
+    return this.http.get<Group[]>(this.baseApiUrl + '/api/Groups/Search/' + groupName)
+  }
 }

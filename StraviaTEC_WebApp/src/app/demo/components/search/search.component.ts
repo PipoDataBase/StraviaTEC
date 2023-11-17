@@ -1,5 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
+// Models imports
+import { SportmanNationality } from 'src/app/models/views-models/vw-sportman-nationality.module';
+import { Group } from 'src/app/models/group.module';
+
+// Services imports
+import { SportmenService } from 'src/app/services/sportmen.service';
+import { GroupsService } from 'src/app/services/groups.service';
+import { SharedService } from 'src/app/services/shared.service';
+import { MessageService } from 'primeng/api';
+
+/*
 export interface Sportman {
   username: string;
   name: string;
@@ -10,17 +21,15 @@ export interface Sportman {
   password: string;
   nationalityId: number;
 }
-
-export interface Group {
-  name: string
-}
+*/
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
-  styleUrls: ['./search.component.scss']
+  styleUrls: ['./search.component.scss'],
+  providers: [MessageService]
 })
-export class SearchComponent {
+export class SearchComponent implements OnInit {
 
   // Functional variables
 
@@ -40,13 +49,16 @@ export class SearchComponent {
     this.showSearchResults = value;
   }
 
+  isFoundUsersEmpty: boolean = true;
+  isFoundGroupsEmpty: boolean = true;
+
   // Database variables
 
-  private foundUsers: Sportman[];
-  public getFoundUsers(): Sportman[] {
+  private foundUsers: SportmanNationality[];
+  public getFoundUsers(): SportmanNationality[] {
     return this.foundUsers;
   }
-  public setFoundUsers(value: Sportman[]) {
+  public setFoundUsers(value: SportmanNationality[]) {
     this.foundUsers = value;
   }
 
@@ -58,89 +70,153 @@ export class SearchComponent {
     this.foundGroups = value;
   }
 
+  userFriends: SportmanNationality[] = [];
+  participatingGroups: Group[] = [];
+
   //Other variables
 
 
   // Constructor
+  constructor(private sportmenService: SportmenService, private groupsService: GroupsService, private sharedService: SharedService, private messageService: MessageService) { }
 
+  ngOnInit() {
+
+    // Loads user freinds
+    this.sportmenService.getFriends(this.sharedService.getUsername()).subscribe({
+      next: (userFriends) => {
+        this.userFriends = userFriends;
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Friends loaded wrong.' });
+      }
+    })
+
+    // Loads user participating groups
+    this.sportmenService.getParticipatingGroups(this.sharedService.getUsername()).subscribe({
+      next: (participatingGroups) => {
+        this.participatingGroups = participatingGroups;
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Participating groups loaded wrong.' });
+      }
+    })
+  }
+
+  foundUserIsCurrentUser(foundUser: string): boolean {
+    return foundUser.toLocaleLowerCase() === this.sharedService.getUsername().toLocaleLowerCase()
+  }
+
+  isUserAlreadyFriend(friendName: string): boolean {
+    return this.userFriends.some(userFriend => userFriend.username.toLocaleLowerCase() === friendName.toLocaleLowerCase());
+  }
+
+  isUserParticipatingOnGroup(groupName: string): boolean {
+    return this.participatingGroups.some(participatingGroup => participatingGroup.name.toLocaleLowerCase() === groupName.toLocaleLowerCase());
+  }
 
   // Search button function: Searches on database for a match of any user or group
-  searchButtonOnClick(searchInputValue: String) {
+  searchButtonOnClick(searchInputValue: string) {
+    this.foundUsers = [];
+    this.foundGroups = [];
+    this.isFoundUsersEmpty = true;
+    this.isFoundGroupsEmpty = true;
+
     this.loadingAnimation = true;
     setTimeout(() => {
-    this.loadingAnimation = false
-    
-    console.log("Searching '" + searchInputValue + "'...");
+      this.loadingAnimation = false
 
-    // Database get
+      // Gets all users that match username input value
+      this.sportmenService.getSearchSportman(searchInputValue).subscribe({
+        next: (foundSportmen) => {
+          this.foundUsers = foundSportmen;
+          if (this.foundUsers.length == 0) {
+            this.isFoundUsersEmpty = true;
+          } else {
+            this.isFoundUsersEmpty = false;
+          }
+        },
+        error: (response) => {
+          console.log(response);
+          this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Challenges loaded wrong.' });
+        }
+      })
 
-    // Search script for testing
-    this.foundUsers = [
-      {username: 'joseandres',
-      name:'Andres',
-      lastName1:'Rodriguez',
-      lastName2:'R',
-      birthDate:'',
-      photoPath:'../../../../assets/straviatec/default-avatar.png',
-      password:"",
-      nationalityId:0},
-      {username: 'emarin',
-      name:'Ema',
-      lastName1:'Marin',
-      lastName2:'G',
-      birthDate:'',
-      photoPath:'../../../../assets/straviatec/default-avatar.png',
-      password:"",
-      nationalityId:0},
-      {username: 'seballoll',
-      name:'Sebas',
-      lastName1:'Chen',
-      lastName2:'C',
-      birthDate:'',
-      photoPath:'../../../../assets/straviatec/default-avatar.png',
-      password:"",
-      nationalityId:0},
-      {username: 'camanem',
-      name:'Oscar',
-      lastName1:'Soto',
-      lastName2:'?',
-      birthDate:'',
-      photoPath:'../../../../assets/straviatec/default-avatar.png',
-      password:"",
-      nationalityId:0},
-    ]
+      // Gets all groups that match group name input value
+      this.groupsService.getSearchGroups(searchInputValue).subscribe({
+        next: (foundGroups) => {
+          this.foundGroups = foundGroups;
+          if (this.foundGroups.length == 0) {
+            this.isFoundGroupsEmpty = true;
+          } else {
+            this.isFoundGroupsEmpty = false;
+          }
+        },
+        error: (response) => {
+          console.log(response);
+          this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Challenges loaded wrong.' });
+        }
+      })
 
-    this.foundGroups = [
-      {name: 'Group1'},
-      {name: 'Group2'},
-      {name: 'Group3'},
-      {name: 'Group4'},
-      {name: 'Group5'},
-      {name: 'Group6'},
-      {name: 'Group7'},
-      {name: 'Group8'},
-      {name: 'Group9'},
-      {name: 'Group10'},
-      {name: 'Group11'},
-      {name: 'Group12'},
-    ]
+      this.showSearchResults = true
 
-    this.showSearchResults = true
-    
-    }, 
-    1000);
+    },
+      1000);
   }
 
   // Follow button function
-  followUserButtonOnClick(username: string){
+  followUserButtonOnClick(username: string) {
     // Database request
-
-    console.log("Following user: " + username)
+    this.sportmenService.postAddFriend(this.sharedService.getUsername(), username).subscribe({
+      next: () => {
+        this.sportmenService.getFriends(this.sharedService.getUsername()).subscribe({
+          next: (userFriends) => {
+            this.userFriends = userFriends;
+          },
+          error: (response) => {
+            console.log(response);
+            this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Friends loaded wrong.' });
+          }
+        })
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Friend request sended wrong.' });
+      }
+    })
   }
 
-  submitGroupButtonOnClick(name: string){
+  submitGroupButtonOnClick(name: string) {
     // Database request
+    this.sportmenService.postJoinGroup(this.sharedService.getUsername(), name).subscribe({
+      next: () => {
+        this.sportmenService.getParticipatingGroups(this.sharedService.getUsername()).subscribe({
+          next: (participatingGroups) => {
+            this.participatingGroups = participatingGroups;
+          },
+          error: (response) => {
+            console.log(response);
+            this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Participating groups loaded wrong.' });
+          }
+        })
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Group join request sended wrong.' });
+      }
+    })
+  }
 
-    console.log("Submited group: " + name)
+  goToProfileButtonOnClick() {
+
+  }
+
+  unfollowUserButtonOnClick(username: string) {
+
+  }
+
+  leaveGroupButtonOnClick(groupName: string) {
+
   }
 }
