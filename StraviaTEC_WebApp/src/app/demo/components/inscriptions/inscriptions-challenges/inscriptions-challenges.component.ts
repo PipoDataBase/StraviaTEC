@@ -108,7 +108,23 @@ export class InscriptionsChallengesComponent implements OnInit {
   }
 
   leaveChallengeButtonOnClick(challengeName: string) {
-    console.log("Leaving challenge ", + challengeName);
+    this.sportmanService.deleteLeaveChallenge(challengeName, this.sharedService.getUsername()).subscribe({
+      next: () => {
+        this.sportmanService.getSportmanParticipatingChallenges(this.sharedService.getUsername()).subscribe({
+          next: (participatingChallenges) => {
+            this.participatingChallenges = participatingChallenges;
+          },
+          error: (response) => {
+            console.log(response);
+            this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Challenges loaded wrong.' });
+          }
+        })
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Username or challenge name wrong.' });
+      }
+    })
   }
 
   isUserParticipatingOnChallenge(challengeName: string): boolean {

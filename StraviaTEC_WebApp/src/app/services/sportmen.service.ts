@@ -58,4 +58,12 @@ export class SportmenService {
   deleteUnfollowUser(username: string, friendName: string): Observable<boolean> {
     return this.http.delete<boolean>(this.baseApiUrl + `/api/Sportmen/Unfollow/${username}/${friendName}`);
   }
+
+  deleteLeaveChallenge(challengeName: string, username: string): Observable<boolean> {
+    return this.http.delete<boolean>(this.baseApiUrl + `/api/Sportmen/LeaveChallenge/${challengeName}/${username}`);
+  }
+
+  deleteLeaveRace(raceName: string, username: string): Observable<boolean> {
+    return this.http.delete<boolean>(this.baseApiUrl + `/api/Sportmen/LeaveRace/${raceName}/${username}`);
+  }
 }
