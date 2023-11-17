@@ -37,7 +37,7 @@ export class InscriptionsChallengesComponent implements OnInit {
 
   ngOnInit() {
     // Requests database for all challenges
-    this.challengesService.getAvailableChallengesVw().subscribe({
+    this.challengesService.getAvailableChallengesVw(this.sharedService.getUsername()).subscribe({
       next: (availableChallenges) => {
         this.challenges = availableChallenges;
       },

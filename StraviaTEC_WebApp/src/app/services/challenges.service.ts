@@ -50,7 +50,7 @@ export class ChallengesService {
     return this.http.delete<boolean>(this.baseApiUrl + '/api/Challenges/DeleteSponsors/' + challengeName);
   }
 
-  getAvailableChallengesVw(): Observable<AvailableChallenge[]> {
-    return this.http.get<AvailableChallenge[]>(this.baseApiUrl + '/api/Challenges/vwAvailableChallenges');
+  getAvailableChallengesVw(username: string): Observable<AvailableChallenge[]> {
+    return this.http.get<AvailableChallenge[]>(this.baseApiUrl + '/api/Challenges/GetAvailableVwChallenges/' + username);
   }
 }

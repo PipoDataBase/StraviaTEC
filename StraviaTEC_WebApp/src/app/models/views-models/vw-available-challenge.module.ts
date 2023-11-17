@@ -6,4 +6,5 @@ export interface AvailableChallenge {
     endDate?: string;
     deep?: boolean;
     type?: string;
+    manager?: string;
 }
