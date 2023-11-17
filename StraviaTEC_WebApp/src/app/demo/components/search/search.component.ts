@@ -213,10 +213,42 @@ export class SearchComponent implements OnInit {
   }
 
   unfollowUserButtonOnClick(username: string) {
-
+    this.sportmenService.deleteUnfollowUser(this.sharedService.getUsername(), username).subscribe({
+      next: () => {
+        this.sportmenService.getFriends(this.sharedService.getUsername()).subscribe({
+          next: (userFriends) => {
+            this.userFriends = userFriends;
+          },
+          error: (response) => {
+            console.log(response);
+            this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Friends loaded wrong.' });
+          }
+        })
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Group join request sended wrong.' });
+      }
+    })
   }
 
   leaveGroupButtonOnClick(groupName: string) {
-
+    this.sportmenService.deleteLeaveGroup(this.sharedService.getUsername(), groupName).subscribe({
+      next: () => {
+        this.sportmenService.getParticipatingGroups(this.sharedService.getUsername()).subscribe({
+          next: (participatingGroups) => {
+            this.participatingGroups = participatingGroups;
+          },
+          error: (response) => {
+            console.log(response);
+            this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Participating groups loaded wrong.' });
+          }
+        })
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Group leave request sended wrong.' });
+      }
+    })
   }
 }

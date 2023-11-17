@@ -50,4 +50,12 @@ export class SportmenService {
   postJoinGroup(username: string, groupName: string): Observable<boolean> {
     return this.http.post<boolean>(this.baseApiUrl + `/api/Sportmen/JoinGroup/${username}/${groupName}`, null);
   }
+
+  deleteLeaveGroup(username: string, groupName: string): Observable<boolean> {
+    return this.http.delete<boolean>(this.baseApiUrl + `/api/Sportmen/LeaveGroup/${username}/${groupName}`);
+  }
+
+  deleteUnfollowUser(username: string, friendName: string): Observable<boolean> {
+    return this.http.delete<boolean>(this.baseApiUrl + `/api/Sportmen/Unfollow/${username}/${friendName}`);
+  }
 }
