@@ -753,6 +753,20 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spGetGroupMembers
+    @GroupName varchar(20)
+AS
+BEGIN
+    SELECT S.Username, S.Name, S.LastName1, S.LastName2, S.BirthDate, S.PhotoPath, S.Nationality
+    FROM vwSportmanNationality S INNER JOIN SportmanGroup SG
+    ON S.Username = SG.Username
+    WHERE SG.GroupName = @GroupName;
+END;
+
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
 -- Checks if the user exists and the name isnt taken. Then creates the group and sets its manager
 Go
 CREATE PROCEDURE spInsertGroup
