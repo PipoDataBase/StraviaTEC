@@ -46,6 +46,8 @@ public partial class StraviaTecContext : DbContext
     public virtual DbSet<VwRace> VwRaces { get; set; }
 
     public virtual DbSet<VwSportmanNationality> VwSportmanNationalities { get; set; }
+
+    public virtual DbSet<WvRaceReportSportmanLeaderboard> WvRaceReportSportmanLeaderboards { get; set; }
     /*
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -626,6 +628,34 @@ public partial class StraviaTecContext : DbContext
                 .ToView("vwSportmanNationality");
 
             entity.Property(e => e.BirthDate).HasColumnType("date");
+            entity.Property(e => e.LastName1)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.LastName2)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.Name)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.Nationality)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.PhotoPath).IsUnicode(false);
+            entity.Property(e => e.Username)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<WvRaceReportSportmanLeaderboard>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("wvRaceReportSportmanLeaderboard");
+
+            entity.Property(e => e.Category)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.Duration).HasPrecision(0);
             entity.Property(e => e.LastName1)
                 .HasMaxLength(20)
                 .IsUnicode(false);

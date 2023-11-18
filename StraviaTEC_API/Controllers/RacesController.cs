@@ -133,6 +133,21 @@ namespace StraviaTEC_API.Controllers
         }
 
 
+        // GET: api/Races
+        [HttpGet("GetLeaderboardReport/{raceName}")]
+        public async Task<ActionResult<IEnumerable<WvRaceReportSportmanLeaderboard>>> GetLeaderboardReport(string raceName)
+        {
+            if (_context.Races == null)
+            {
+                return NotFound();
+            }
+            return await _context.WvRaceReportSportmanLeaderboards.FromSqlRaw(
+                    "EXEC spGetRaceReportSportmanLeaderboard @RaceName",
+                    new SqlParameter("@RaceName", raceName)
+                    ).ToListAsync();
+        }
+
+
         // PUT: api/Races/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

@@ -538,6 +538,36 @@ END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
+GO
+CREATE PROCEDURE spGetRaceReportSportmanLeaderboard
+    @RaceName varchar(20)
+AS
+BEGIN
+    SELECT Username, Name, LastName1, LastName2, Age, PhotoPath, Nationality, Category, Duration
+    FROM wvRaceReportSportmanLeaderboard
+    WHERE RaceName = @RaceName
+    ORDER BY Category, Duration ASC
+END;
+
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+
+GO
+CREATE FUNCTION FGetAge (@BirthDate DATE)
+RETURNS INT
+AS
+BEGIN
+    DECLARE @Age INT;
+
+    SET @Age = DATEDIFF(YEAR, @BirthDate, GETDATE()) - 
+        CASE WHEN FORMAT(GETDATE(), 'MMdd') < FORMAT(@BirthDate, 'MMdd') THEN 1 ELSE 0 END;
+
+    RETURN @Age;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
 Go
 -- ================================================
 --                  Nationality
