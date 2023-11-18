@@ -25,7 +25,7 @@ export interface ActivityType {
 })
 export class InscriptionsChallengesComponent implements OnInit {
   challenges: AvailableChallenge[] = [];
-  participatingChallenges: Challenge[] = [];
+  participatingChallenges: AvailableChallenge[] = [];
 
   sortOptions: SelectItem[] = [];
 

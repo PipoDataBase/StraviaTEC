@@ -15,7 +15,12 @@ import { RatingModule } from 'primeng/rating';
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
 import { RippleModule } from 'primeng/ripple';
+import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
+
 
 @NgModule({
     imports: [
@@ -34,7 +39,11 @@ import { ToastModule } from 'primeng/toast';
         ButtonModule,
         ChipModule,
         RippleModule,
-        ToastModule
+        ToastModule,
+        ProgressBarModule,
+        DialogModule,
+        TableModule,
+        TagModule
     ],
     declarations: [ProfileComponent]
 })

@@ -1,6 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { Challenge } from 'src/app/models/challenge.module';
+import { AvailableChallenge } from 'src/app/models/views-models/vw-available-challenge.module';
 import { Nationality } from 'src/app/models/nationality.module';
 import { Sportman } from 'src/app/models/sportman.module';
 import { NationalitiesService } from 'src/app/services/nationalities.service';
@@ -11,11 +12,35 @@ import { DataView } from 'primeng/dataview';
 import { ActivityType } from 'src/app/models/activity-type.module';
 import { ActivityTypesService } from 'src/app/services/activity-types.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { AvailableRace } from 'src/app/models/views-models/vw-available-race.module';
+import { Sponsor } from 'src/app/models/sponsor.module';
+import { Category } from 'src/app/models/category.module';
+import { Bill } from 'src/app/models/bill.module';
+
+import { RacesService } from 'src/app/services/races.service';
+import { SponsorsService } from 'src/app/services/sponsors.service';
+import { CategoriesService } from 'src/app/services/categories.service';
+import { BillService } from 'src/app/services/bill.service';
 
 export interface MoreInfoTest {
   following: number;
   followers: number;
   activities: number;
+}
+
+export interface RaceCategory {
+  raceName: string,
+  category: string
+}
+
+export interface RaceBankAccount {
+  raceName: string,
+  bankAccount: string
+}
+
+export interface RaceSponsor {
+  raceName: string,
+  sponsorTradeName: string
 }
 
 @Component({
@@ -83,13 +108,35 @@ export class ProfileComponent {
 
   activityTypes: ActivityType[] = [];
 
-  myChallenges: Challenge[] = [];
+  myChallenges: AvailableChallenge[] = [];
+  myRaces: AvailableRace[] = [];
 
   sortOptions: SelectItem[] = [];
   sortOrder: number = 0;
   sortField: string = '';
 
-  constructor(private sportmenService: SportmenService, private messageService: MessageService, private storage: AngularFireStorage, private nationalitiesService: NationalitiesService, public sharedService: SharedService, private sportmanService: SportmenService, private activityTypesService: ActivityTypesService) { }
+  // Races Starts
+  isViewMoreInfo: boolean = false;
+  raceMoreInfoDialog: boolean = false;
+  raceRouteDialog: boolean = false;
+  submitRaceDialog: boolean = false;
+
+  raceReceiptUploaded: File | null = null;
+
+  race: AvailableRace = {};
+
+  sponsors: Sponsor[] = [];
+  categories: Category[] = [];
+
+  raceCategory: RaceCategory[] = []
+  raceSponsor: RaceSponsor[] = []
+  raceBankAccount: RaceBankAccount[] = [];
+
+  selectedInscriptionCategory: string = '';
+
+  // Races Ends
+
+  constructor(private sportmenService: SportmenService, private messageService: MessageService, private storage: AngularFireStorage, private nationalitiesService: NationalitiesService, public sharedService: SharedService, private sportmanService: SportmenService, private activityTypesService: ActivityTypesService, private racesService: RacesService, private sponsorsService: SponsorsService, private categoriesService: CategoriesService, private billsService: BillService) { }
 
   updateSportman() {
     this.currentImage = '';
@@ -156,6 +203,93 @@ export class ProfileComponent {
 
     // Get all the challenges I've joined
     this.updateMyChallenges();
+
+    // Races Starts
+
+    // Requests database for all participating races
+    this.sportmanService.getSportmanJoinedRaces(this.sharedService.getUsername()).subscribe({
+      next: (joinedRaces) => {
+        this.myRaces = joinedRaces;
+
+        for (let i = 0; i < this.myRaces.length; i++) {
+          // Requests all races categories to database
+          this.racesService.getRaceCategories(this.myRaces[i].name).subscribe({
+            next: (raceCategories) => {
+              var raceCategoryToInsert: RaceCategory;
+              for (let j = 0; j < raceCategories.length; j++) {
+                raceCategoryToInsert = { raceName: this.myRaces[i].name, category: raceCategories[j].category1 }
+                this.raceCategory.push(raceCategoryToInsert);
+              }
+            },
+            error: (response) => {
+              console.log(response);
+              this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Races loaded wrong.' });
+            }
+          })
+
+          // Requests all race bank accounts to database
+          this.racesService.getRaceBankAccounts(this.myRaces[i].name).subscribe({
+            next: (bankAccounts) => {
+              var raceBankAccountToInsert: RaceBankAccount;
+              for (let j = 0; j < bankAccounts.length; j++) {
+                raceBankAccountToInsert = { raceName: this.myRaces[i].name, bankAccount: bankAccounts[j].bankAccount1 }
+                this.raceBankAccount.push(raceBankAccountToInsert);
+              }
+            },
+            error: (response) => {
+              console.log(response);
+              this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Races loaded wrong.' });
+            }
+          })
+
+          // Requests all race sponsors to database
+          this.racesService.getRaceSponsors(this.myRaces[i].name).subscribe({
+            next: (sponsors) => {
+              var raceSponsorToInsert: RaceSponsor;
+              for (let j = 0; j < sponsors.length; j++) {
+                raceSponsorToInsert = { raceName: this.myRaces[i].name, sponsorTradeName: sponsors[j].tradeName }
+                this.raceSponsor.push(raceSponsorToInsert);
+              }
+            },
+            error: (response) => {
+              console.log(response);
+              this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Races loaded wrong.' });
+            }
+          })
+
+        }
+
+
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Races loaded wrong.' });
+      }
+    })
+
+    // Requests database for all sponsors
+    this.sponsorsService.getSponsors().subscribe({
+      next: (sponsors) => {
+        this.sponsors = sponsors;
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Sponosrs loaded wrong.' });
+      }
+    })
+
+    // Requests database for all categories
+    this.categoriesService.getCategories().subscribe({
+      next: (categories) => {
+        this.categories = categories;
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Categories loaded wrong.' });
+      }
+    })
+
+    // Races Ends
 
     this.sortOptions = [
       { label: 'Name descending', value: 'name' },
@@ -309,4 +443,126 @@ export class ProfileComponent {
   isUserParticipatingOnChallenge(challengeName: string): boolean {
     return this.myChallenges.some(participatingChallenge => participatingChallenge.name === challengeName);
   }
+
+
+  // Races Starts
+
+  leaveRaceButtonOnClick(raceName: string) {
+    this.sportmanService.deleteLeaveRace(raceName, this.sharedService.getUsername()).subscribe({
+      next: (joinedRaces) => {
+        // Requests database for all participating races
+        this.sportmanService.getSportmanJoinedRaces(this.sharedService.getUsername()).subscribe({
+          next: (joinedRaces) => {
+            this.myRaces = joinedRaces;
+
+            this.raceCategory = [];
+            this.raceSponsor = [];
+            this.raceBankAccount = [];
+
+            for (let i = 0; i < this.myRaces.length; i++) {
+              // Requests all races categories to database
+              this.racesService.getRaceCategories(this.myRaces[i].name).subscribe({
+                next: (raceCategories) => {
+                  var raceCategoryToInsert: RaceCategory;
+                  for (let j = 0; j < raceCategories.length; j++) {
+                    raceCategoryToInsert = { raceName: this.myRaces[i].name, category: raceCategories[j].category1 }
+                    this.raceCategory.push(raceCategoryToInsert);
+                  }
+                },
+                error: (response) => {
+                  console.log(response);
+                  this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Races loaded wrong.' });
+                }
+              })
+
+              // Requests all race bank accounts to database
+              this.racesService.getRaceBankAccounts(this.myRaces[i].name).subscribe({
+                next: (bankAccounts) => {
+                  var raceBankAccountToInsert: RaceBankAccount;
+                  for (let j = 0; j < bankAccounts.length; j++) {
+                    raceBankAccountToInsert = { raceName: this.myRaces[i].name, bankAccount: bankAccounts[j].bankAccount1 }
+                    this.raceBankAccount.push(raceBankAccountToInsert);
+                  }
+                },
+                error: (response) => {
+                  console.log(response);
+                  this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Races loaded wrong.' });
+                }
+              })
+
+              // Requests all race sponsors to database
+              this.racesService.getRaceSponsors(this.myRaces[i].name).subscribe({
+                next: (sponsors) => {
+                  var raceSponsorToInsert: RaceSponsor;
+                  for (let j = 0; j < sponsors.length; j++) {
+                    raceSponsorToInsert = { raceName: this.myRaces[i].name, sponsorTradeName: sponsors[j].tradeName }
+                    this.raceSponsor.push(raceSponsorToInsert);
+                  }
+                },
+                error: (response) => {
+                  console.log(response);
+                  this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Races loaded wrong.' });
+                }
+              })
+
+            }
+
+
+          },
+          error: (response) => {
+            console.log(response);
+            this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Races loaded wrong.' });
+          }
+        })
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Race leaving wrong.' });
+      }
+    })
+  }
+
+  showRaceMoreInfoDialogButtonOnClick(race: AvailableRace) {
+    this.race = { ...race };
+    this.raceMoreInfoDialog = true;
+    this.isViewMoreInfo = true;
+  }
+
+  hideRaceMoreInfoDialogButtonOnClick() {
+    this.raceMoreInfoDialog = false;
+    this.race = {};
+  }
+
+  showRaceRouteDialogButtonOnClick(race: AvailableRace) {
+    this.race = { ...race };
+    this.raceRouteDialog = true;
+  }
+
+  hideRaceRouteDialogButtonOnClick() {
+    this.raceRouteDialog = false;
+    this.race = {};
+  }
+
+  showSubmitRaceDailogButtonOnClick(race: AvailableRace) {
+    this.raceReceiptUploaded = null;
+    this.selectedInscriptionCategory = '';
+    this.race = { ...race };
+    this.submitRaceDialog = true;
+  }
+
+  hideSubmitRaceDailogButtonOnClick() {
+    this.submitRaceDialog = false;
+    this.race = {};
+  }
+
+  isSponsorOfRace(sponsorTradeName: string, raceName: string): boolean {
+    for (let i = 0; i < this.raceSponsor.length; i++) {
+      if (this.raceSponsor[i].raceName === raceName && this.raceSponsor[i].sponsorTradeName === sponsorTradeName) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Races Ends
 }

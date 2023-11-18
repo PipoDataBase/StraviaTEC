@@ -191,60 +191,96 @@
 
                         <ng-template let-challenge pTemplate="listItem">
                             <div class="col-12">
-                                <div class="flex flex-column md:flex-row align-items-center p-3 w-full">
-                                    <img [src]="'../../../../assets/straviatec/ChallengeDefaultImage.png'"
-                                        [alt]="challenge.name" class="my-4 md:my-0 w-9 md:w-10rem shadow-2 mr-5" />
+                                <div class="flex flex-column md:flex-row align-items-center p-3 pb-1 w-full"
+                                    *ngIf="isUserParticipatingOnChallenge(challenge.name)">
+                                    <img [src]="'../../../../assets/straviatec/ChallengeDefaultImage.png'" [alt]="challenge.name"
+                                        class="my-4 md:my-0 w-9 md:w-10rem shadow-2 mr-5" />
                                     <div class="flex-1 flex flex-column align-items-center text-center md:text-left">
                                         <div class="text-2xl font-bold mb-3">{{ challenge.name }}</div>
                                         <div class="h6 mb-3">Complete {{ challenge.goal }} km</div>
-                                        <div class="h6 mb-3">From {{ getDateOnFormat(challenge.startDate) }} to
-                                            {{
+                                        <div class="h6 mb-3">From {{ getDateOnFormat(challenge.startDate) }} to {{
                                             getDateOnFormat(challenge.endDate) }}</div>
                                         <div class="flex flex-wrap align-items-center mb-3">
-                                            <p-chip
-                                                label="{{ sharedService.getActivityType(activityTypes, challenge.type) }}"
-                                                styleClass="m-1"></p-chip>
-                                            <p-chip label="{{ challenge.deep ? 'Deep' : 'Height' }}"
-                                                styleClass="m-1"></p-chip>
+                                            <p-chip label="{{ challenge.type }}" styleClass="m-1"></p-chip>
+                                            <p-chip label="{{ challenge.deep ? 'Deep' : 'Height' }}" styleClass="m-1"></p-chip>
                                             <p-chip label="{{ challenge.private ? 'Private' : 'Public' }}"
                                                 styleClass="m-1"></p-chip>
                                         </div>
+                                        <div class="h6 mb-3" style="font-size: x-small">Created by {{ challenge.manager }}</div>
                                     </div>
                                     <div class="flex flex-column align-items-center col-md-2">
-                                        <p-button styleClass="p-button-danger"
-                                            *ngIf="isUserParticipatingOnChallenge(challenge.name)"
-                                            label="Leave Challenge"
+                                        <p-button class="mb-3" *ngIf="!isUserParticipatingOnChallenge(challenge.name)"
+                                            label="Join Challenge"
+                                            (onClick)="joinChallengeButtonOnClick(challenge.name)"></p-button>
+                                        <p-button class="mb-3" styleClass="p-button-danger"
+                                            *ngIf="isUserParticipatingOnChallenge(challenge.name)" label="Leave Challenge"
                                             (onClick)="leaveChallengeButtonOnClick(challenge.name)"></p-button>
                                     </div>
                                 </div>
+                                <div class="flex flex-column md:flex-row align-items-center p-3 w-full"
+                                    *ngIf="!isUserParticipatingOnChallenge(challenge.name)">
+                                    <img [src]="'../../../../assets/straviatec/ChallengeDefaultImage.png'" [alt]="challenge.name"
+                                        class="my-4 md:my-0 w-9 md:w-10rem shadow-2 mr-5" />
+                                    <div class="flex-1 flex flex-column align-items-center text-center md:text-left">
+                                        <div class="text-2xl font-bold mb-3">{{ challenge.name }}</div>
+                                        <div class="h6 mb-3">Complete {{ challenge.goal }} km</div>
+                                        <div class="h6 mb-3">From {{ getDateOnFormat(challenge.startDate) }} to {{
+                                            getDateOnFormat(challenge.endDate) }}</div>
+                                        <div class="flex flex-wrap align-items-center mb-3">
+                                            <p-chip label="{{ challenge.type }}" styleClass="m-1"></p-chip>
+                                            <p-chip label="{{ challenge.deep ? 'Deep' : 'Height' }}" styleClass="m-1"></p-chip>
+                                            <p-chip label="{{ challenge.private ? 'Private' : 'Public' }}"
+                                                styleClass="m-1"></p-chip>
+                                        </div>
+                                        <div class="h6 mb-3" style="font-size: x-small">Created by {{ challenge.manager }}</div>
+                                    </div>
+                                    <div class="flex flex-column align-items-center col-md-2">
+                                        <p-button class="mb-3" *ngIf="!isUserParticipatingOnChallenge(challenge.name)"
+                                            label="Join Challenge"
+                                            (onClick)="joinChallengeButtonOnClick(challenge.name)"></p-button>
+                                        <p-button class="mb-3" styleClass="p-button-danger"
+                                            *ngIf="isUserParticipatingOnChallenge(challenge.name)" label="Leave Challenge"
+                                            (onClick)="leaveChallengeButtonOnClick(challenge.name)"></p-button>
+                                    </div>
+                                </div>
+                                <p-progressBar [style]="{'height' : '10.5px'}" [value]="challenge.progress" [showValue]="false"
+                                    *ngIf="isUserParticipatingOnChallenge(challenge.name)"></p-progressBar>
                             </div>
                         </ng-template>
 
                         <ng-template let-challenge pTemplate="gridItem">
                             <div class="col-12 md:col-4">
-                                <div class="card m-3 border-1 surface-border">
-                                    <div class="flex flex-column align-items-center text-center mb-3">
-                                        <img [src]="'../../../../assets/straviatec/ChallengeDefaultImage.png'"
-                                            [alt]="challenge.name" class="w-10 shadow-2 my-3 mx-0 mb-3" />
-                                        <div class="text-2xl font-bold mb-3">{{ challenge.name }}</div>
-                                        <div class="h6 mb-3">Complete {{ challenge.goal }} km</div>
-                                        <div class="h6 mb-3">From {{ getDateOnFormat(challenge.startDate) }} to
-                                            {{
-                                            getDateOnFormat(challenge.endDate) }}</div>
-                                        <div class="flex flex-wrap align-items-center mb-3">
-                                            <p-chip
-                                                label="{{ sharedService.getActivityType(activityTypes, challenge.type) }}"
-                                                styleClass="m-1"></p-chip>
-                                            <p-chip label="{{ challenge.deep ? 'Deep' : 'Height' }}"
-                                                styleClass="m-1"></p-chip>
-                                            <p-chip label="{{ challenge.private ? 'Private' : 'Public' }}"
-                                                styleClass="m-1"></p-chip>
+                                <div class="card m-3 border-1 surface-border p-0">
+                                    <div class="p-3">
+                                        <div class="flex flex-column align-items-center text-center mb-3">
+                                            <img [src]="'../../../../assets/straviatec/ChallengeDefaultImage.png'"
+                                                [alt]="challenge.name" class="w-10 shadow-2 my-3 mx-0 mb-3" />
+                                            <div class="text-2xl font-bold mb-3">{{challenge.name}}</div>
+                                            <div class="h6 mb-3">Complete {{challenge.goal}} km</div>
+                                            <div class="h6 mb-3">From {{ getDateOnFormat(challenge.startDate) }} to {{
+                                                getDateOnFormat(challenge.endDate) }}</div>
+                                            <div class="flex flex-wrap align-items-center mb-3">
+                                                <p-chip label="{{ challenge.type }}" styleClass="m-1"></p-chip>
+                                                <p-chip label="{{ challenge.deep ? 'Deep' : 'Height' }}" styleClass="m-1"></p-chip>
+                                                <p-chip label="{{ challenge.private ? 'Private' : 'Public' }}"
+                                                    styleClass="m-1"></p-chip>
+                                            </div>
+                                            <p-button class="mb-3" *ngIf="!isUserParticipatingOnChallenge(challenge.name)"
+                                                label="Join Challenge"
+                                                (onClick)="joinChallengeButtonOnClick(challenge.name)"></p-button>
+                                            <p-button class="mb-3" styleClass="p-button-danger"
+                                                *ngIf="isUserParticipatingOnChallenge(challenge.name)" label="Leave Challenge"
+                                                (onClick)="leaveChallengeButtonOnClick(challenge.name)"></p-button>
+                                            <div class="h6 mb-1" style="font-size: x-small"
+                                                *ngIf="isUserParticipatingOnChallenge(challenge.name)">Created by {{
+                                                challenge.manager }}</div>
+                                            <div class="h6 mb-3" style="font-size: x-small"
+                                                *ngIf="!isUserParticipatingOnChallenge(challenge.name)">Created by {{
+                                                challenge.manager }}</div>
                                         </div>
-                                        <p-button styleClass="p-button-danger"
-                                            *ngIf="isUserParticipatingOnChallenge(challenge.name)"
-                                            label="Leave Challenge"
-                                            (onClick)="leaveChallengeButtonOnClick(challenge.name)"></p-button>
                                     </div>
+                                    <p-progressBar [style]="{'height' : '10px'}" [value]="challenge.progress" [showValue]="false"
+                                        *ngIf="isUserParticipatingOnChallenge(challenge.name)"></p-progressBar>
                                 </div>
                             </div>
                         </ng-template>
@@ -258,7 +294,197 @@
             </ng-template>
             <div class="col-md-12">
                 <div class="card">
+                    <p-toast key="tst"></p-toast>
+                    <p-dataView #dv [value]="myRaces" [paginator]="true" [rows]="12" filterBy="name" [sortField]="sortField"
+                        [sortOrder]="sortOrder" layout="grid">
+                        <ng-template pTemplate="header">
+                            <div class="flex flex-column md:flex-row md:justify-content-between gap-2">
+                                <span class="p-input-icon-left col-md-8">
+                                    <i class="pi pi-search"></i>
+                                    <input style="width: 100%;" type="search" pInputText placeholder="Search race"
+                                        (input)="onFilter(dv, $event)">
+                                </span>
+                                <p-dropdown [options]="sortOptions" placeholder="Sort By Price"
+                                    (onChange)="onSortChange($event)"></p-dropdown>
+                                <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
+                            </div>
+                        </ng-template>
+            
+                        <ng-template let-race pTemplate="listItem">
+                            <div class="col-12">
+                                <div class="flex flex-column md:flex-row align-items-center p-3 w-full">
+                                    <img [src]="'../../../../assets/straviatec/RaceDefaultImage.png'" [alt]="race.name"
+                                        class="my-4 md:my-0 w-9 md:w-10rem shadow-2 mr-5" />
+                                    <div class="flex-1 flex flex-column align-items-center text-center md:text-left">
+                                        <div class="text-2xl font-bold mb-3">{{ race.name }}</div>
+                                        <div class="h6 mb-3">On {{ getDateOnFormat(race.date) }}</div>
+                                        <div class="h6 mb-3">${{ race.inscriptionPrice }}</div>
+                                        <div class="flex flex-wrap align-items-center mb-3">
+                                            <p-chip label="{{ race.type }}" styleClass="m-1"></p-chip>
+                                            <p-chip label="{{ race.private ? 'Private' : 'Public' }}" styleClass="m-1"></p-chip>
+                                        </div>
+                                        <div class="flex flex-wrap align-items-center mb-2">
+                                            <div *ngFor="let category of raceCategory"
+                                                class="flex flex-wrap align-items-center mb-3">
+                                                <p-tag class=" ml-1 mr-1 mt-1 mb-1" *ngIf="race.name === category.raceName"
+                                                    value="{{ category.category }}"></p-tag>
+                                            </div>
+                                        </div>
+                                        <div class="h6 mb-3" style="font-size: x-small">Organized by {{ race.manager }}</div>
+                                    </div>
+                                    <div class="flex flex-column align-items-center col-md-2">
+                                        <div class="flex flex-row align-items-center">
+                                            <button pButton pRipple label="" icon="pi pi-info-circle"
+                                                class="p-button-rounded p-button-text mr-1 mb-2"
+                                                (click)="showRaceMoreInfoDialogButtonOnClick(race)"></button>
+                                            <button pButton pRipple label="" icon="pi pi-map"
+                                                class="p-button-rounded p-button-text ml-1 mb-2"
+                                                (click)="showRaceRouteDialogButtonOnClick(race)"></button>
+                                        </div>
+                                        <p-button label="Leave Race" styleClass="p-button-danger"
+                                            (onClick)="leaveRaceButtonOnClick(race.name)"></p-button>
+            
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+            
+                        <ng-template let-race pTemplate="gridItem">
+                            <div class="col-12 md:col-4">
+                                <div class="card m-3 border-1 surface-border">
+                                    <div class="flex flex-column align-items-center text-center mb-3">
+                                        <img [src]="'../../../../assets/straviatec/RaceDefaultImage.png'" [alt]="race.name"
+                                            class="w-10 shadow-2 my-3 mx-0 mb-3" />
+                                        <div class="text-2xl font-bold mb-3">{{ race.name }}</div>
+                                        <div class="h6 mb-3">On {{ getDateOnFormat(race.date) }}</div>
+                                        <div class="h6 mb-3">${{ race.inscriptionPrice }}</div>
+                                        <div class="flex flex-wrap align-items-center mb-3">
+                                            <p-chip label="{{ race.type }}" styleClass="m-1"></p-chip>
+                                            <p-chip label="{{ race.private ? 'Private' : 'Public' }}" styleClass="m-1"></p-chip>
+                                        </div>
+                                        <div class="flex flex-wrap align-items-center mb-2">
+                                            <div *ngFor="let category of raceCategory" class="flex flex-wrap align-items-center">
+                                                <p-tag class="ml-1 mr-1 mt-1 mb-1" *ngIf="race.name === category.raceName"
+                                                    value="{{ category.category }}"></p-tag>
+                                            </div>
+                                        </div>
+                                        <div class="flex flex-row align-items-center text-center">
+                                            <button pButton pRipple class="mb-3" label="" icon="pi pi-info-circle"
+                                                class="p-button-rounded p-button-text mr-2"
+                                                (click)="showRaceMoreInfoDialogButtonOnClick(race)"></button>
+                                            <p-button class="mb-3" label="Leave Race" styleClass="p-button-danger"
+                                                (onClick)="leaveRaceButtonOnClick(race.name)"></p-button>
+                                            <button pButton pRipple class="mb-3" label="" icon="pi pi-map"
+                                                class="p-button-rounded p-button-text ml-2"
+                                                (click)="showRaceRouteDialogButtonOnClick(race)"></button>
+                                        </div>
+                                        <div class="h6 mb-3" style="font-size: x-small">Organized by {{ race.manager }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </p-dataView>
                 </div>
+            
+                <p-dialog [(visible)]="raceRouteDialog" [style]="{width: '50%'}" header="Race Route" [modal]="true" class="p-fluid">
+                    <div class="z-depth-1-half map-container">
+                        <iframe [src]="sharedService.getSafeResourceUrl(race.routePath)" width="100%" height="450px"></iframe>
+                    </div>
+            
+                    <ng-template pTemplate="footer">
+                        <button pButton pRipple label="Close" icon="pi pi-times" class="p-button-text"
+                            (click)="hideRaceRouteDialogButtonOnClick()"></button>
+                    </ng-template>
+                </p-dialog>
+            
+                <p-dialog [(visible)]="raceMoreInfoDialog" [style]="{width: '50%'}" header="More Information" [modal]="true"
+                    class="p-fluid">
+                    <div class="mb-5">
+                        <h3>Bank Accounts</h3>
+                        <p-toast></p-toast>
+                        <p-table [value]="raceBankAccount" dataKey="bankAccount" editMode="row"
+                            [tableStyle]="{'min-width': '50rem'}">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width:100%; text-align: center;">Bank Account</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-bankAccount let-editing="editing" let-ri="rowIndex">
+                                <tr [pEditableRow]="bankAccount" *ngIf="race.name === bankAccount.raceName">
+                                    <td style="text-align: center;">
+                                        <i class="pi pi-dollar" style="font-size: 1rem"></i>
+                                        <p-cellEditor>
+                                            <ng-template pTemplate="input">
+                                                <input pInputText type="text" [(ngModel)]="bankAccount.bankAccount" required>
+                                            </ng-template>
+                                            <ng-template pTemplate="output">
+                                                {{ bankAccount.bankAccount }}
+                                            </ng-template>
+                                        </p-cellEditor>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+            
+                    <div>
+                        <h3>Sponsors</h3>
+                        <p-toast></p-toast>
+                        <p-table [value]="sponsors" dataKey="tradeName" editMode="row" [tableStyle]="{'min-width': '50rem'}">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width:25%; text-align: center;">Logo</th>
+                                    <th style="width:25%; text-align: center;">Trade Name</th>
+                                    <th style="width:25%; text-align: center;">Legal Representant</th>
+                                    <th style="width:25%; text-align: center;">Phone</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-sponsor let-editing="editing" let-ri="rowIndex">
+                                <tr [pEditableRow]="sponsor" *ngIf="isSponsorOfRace(sponsor.tradeName, race.name)">
+                                    <td style="width:25%; min-width:10rem; text-align: center;"><span
+                                            class="p-column-title">Image</span>
+                                        <img [src]="sponsor.logoPath" [alt]="logo" width="100" class="shadow-4" />
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <p-cellEditor>
+                                            <ng-template pTemplate="input">
+                                                <input pInputText type="text" [(ngModel)]="sponsor.tradeName" required>
+                                            </ng-template>
+                                            <ng-template pTemplate="output">
+                                                {{ sponsor.tradeName }}
+                                            </ng-template>
+                                        </p-cellEditor>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <p-cellEditor>
+                                            <ng-template pTemplate="input">
+                                                <input pInputText type="text" [(ngModel)]="sponsor.legalRepresentant" required>
+                                            </ng-template>
+                                            <ng-template pTemplate="output">
+                                                {{ sponsor.legalRepresentant }}
+                                            </ng-template>
+                                        </p-cellEditor>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <p-cellEditor>
+                                            <ng-template pTemplate="input">
+                                                <input pInputText type="text" [(ngModel)]="sponsor.phone">
+                                            </ng-template>
+                                            <ng-template pTemplate="output">
+                                                {{ sponsor.phone }}
+                                            </ng-template>
+                                        </p-cellEditor>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+            
+                    <ng-template pTemplate="footer">
+                        <button pButton pRipple label="Close" icon="pi pi-times" class="p-button-text"
+                            (click)="hideRaceMoreInfoDialogButtonOnClick()"></button>
+                    </ng-template>
+                </p-dialog>
             </div>
         </mat-tab>
     </mat-tab-group>

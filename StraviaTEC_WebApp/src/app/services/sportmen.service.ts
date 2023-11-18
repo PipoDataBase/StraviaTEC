@@ -7,6 +7,7 @@ import { SportmanNationality } from '../models/views-models/vw-sportman-national
 import { Challenge } from '../models/challenge.module';
 import { Group } from '../models/group.module';
 import { AvailableRace } from '../models/views-models/vw-available-race.module';
+import { AvailableChallenge } from '../models/views-models/vw-available-challenge.module';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +25,8 @@ export class SportmenService {
     return this.http.get<boolean>(this.baseApiUrl + `/api/Sportmen/Login/${username}/${password}`);
   }
 
-  getSportmanParticipatingChallenges(username: string): Observable<Challenge[]> {
-    return this.http.get<Challenge[]>(this.baseApiUrl + '/api/Sportmen/participatingChallenges/' + username);
+  getSportmanParticipatingChallenges(username: string): Observable<AvailableChallenge[]> {
+    return this.http.get<AvailableChallenge[]>(this.baseApiUrl + '/api/Sportmen/participatingChallenges/' + username);
   }
 
   getSportmanJoinedRaces(username: string): Observable<AvailableRace[]> {
