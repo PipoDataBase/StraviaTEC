@@ -284,15 +284,32 @@ CREATE PROCEDURE spDeleteChallenge
     @Name varchar(20)
 AS
 BEGIN
-	DELETE FROM ChallengeSportmanManager
-	WHERE ChallengeName = @Name;
-	DELETE FROM ChallengeSponsor
-	WHERE ChallengeName = @Name;
-    DELETE FROM Challenge
-    WHERE Name = @Name;
+    BEGIN TRANSACTION;
+    BEGIN TRY
+	    DELETE FROM ChallengeSportmanManager
+	    WHERE ChallengeName = @Name;
+	    DELETE FROM ChallengeSponsor
+	    WHERE ChallengeName = @Name;
+        DELETE FROM ChallengeSportmanParticipant
+        WHERE ChallengeName = @Name;
+        DELETE FROM ChallengeGroup 
+        WHERE ChallengeName = @Name;
+        UPDATE Activity
+        SET ChallengeName = NULL
+        WHERE ChallengeName = @Name;
+        DELETE FROM Challenge
+        WHERE Name = @Name;
+        COMMIT;
+        RETURN;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        THROW 51000, 'ERROR deleting chalenge', 1;
+    END CATCH;
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
+
 Go
 CREATE PROCEDURE spDeleteChallengeSponsors
     @ChallengeName varchar(20)
@@ -418,7 +435,23 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
-Go
+
+GO
+CREATE TRIGGER StopSportmanDeletion
+ON Sportman
+INSTEAD OF DELETE
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM Sportman S INNER JOIN DELETED D
+               ON S.Username = D.Username)
+        THROW 51000, 'You cant delete your account by yourself. Please call our customer service to delete your account', 1;
+    ELSE
+        THROW 51000, 'The username to delete doesnt exists', 1;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
 CREATE PROCEDURE spDeleteSportman
     @Username varchar(20)
 AS
@@ -655,6 +688,22 @@ BEGIN
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE TRIGGER stopNationalityDeletion
+ON Nationality
+INSTEAD OF DELETE
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM Nationality N INNER JOIN DELETED D
+               ON N.Id = D.Id)
+        THROW 51000, 'You cant delete Nationalities', 1;
+    ELSE
+        THROW 51000, 'The Id provided to delete Nationality doesnt exists', 1;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
 Go
 CREATE PROCEDURE spDeleteNationality
     @Id tinyint
