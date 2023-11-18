@@ -407,6 +407,12 @@
         </div>
 
         <ng-template pTemplate="footer">
+            <button pButton pRipple label="Participants Report" icon="pi pi-download" class="p-button-text"
+                (click)="exportParticipantsPdf()"></button>
+            <button pButton pRipple label="Leaderboard Report" icon="pi pi-download" class="p-button-text"
+                (click)="exportLeaderboardPdf()"></button>
+            <button pButton pRipple label="Complete Report" icon="pi pi-download" class="p-button-text"
+                (click)="exportCompletePdf()"></button>
             <button pButton pRipple label="Close" icon="pi pi-times" class="p-button-text"
                 (click)="hideSubmitRaceDailogButtonOnClick()"></button>
         </ng-template>

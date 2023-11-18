@@ -22,6 +22,9 @@ import { BillService } from 'src/app/services/bill.service';
 import { RaceReportSportmanParticipant } from 'src/app/models/views-models/vw-sportman-race-report-participants.module';
 import { RaceReportSportmanLeaderboard } from 'src/app/models/views-models/vw-sportman-race-report-leaderboard.module';
 
+import jsPDF from 'jspdf';
+import "jspdf-autotable";
+
 export interface RaceCategory {
   raceName: string,
   category: string
@@ -73,6 +76,13 @@ export class ReportsRacesComponent {
   raceLeaderboardLoading: boolean = true;
 
   selectedInscriptionCategory: string = '';
+
+  // For PDF generation
+  cols1: any[];
+  exportColumns1;
+
+  cols2: any[];
+  exportColumns2;
 
   constructor(private racesService: RacesService, private sportmanService: SportmenService, private sponsorsService: SponsorsService, private categoriesService: CategoriesService, private billsService: BillService, public sharedService: SharedService, private sanitizer: DomSanitizer, private messageService: MessageService) { }
 
@@ -159,6 +169,35 @@ export class ReportsRacesComponent {
         this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Categories loaded wrong.' });
       }
     })
+
+    this.cols1 = [
+      { field: "username", header: "Username" },
+      { field: "name", header: "Name" },
+      { field: "lastName1", header: "First Last Name" },
+      { field: "lastName2", header: "Second Last Name" },
+      { field: "age", header: "Age" },
+      { field: "category", header: "Category" }
+    ];
+
+    this.exportColumns1 = this.cols1.map(col => ({
+      title: col.header,
+      dataKey: col.field
+    }));
+
+    this.cols2 = [
+      { field: "username", header: "Username" },
+      { field: "name", header: "Name" },
+      { field: "lastName1", header: "First Last Name" },
+      { field: "lastName2", header: "Second Last Name" },
+      { field: "age", header: "Age" },
+      { field: "category", header: "Category" },
+      { field: "duration", header: "Duration" }
+    ];
+
+    this.exportColumns2 = this.cols2.map(col => ({
+      title: col.header,
+      dataKey: col.field
+    }));
 
     this.sortOptions = [
       { label: 'Name descending', value: 'name' },
@@ -306,5 +345,87 @@ export class ReportsRacesComponent {
       }
     }
     return false;
+  }
+
+  exportParticipantsPdf() {
+    const doc = new jsPDF('p');
+
+    doc.setFontSize(20)
+
+    doc.text('Report: ' + this.race.name, 14, 20)
+
+    doc.setFontSize(14)
+
+    doc.text('Race Participants', 14, 30)
+
+    var body1: any[] = [];
+    var forBody1: any[] = [];
+    for (let i = 0; i < this.raceParticipants.length; i++) {
+      forBody1 = [this.raceParticipants[i].username, this.raceParticipants[i].name, this.raceParticipants[i].lastName1, this.raceParticipants[i].lastName2, this.raceParticipants[i].age, this.raceParticipants[i].category]
+      body1.push(forBody1);
+    }
+
+    doc['autoTable']({ head: [this.exportColumns1], body: body1, startY: 40 });
+
+    doc.save(this.race.name.replace(' ', '') + "_ParticiantsReport.pdf");
+  }
+
+  exportLeaderboardPdf() {
+    const doc = new jsPDF('p');
+
+    doc.setFontSize(20)
+
+    doc.text('Report: ' + this.race.name, 14, 20)
+
+    doc.setFontSize(14)
+
+    doc.text('Race Leaderboard', 14, 30)
+
+    var body2: any[] = [];
+    var forBody2: any[] = [];
+    for (let i = 0; i < this.raceLeaderboard.length; i++) {
+      forBody2 = [this.raceParticipants[i].username, this.raceParticipants[i].name, this.raceParticipants[i].lastName1, this.raceParticipants[i].lastName2, this.raceParticipants[i].age, this.raceParticipants[i].category]
+      body2.push(forBody2);
+    }
+
+    doc['autoTable']({ head: [this.exportColumns2], body: body2, startY: 40 });
+
+    doc.save(this.race.name.replace(' ', '') + "_LeaderboardReport.pdf");
+  }
+
+  exportCompletePdf() {
+    const doc = new jsPDF('p');
+
+    doc.setFontSize(20)
+
+    doc.text('Report: ' + this.race.name, 14, 20)
+
+    doc.setFontSize(14)
+
+    doc.text('Race Participants', 14, 30)
+
+    var body1: any[] = [];
+    var forBody1: any[] = [];
+    for (let i = 0; i < this.raceParticipants.length; i++) {
+      forBody1 = [this.raceParticipants[i].username, this.raceParticipants[i].name, this.raceParticipants[i].lastName1, this.raceParticipants[i].lastName2, this.raceParticipants[i].age, this.raceParticipants[i].category]
+      body1.push(forBody1);
+    }
+
+    doc['autoTable']({ head: [this.exportColumns1], body: body1, startY: 40 });
+
+    doc.addPage();
+
+    doc.text('Race Leaderboard', 14, 20)
+
+    var body2: any[] = [];
+    var forBody2: any[] = [];
+    for (let i = 0; i < this.raceLeaderboard.length; i++) {
+      forBody2 = [this.raceParticipants[i].username, this.raceParticipants[i].name, this.raceParticipants[i].lastName1, this.raceParticipants[i].lastName2, this.raceParticipants[i].age, this.raceParticipants[i].category]
+      body2.push(forBody2);
+    }
+
+    doc['autoTable']({ head: [this.exportColumns2], body: body2, startY: 30 });
+
+    doc.save(this.race.name.replace(' ', '') + "_CompleteReport.pdf");
   }
 }
