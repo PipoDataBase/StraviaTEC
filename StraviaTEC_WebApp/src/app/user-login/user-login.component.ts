@@ -26,6 +26,24 @@ export class UserLoginComponent {
       this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Password is empty.' });
     }
 
+    this.sportmenService.getSportmanLogin(username, password).subscribe({
+      next: (response) => {
+        if (response) {
+          const data = { id: 1, username: username }
+          localStorage.setItem('session', JSON.stringify(data));
+          this.router.navigate(["dashboard"]);
+        }
+        else {
+          this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Incorrect password.' });
+        }
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Username or password incorrect.' });
+      }
+    })
+
+    /*
     this.sportmenService.getSportman(username).subscribe({
       next: (sportman) => {
         if (sportman.password === password) {
@@ -41,7 +59,7 @@ export class UserLoginComponent {
         console.log(response);
         this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Username or password incorrect.' });
       }
-    })
+    })*/
   }
 
   toRegister(): void {

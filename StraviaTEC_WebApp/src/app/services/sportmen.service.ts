@@ -20,6 +20,10 @@ export class SportmenService {
     return this.http.get<Sportman>(this.baseApiUrl + '/api/Sportmen/' + id);
   }
 
+  getSportmanLogin(username: string, password: string): Observable<boolean> {
+    return this.http.get<boolean>(this.baseApiUrl + `/api/Sportmen/Login/${username}/${password}`);
+  }
+
   getSportmanParticipatingChallenges(username: string): Observable<Challenge[]> {
     return this.http.get<Challenge[]>(this.baseApiUrl + '/api/Sportmen/participatingChallenges/' + username);
   }
