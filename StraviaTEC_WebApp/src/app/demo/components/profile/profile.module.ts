@@ -14,6 +14,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RatingModule } from 'primeng/rating';
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
+import { RippleModule } from 'primeng/ripple';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
     imports: [
@@ -30,7 +32,9 @@ import { ChipModule } from 'primeng/chip';
         DropdownModule,
         RatingModule,
         ButtonModule,
-        ChipModule
+        ChipModule,
+        RippleModule,
+        ToastModule
     ],
     declarations: [ProfileComponent]
 })

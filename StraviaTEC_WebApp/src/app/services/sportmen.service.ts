@@ -44,6 +44,10 @@ export class SportmenService {
     return this.http.post<boolean>(this.baseApiUrl + '/api/Sportmen', sportman);
   }
 
+  putSportman(id: string, sportman: Sportman): Observable<boolean> {
+    return this.http.put<boolean>(this.baseApiUrl + '/api/Sportmen/' + id, sportman);
+  }
+
   postSportmanChallengeInscription(challengeName: string, username: string): Observable<boolean> {
     return this.http.post<boolean>(this.baseApiUrl + `/api/Sportmen/AddToChallenge/${challengeName}/${username}`, null);
   }

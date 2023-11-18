@@ -230,7 +230,7 @@ namespace StraviaTEC_API.Controllers
                     new SqlParameter("@Password", sportman.Password),
                     new SqlParameter("@Nationality", sportman.Nationality)
                     );
-                return Ok("Sportman Updated");
+                return Ok(true);
             }
             catch (DbUpdateConcurrencyException)
             {

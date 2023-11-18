@@ -20,3 +20,21 @@
 .tab-icon {
     margin-right: 6px;
 }
+
+.circle-avatar {
+    position: relative;
+}
+
+.circle-avatar img {
+    border-radius: 50%;
+    transition: filter 0.3s ease;
+}
+
+.circle-avatar:hover img {
+    filter: brightness(80%);
+}
+
+/* Opcional: Estilo adicional para el sombreado */
+.circle-avatar:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
