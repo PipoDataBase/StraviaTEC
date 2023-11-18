@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { ActivityType } from 'src/app/models/activity-type.module';
 import { Activity } from 'src/app/models/activity.module';
@@ -7,6 +7,9 @@ import { ActivitiesService } from 'src/app/services/activities.service';
 import { ActivityTypesService } from 'src/app/services/activity-types.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { SportmenService } from 'src/app/services/sportmen.service';
+import { MatAccordion, MatExpansionPanel } from '@angular/material/expansion';
+import { CommentsService } from 'src/app/services/comments.service';
+import { _Comment } from 'src/app/models/comment.module';
 
 @Component({
   selector: 'app-home',
@@ -14,26 +17,26 @@ import { SportmenService } from 'src/app/services/sportmen.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
-  //showContent = true;
-  activities: Activity[] = [];
-  activityTypes: ActivityType[] = [];
-
-  comments: { user: string; text: string }[] = [];
-  newComment: string = '';
-  value!: string;
+  @ViewChild(MatAccordion) accordion: MatAccordion;
 
   sportman: Sportman = {
-    username: 'MarinGE23',
-    name: 'Emanuel',
-    lastName1: 'Marín',
-    lastName2: 'Gutiérrez',
-    birthDate: '2000-01-21',
-    photoPath: 'https://firebasestorage.googleapis.com/v0/b/straviatec-942e3.appspot.com/o/profile%2FEmanuel.png?alt=media&token=4ef35ab0-380f-4d0b-8271-6d13a734887e',
-    password: 'abc123de',
-    nationality: 18 // Costa Rican
-  }
+    username: '',
+    name: '',
+    lastName1: '',
+    lastName2: '',
+    birthDate: '',
+    photoPath: '',
+    password: '',
+    nationality: -1
+  };
 
-  constructor(public sharedService: SharedService, private activityTypesService: ActivityTypesService, private activitiesService: ActivitiesService, private sportmenService: SportmenService) { }
+  activities: Activity[] = [];
+  activityTypes: ActivityType[] = [];
+  comments: _Comment[] = [];
+  comment: _Comment = {};
+  toComment: string;
+
+  constructor(public sharedService: SharedService, private activityTypesService: ActivityTypesService, private activitiesService: ActivitiesService, private sportmenService: SportmenService, private commentsService: CommentsService) { }
 
   ngOnInit() {
     this.activitiesService.getActivities().subscribe({
@@ -55,11 +58,9 @@ export class HomeComponent {
             });
           },
           error: (response) => {
-            console.log(response);
+            //console.log(response);
           }
         });
-
-        console.log(this.activities);
       },
       error: (response) => {
         console.log(response);
@@ -75,14 +76,37 @@ export class HomeComponent {
         console.log(response);
       }
     })
+
+    // Get sportman
+    this.sportmenService.getSportman(this.sharedService.getUsername()).subscribe({
+      next: (sportman) => {
+        if (sportman.photoPath == '') sportman.photoPath = '../../../../assets/straviatec/default-avatar.png';
+        this.sportman = sportman;
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
   }
 
-  addComment() {
-    if (this.newComment.trim() !== '') {
-      // Agregar el nuevo comentario a la lista
-      this.comments.push({ user: 'Usuario', text: this.newComment });
-      // Limpiar el área de comentarios
-      this.newComment = '';
+  handlePanelClick(panel: MatExpansionPanel, activityId: number): void {
+    this.toComment = '';
+    if (panel.expanded) {
+      this.commentsService.GetCommentsByActivity(String(activityId)).subscribe({
+        next: (comments) => {
+          this.comments = comments;
+        },
+        error: (response) => {
+          console.log(response);
+        }
+      })
     }
+  }
+
+  addComment(activityId: number) {
+    if (this.toComment == '') {
+
+    }
+    console.log(this.toComment);
   }
 }

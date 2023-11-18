@@ -598,7 +598,8 @@ Go
 CREATE PROCEDURE spGetActivities
 AS
 BEGIN
-    SELECT * FROM Activity;
+    SELECT * FROM Activity
+	ORDER BY Date DESC;
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>

@@ -1,8 +1,8 @@
-export interface Comment {
-    _id: string;
-    name: string;
-    email: string;
-    activityId: string;
-    text: string;
-    date: string;
+export interface _Comment {
+    _id?: string;
+    name?: string;
+    email?: string;
+    activityId?: string;
+    text?: string;
+    date?: string;
 }
