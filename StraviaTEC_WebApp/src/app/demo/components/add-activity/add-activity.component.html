@@ -7,7 +7,7 @@
         <div class="row mb-3">
           <div class="form-group">
             <label>Description</label>
-            <input #description type="text" class="form-control">
+            <input type="text" class="form-control" [(ngModel)]="activity.description" name="description">
           </div>
         </div>
 
@@ -15,16 +15,17 @@
           <div class="col-md-6 pr-1">
             <div class="form-group">
               <label>Activity Date</label>
-              <input #activityDate type="datetime-local" required class="form-control">
+              <input type="datetime-local" required class="form-control" [(ngModel)]="activity.date" name="date">
             </div>
           </div>
 
           <div class="col-md-6 pl-1">
             <div class="form-group">
               <label>Activity Type</label>
-              <select #activityType name="activityType" required class="form-control shadow-sm px-4">
-                <option *ngFor="let activityType of activityTypes" [value]="activityType.id">{{ activityType.type }}
-                </option>
+              <select [(ngModel)]="selectedActivityType" name="activityType" required
+                class="form-control shadow-sm px-4">
+                <option *ngFor="let activityType of activityTypes" [value]="activityType.id">{{
+                  activityType.type }}</option>
               </select>
             </div>
           </div>
@@ -33,15 +34,16 @@
         <div class="row mb-3">
           <div class="col-md-6 pr-1">
             <div class="form-group">
-              <label>Duration (minutes)</label>
-              <input #duration type="number" min="0" value="0" required class="form-control">
+              <label>Duration</label>
+              <input type="text" pattern="^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d$" placeholder="HH:mm:ss" required
+                class="form-control" [(ngModel)]="activity.duration" name="duration">
             </div>
           </div>
 
           <div class="col-md-6 pl-1">
             <div class="form-group">
               <label>Kilometers</label>
-              <input #kilometers type="number" min="0" value="0" required class="form-control">
+              <input type="number" min="0" value="0" required class="form-control" [(ngModel)]="activity.kilometers" name="kilometers">
             </div>
           </div>
         </div>
@@ -50,14 +52,16 @@
           <div class="col-md-6 pr-1">
             <div class="form-group">
               <label>Route (.gpx)</label>
-              <input #route type="file" accept=".gpx" class="form-control shadow-sm px-4" />
+              <input type="file" accept=".gpx" class="form-control shadow-sm px-4" [(ngModel)]="selectedRoute" name="route" />
             </div>
           </div>
         </div>
 
+        <p-toast position="top-center" key="tc"></p-toast>
         <div class="row" style="text-align: center;">
           <div class="update ml-auto mr-auto">
-            <button type="button" style="width: 30%;" (click)="addActivity(description.value, activityDate.value, duration.value, activityType.value, kilometers.value, route.value)"
+            <button type="button" style="width: 30%;"
+              (click)="addActivity()"
               class="btn btn-primary btn-round text-uppercase shadow-sm">Add Activity</button>
           </div>
         </div>

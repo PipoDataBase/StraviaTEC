@@ -81,7 +81,7 @@ namespace StraviaTEC_API.Controllers
                     new SqlParameter("@ChallengeName", activity.ChallengeName),
                     new SqlParameter("@Type", activity.Type)
                     );
-                return Ok("Activity Updated");
+                return Ok(true);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -137,7 +137,7 @@ namespace StraviaTEC_API.Controllers
                         new SqlParameter("@Username", activity.Username),
                         new SqlParameter("@Type", activity.Type)
                         );
-                    return Ok("Activity Created");
+                    return Ok(true); //"Activity Created"
                 }
                 else if (activity.ChallengeName == "" && activity.RaceName != "")
                 {
@@ -152,7 +152,7 @@ namespace StraviaTEC_API.Controllers
                         new SqlParameter("@RaceName", activity.RaceName),
                         new SqlParameter("@Type", activity.Type)
                         );
-                    return Ok("Activity from Race Created");
+                    return Ok(true); //"Activity from Race Created"
                 }
                 else if (activity.ChallengeName != "" && activity.RaceName == "")
                 {
@@ -167,7 +167,7 @@ namespace StraviaTEC_API.Controllers
                         new SqlParameter("@ChallengeName", activity.ChallengeName),
                         new SqlParameter("@Type", activity.Type)
                         );
-                    return Ok("Activity from Challenge Created");
+                    return Ok(true); //"Activity from Challenge Created"
                 }
                 else
                 {
@@ -183,7 +183,7 @@ namespace StraviaTEC_API.Controllers
                     new SqlParameter("@ChallengeName", activity.ChallengeName),
                     new SqlParameter("@Type", activity.Type)
                     );
-                    return Ok("Activity from Challenge and Race Created");
+                    return Ok(true); //"Activity from Challenge and Race Created"
                 }
 
             }
@@ -219,7 +219,7 @@ namespace StraviaTEC_API.Controllers
                     new SqlParameter("@Id", id)
                     );
 
-            return Ok("Activity Deleted");
+            return Ok(true);
 
         }
 
