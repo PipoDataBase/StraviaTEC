@@ -468,3 +468,13 @@ EXEC spInsertBankAccount 'CR05015202001026284066', 'End of Semester Race';
 GO
 EXEC spInsertBankAccount 'CR05015202001026284067', 'End of Semester Race';
 Go
+
+-- ================================================
+--                Activities
+-- ================================================	
+EXEC spInsertActivity 13, '01:18:33', '2023-11-17T07:00:00', '', 'Morning warm-up', 'Emarin19', 0;
+GO
+EXEC spInsertActivity 46, '02:12:28', '2023-11-13T16:30:00', '', 'Afternoon bike ride', 'Emarin19', 2;
+GO
+EXEC spInsertActivity 78, '03:56:02', '2023-11-14T07:45:00', '', 'Cycling tour in the morning', 'Jose216', 2;
+GO

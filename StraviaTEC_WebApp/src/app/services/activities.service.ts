@@ -13,7 +13,7 @@ export class ActivitiesService {
   constructor(private http: HttpClient) { }
 
   getActivities(): Observable<Activity[]> {
-    return this.http.get<Activity[]>(this.baseApiUrl + '/api/Comment');
+    return this.http.get<Activity[]>(this.baseApiUrl + '/api/Activities');
   }
 
   getActivity(id: number): Observable<Activity> {
