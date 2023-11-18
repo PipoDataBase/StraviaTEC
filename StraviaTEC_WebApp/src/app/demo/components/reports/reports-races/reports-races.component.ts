@@ -255,79 +255,33 @@ export class ReportsRacesComponent {
   showRaceReportDailogButtonOnClick(race: AvailableRace) {
     this.race = { ...race };
 
+    this.raceParticipants = [];
+    this.raceLeaderboard = [];
+
     // Request to database for participants
-    this.raceParticipants =
-      [
-        {
-          username: 'jose216',
-          name: 'jose',
-          lastName1: 'rodrig',
-          lastName2: 'rojas',
-          age: 23,
-          photoPath: '',
-          nationality: 'Costa Rican',
-          category: 'Sub-23'
-        },
-        {
-          username: 'jose216',
-          name: 'jose',
-          lastName1: 'rodrig',
-          lastName2: 'rojas',
-          age: 23,
-          photoPath: '',
-          nationality: 'Costa Rican',
-          category: 'Sub-23'
-        },
-        {
-          username: 'jose216',
-          name: 'jose',
-          lastName1: 'rodrig',
-          lastName2: 'rojas',
-          age: 23,
-          photoPath: '',
-          nationality: 'Costa Rican',
-          category: 'Sub-23'
-        }
-      ]
+    this.racesService.getRaceParticipantsReport(this.race.name).subscribe({
+      next: (raceParticipants) => {
+        this.raceParticipants = raceParticipants;
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Race participants loaded wrong.' });
+      }
+    })
+
     this.raceParticipantsLoading = false;
 
     // Request to database for leaderboard
-    this.raceLeaderboard =
-      [
-        {
-          username: 'jose216',
-          name: 'jose',
-          lastName1: 'rodrig',
-          lastName2: 'rojas',
-          age: 23,
-          photoPath: '',
-          nationality: 'Costa Rican',
-          category: 'Sub-23',
-          duration: '20'
-        },
-        {
-          username: 'jose216',
-          name: 'jose',
-          lastName1: 'rodrig',
-          lastName2: 'rojas',
-          age: 23,
-          photoPath: '',
-          nationality: 'Costa Rican',
-          category: 'Sub-23',
-          duration: '21'
-        },
-        {
-          username: 'jose216',
-          name: 'jose',
-          lastName1: 'rodrig',
-          lastName2: 'rojas',
-          age: 23,
-          photoPath: '',
-          nationality: 'Costa Rican',
-          category: 'Sub-23',
-          duration: '22'
-        }
-      ]
+    this.racesService.getRaceLeaderboardReport(this.race.name).subscribe({
+      next: (raceLeaderboard) => {
+        this.raceLeaderboard = raceLeaderboard;
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Race leaderboard loaded wrong.' });
+      }
+    })
+
     this.raceLeaderboardLoading = false;
 
     this.submitRaceDialog = true;
@@ -384,7 +338,7 @@ export class ReportsRacesComponent {
     var body2: any[] = [];
     var forBody2: any[] = [];
     for (let i = 0; i < this.raceLeaderboard.length; i++) {
-      forBody2 = [this.raceParticipants[i].username, this.raceParticipants[i].name, this.raceParticipants[i].lastName1, this.raceParticipants[i].lastName2, this.raceParticipants[i].age, this.raceParticipants[i].category]
+      forBody2 = [this.raceLeaderboard[i].username, this.raceLeaderboard[i].name, this.raceLeaderboard[i].lastName1, this.raceLeaderboard[i].lastName2, this.raceLeaderboard[i].age, this.raceLeaderboard[i].category, this.raceLeaderboard[i].duration]
       body2.push(forBody2);
     }
 
@@ -420,7 +374,7 @@ export class ReportsRacesComponent {
     var body2: any[] = [];
     var forBody2: any[] = [];
     for (let i = 0; i < this.raceLeaderboard.length; i++) {
-      forBody2 = [this.raceParticipants[i].username, this.raceParticipants[i].name, this.raceParticipants[i].lastName1, this.raceParticipants[i].lastName2, this.raceParticipants[i].age, this.raceParticipants[i].category]
+      forBody2 = [this.raceLeaderboard[i].username, this.raceLeaderboard[i].name, this.raceLeaderboard[i].lastName1, this.raceLeaderboard[i].lastName2, this.raceLeaderboard[i].age, this.raceLeaderboard[i].category, this.raceLeaderboard[i].duration]
       body2.push(forBody2);
     }
 

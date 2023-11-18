@@ -84,7 +84,7 @@
                                     (click)="showRaceMoreInfoDialogButtonOnClick(race)"></button>
                                 <p-button class="mb-3" label="Join Race" *ngIf="!isUserJoinedOnRace(race.name)"
                                     (onClick)="showSubmitRaceDailogButtonOnClick(race)"></p-button>
-                                <p-button label="Leave Race" styleClass="p-button-danger"
+                                <p-button class="mb-3" label="Leave Race" styleClass="p-button-danger"
                                     *ngIf="isUserJoinedOnRace(race.name)"
                                     (onClick)="leaveRaceButtonOnClick(race.name)"></p-button>
                                 <button pButton pRipple class="mb-3" label="" icon="pi pi-map"

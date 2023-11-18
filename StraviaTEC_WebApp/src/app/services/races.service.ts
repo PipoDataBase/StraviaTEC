@@ -7,6 +7,8 @@ import { Sponsor } from '../models/sponsor.module';
 import { Category } from '../models/category.module';
 import { BankAccount } from '../models/bank-account.module';
 import { AvailableRace } from '../models/views-models/vw-available-race.module';
+import { RaceReportSportmanParticipant } from '../models/views-models/vw-sportman-race-report-participants.module';
+import { RaceReportSportmanLeaderboard } from '../models/views-models/vw-sportman-race-report-leaderboard.module';
 
 @Injectable({
   providedIn: 'root'
@@ -70,5 +72,13 @@ export class RacesService {
 
   getAvailableRacesVw(username: string): Observable<AvailableRace[]> {
     return this.http.get<AvailableRace[]>(this.baseApiUrl + '/api/Races/GetAvailableVwRaces/' + username);
+  }
+
+  getRaceLeaderboardReport(raceName: string): Observable<RaceReportSportmanLeaderboard[]> {
+    return this.http.get<RaceReportSportmanLeaderboard[]>(this.baseApiUrl + '/api/Races/GetLeaderboardReport/' + raceName);
+  }
+
+  getRaceParticipantsReport(raceName: string): Observable<RaceReportSportmanParticipant[]> {
+    return this.http.get<RaceReportSportmanParticipant[]>(this.baseApiUrl + '/api/Races/GetParticipantReport/' + raceName);
   }
 }

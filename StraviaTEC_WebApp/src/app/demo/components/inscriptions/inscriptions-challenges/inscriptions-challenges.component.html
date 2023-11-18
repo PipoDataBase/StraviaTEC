@@ -18,7 +18,8 @@
 
             <ng-template let-challenge pTemplate="listItem">
                 <div class="col-12">
-                    <div class="flex flex-column md:flex-row align-items-center p-3 w-full">
+                    <div class="flex flex-column md:flex-row align-items-center p-3 pb-1 w-full"
+                        *ngIf="isUserParticipatingOnChallenge(challenge.name)">
                         <img [src]="'../../../../assets/straviatec/ChallengeDefaultImage.png'" [alt]="challenge.name"
                             class="my-4 md:my-0 w-9 md:w-10rem shadow-2 mr-5" />
                         <div class="flex-1 flex flex-column align-items-center text-center md:text-left">
@@ -35,13 +36,42 @@
                             <div class="h6 mb-3" style="font-size: x-small">Created by {{ challenge.manager }}</div>
                         </div>
                         <div class="flex flex-column align-items-center col-md-2">
-                            <p-button class="mb-3" *ngIf="!isUserParticipatingOnChallenge(challenge.name)" label="Join Challenge"
+                            <p-button class="mb-3" *ngIf="!isUserParticipatingOnChallenge(challenge.name)"
+                                label="Join Challenge"
                                 (onClick)="joinChallengeButtonOnClick(challenge.name)"></p-button>
                             <p-button class="mb-3" styleClass="p-button-danger"
                                 *ngIf="isUserParticipatingOnChallenge(challenge.name)" label="Leave Challenge"
                                 (onClick)="leaveChallengeButtonOnClick(challenge.name)"></p-button>
                         </div>
                     </div>
+                    <div class="flex flex-column md:flex-row align-items-center p-3 w-full"
+                        *ngIf="!isUserParticipatingOnChallenge(challenge.name)">
+                        <img [src]="'../../../../assets/straviatec/ChallengeDefaultImage.png'" [alt]="challenge.name"
+                            class="my-4 md:my-0 w-9 md:w-10rem shadow-2 mr-5" />
+                        <div class="flex-1 flex flex-column align-items-center text-center md:text-left">
+                            <div class="text-2xl font-bold mb-3">{{ challenge.name }}</div>
+                            <div class="h6 mb-3">Complete {{ challenge.goal }} km</div>
+                            <div class="h6 mb-3">From {{ getDateOnFormat(challenge.startDate) }} to {{
+                                getDateOnFormat(challenge.endDate) }}</div>
+                            <div class="flex flex-wrap align-items-center mb-3">
+                                <p-chip label="{{ challenge.type }}" styleClass="m-1"></p-chip>
+                                <p-chip label="{{ challenge.deep ? 'Deep' : 'Height' }}" styleClass="m-1"></p-chip>
+                                <p-chip label="{{ challenge.private ? 'Private' : 'Public' }}"
+                                    styleClass="m-1"></p-chip>
+                            </div>
+                            <div class="h6 mb-3" style="font-size: x-small">Created by {{ challenge.manager }}</div>
+                        </div>
+                        <div class="flex flex-column align-items-center col-md-2">
+                            <p-button class="mb-3" *ngIf="!isUserParticipatingOnChallenge(challenge.name)"
+                                label="Join Challenge"
+                                (onClick)="joinChallengeButtonOnClick(challenge.name)"></p-button>
+                            <p-button class="mb-3" styleClass="p-button-danger"
+                                *ngIf="isUserParticipatingOnChallenge(challenge.name)" label="Leave Challenge"
+                                (onClick)="leaveChallengeButtonOnClick(challenge.name)"></p-button>
+                        </div>
+                    </div>
+                    <p-progressBar [style]="{'height' : '10.5px'}" [value]="challenge.progress" [showValue]="false"
+                        *ngIf="isUserParticipatingOnChallenge(challenge.name)"></p-progressBar>
                 </div>
             </ng-template>
 
@@ -62,16 +92,22 @@
                                     <p-chip label="{{ challenge.private ? 'Private' : 'Public' }}"
                                         styleClass="m-1"></p-chip>
                                 </div>
-                                <p-button class="mb-3" *ngIf="!isUserParticipatingOnChallenge(challenge.name)" label="Join Challenge"
+                                <p-button class="mb-3" *ngIf="!isUserParticipatingOnChallenge(challenge.name)"
+                                    label="Join Challenge"
                                     (onClick)="joinChallengeButtonOnClick(challenge.name)"></p-button>
                                 <p-button class="mb-3" styleClass="p-button-danger"
                                     *ngIf="isUserParticipatingOnChallenge(challenge.name)" label="Leave Challenge"
                                     (onClick)="leaveChallengeButtonOnClick(challenge.name)"></p-button>
-                                <div class="h6 mb-1" style="font-size: x-small" *ngIf="isUserParticipatingOnChallenge(challenge.name)">Created by {{ challenge.manager }}</div>
-                                <div class="h6 mb-3" style="font-size: x-small" *ngIf="!isUserParticipatingOnChallenge(challenge.name)">Created by {{ challenge.manager }}</div>
+                                <div class="h6 mb-1" style="font-size: x-small"
+                                    *ngIf="isUserParticipatingOnChallenge(challenge.name)">Created by {{
+                                    challenge.manager }}</div>
+                                <div class="h6 mb-3" style="font-size: x-small"
+                                    *ngIf="!isUserParticipatingOnChallenge(challenge.name)">Created by {{
+                                    challenge.manager }}</div>
                             </div>
                         </div>
-                        <p-progressBar [style]="{'height' : '10px'}" [value]="challenge.progress" [showValue]="false" *ngIf="isUserParticipatingOnChallenge(challenge.name)"></p-progressBar>
+                        <p-progressBar [style]="{'height' : '10px'}" [value]="challenge.progress" [showValue]="false"
+                            *ngIf="isUserParticipatingOnChallenge(challenge.name)"></p-progressBar>
                     </div>
                 </div>
             </ng-template>
