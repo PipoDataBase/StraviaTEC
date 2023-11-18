@@ -167,6 +167,23 @@ namespace StraviaTEC_API.Controllers
         }
 
         // GET: api/Sportmen
+        [HttpGet("GetChallengeProgress/{username}/{challengeName}")]
+        public async Task<ActionResult<IEnumerable<VwChallenge>>> GetChallengeProgress(string username, string challengeName)
+        {
+            if (_context.Sportmen == null)
+            {
+                return NotFound();
+            }
+            var result = await _context.VwChallenges.FromSqlRaw(
+                    "EXEC spGetChallengeProgress @Username, @ChallengeName",
+                    new SqlParameter("@Username", username),
+                    new SqlParameter("@ChallengeName", challengeName)
+                    ).ToListAsync();
+
+            return result;
+        }
+
+        // GET: api/Sportmen
         [HttpGet("Login/{username}/{password}")]
         public async Task<IActionResult> Login (string username, string password)
         {
