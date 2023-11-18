@@ -1,15 +1,3 @@
-CREATE FUNCTION FGetAge (@BirthDate DATE)
-RETURNS INT
-AS
-BEGIN
-    DECLARE @Age INT;
-
-    SET @Age = DATEDIFF(YEAR, @BirthDate, GETDATE()) - 
-        CASE WHEN FORMAT(GETDATE(), 'MMdd') < FORMAT(@BirthDate, 'MMdd') THEN 1 ELSE 0 END;
-
-    RETURN @Age;
-END;
-
 -- ===============================================
 --                    Sportmen
 -- ================================================
@@ -30,6 +18,21 @@ AS SELECT R.Name, R.InscriptionPrice, R.Date, R.Private, R.RoutePath, AT.Type, R
 FROM Race R 
 INNER JOIN ActivityType AT ON R.Type = AT.Id
 INNER JOIN RaceSportmanManager RSM ON R.Name = RSM.RaceName;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE FUNCTION FGetAge (@BirthDate DATE)
+RETURNS INT
+AS
+BEGIN
+    DECLARE @Age INT;
+
+    SET @Age = DATEDIFF(YEAR, @BirthDate, GETDATE()) - 
+        CASE WHEN FORMAT(GETDATE(), 'MMdd') < FORMAT(@BirthDate, 'MMdd') THEN 1 ELSE 0 END;
+
+    RETURN @Age;
+END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
@@ -113,45 +116,3 @@ INNER JOIN ActivityType AT ON C.Type = AT.Id
 INNER JOIN ChallengeSportmanManager CSM ON C.Name = CSM.ChallengeName;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
-
-GO
-CREATE FUNCTION FGetProgress (@Username varchar(20), @ChallengeName varchar(20))
-RETURNS tinyint
-AS
-BEGIN
-    DECLARE @CompletedKm numeric(12,3);
-    DECLARE @GoalKm numeric(12,3);
-    DECLARE @Progress tinyint;
-    -- Gets User Activities related to the 
-    -- challenge and sums its kilometers
-    SELECT @CompletedKm = SUM(Kilometers)
-    FROM (SELECT Kilometers 
-          FROM Activity 
-          WHERE Username = @Username 
-          AND ChallengeName = @ChallengeName) 
-          AS Activities;
-    -- Gets the Goal Kilometers from the challenge
-    SELECT @GoalKm = Goal
-    FROM (SELECT Goal
-          FROM Challenge
-          WHERE Name = @ChallengeName)
-          AS Challenge;
-    -- Validates data and calculates progress
-    IF (@CompletedKm = 0 OR @CompletedKm IS NULL OR @CompletedKm IS NULL)
-        BEGIN
-            SET @Progress = 0;
-        END
-    IF @GoalKm < @CompletedKm
-	    BEGIN
-		    SET @Progress = 100
-	    END
-    ELSE
-        BEGIN
-            SET @Progress = (@CompletedKm/@GoalKm * 100);
-		    IF @Progress IS NULL
-			    BEGIN 
-				    SET @Progress = 0
-			    END
-        END
-    RETURN @Progress;
-END;

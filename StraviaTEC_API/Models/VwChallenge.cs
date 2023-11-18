@@ -21,5 +21,5 @@ public partial class VwChallenge
 
     public string Manager { get; set; } = null!;
 
-    public int? Progress { get; set; }
+    public byte? Progress { get; set; }
 }
