@@ -13,6 +13,8 @@ import { RacesService } from 'src/app/services/races.service';
 import { SponsorsService } from 'src/app/services/sponsors.service';
 import { forkJoin } from 'rxjs';
 import { BankAccountsService } from 'src/app/services/bank-accounts.service';
+import { Group } from 'src/app/models/group.module';
+import { GroupsService } from 'src/app/services/groups.service';
 
 @Component({
   selector: 'app-management-races',
@@ -39,16 +41,19 @@ export class ManagementRacesComponent {
   routePath: any;
 
   races: Race[] = [];
+  groups: Group[] = [];
   sponsors: Sponsor[] = [];
   categories: Category[] = [];
   bankAccounts: BankAccount[] = [];
 
   selectedRaces: Race[] = [];
+  selectedGroups: Group[] = [];
   selectedSponsors: Sponsor[] = [];
   selectedCategories: Category[] = [];
   selectedBankAccounts: BankAccount[] = [];
 
   race: Race = {};
+  group: Group = {};
   sponsor: Sponsor = {};
   category: Category = {};
   bankAccount: BankAccount = {};
@@ -57,7 +62,7 @@ export class ManagementRacesComponent {
 
   submitted: boolean = false;
 
-  constructor(private messageService: MessageService, public sharedService: SharedService, private activityTypesService: ActivityTypesService, private racesService: RacesService, private categoriesService: CategoriesService, private sponsorsService: SponsorsService, private bankAccountsService: BankAccountsService) { }
+  constructor(private messageService: MessageService, public sharedService: SharedService, private activityTypesService: ActivityTypesService, private racesService: RacesService, private categoriesService: CategoriesService, private sponsorsService: SponsorsService, private bankAccountsService: BankAccountsService, private groupsService: GroupsService) { }
 
   updateRaces() {
     this.racesService.getRacesByManager(this.sharedService.getUsername()).subscribe({
@@ -128,6 +133,15 @@ export class ManagementRacesComponent {
         console.log(response);
       }
     })
+
+    this.groupsService.getGroups().subscribe({
+      next: (groups) => {
+        this.groups = groups;
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
   }
 
   openNew() {
@@ -138,6 +152,7 @@ export class ManagementRacesComponent {
     this.selectedActivityType = -1;
     this.selectedPrivacy = false;
     this.selectedCategories = [];
+    this.selectedGroups = [];
   }
 
   openNewBankAccount() {
@@ -180,6 +195,15 @@ export class ManagementRacesComponent {
     this.racesService.getRaceCategories(this.race.name).subscribe({
       next: (categories) => {
         this.selectedCategories = categories;
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
+
+    this.racesService.getRaceGroups(this.race.name).subscribe({
+      next: (groups) => {
+        this.selectedGroups = groups;
       },
       error: (response) => {
         console.log(response);
@@ -289,6 +313,7 @@ export class ManagementRacesComponent {
     this.raceDialog = false;
     this.submitted = false;
     this.selectedCategories = [];
+    this.selectedGroups = [];
   }
 
   hideRaceIBANAccountDialog() {
@@ -330,6 +355,7 @@ export class ManagementRacesComponent {
           next: (response) => {
             if (response) {
               this.aboutCategories(raceUpdated.name);
+              this.aboutGroups(raceUpdated.name);
               this.updateRaces();
               this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Race Updated.', life: 3000 });
             }
@@ -361,6 +387,7 @@ export class ManagementRacesComponent {
           next: (response) => {
             if (response) {
               this.aboutCategories(newRace.name);
+              this.aboutGroups(newRace.name);
               this.updateRaces();
               this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Race Created.', life: 3000 });
             }
@@ -514,6 +541,32 @@ export class ManagementRacesComponent {
         }
 
         this.selectedCategories = [];
+        this.race = {};
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    });
+  }
+
+  aboutGroups(name: string) {
+    this.racesService.deleteRaceGroups(name).subscribe({
+      next: (response) => {
+        if (response) {
+          const postGroupObservables = this.selectedGroups.map(group =>
+            this.groupsService.postRaceGroup(name, group.name)
+          );
+
+          forkJoin(postGroupObservables).subscribe({
+            next: (response) => {
+            },
+            error: (response) => {
+              console.log(response);
+            }
+          });
+        }
+
+        this.selectedGroups = [];
         this.race = {};
       },
       error: (response) => {

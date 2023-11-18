@@ -1238,6 +1238,8 @@ BEGIN
 	WHERE RaceName = @Name;
 	DELETE FROM RaceCategory
 	WHERE RaceName = @Name;
+	DELETE FROM RaceGroup
+	WHERE RaceName = @Name;
 	DELETE FROM RaceSponsor
 	WHERE RaceName = @Name;
 	DELETE FROM BankAccount
