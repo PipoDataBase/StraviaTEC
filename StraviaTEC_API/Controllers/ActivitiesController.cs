@@ -172,7 +172,7 @@ namespace StraviaTEC_API.Controllers
                 else
                 {
                     await _context.Database.ExecuteSqlRawAsync(
-                    "EXEC spInsertActivityChallengeAndRace @Id @Kilometers, @Duration, @Date, @RoutePath, @Description, @Username, @RaceName, @ChallengeName, @Type",
+                    "EXEC spInsertActivityChallengeAndRace @Kilometers, @Duration, @Date, @RoutePath, @Description, @Username, @RaceName, @ChallengeName, @Type",
                     new SqlParameter("@Kilometers", activity.Kilometers),
                     new SqlParameter("@Duration", activity.Duration),
                     new SqlParameter("@Date", activity.Date),

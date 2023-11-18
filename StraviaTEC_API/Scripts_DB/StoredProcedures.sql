@@ -712,8 +712,17 @@ CREATE PROCEDURE spInsertActivityRace
 	@Type tinyint
 AS
 BEGIN
-    INSERT INTO Activity (Kilometers, Duration, Date, RoutePath, Description, Username, RaceName, ChallengeName, Type)
-    VALUES (@Kilometers, @Duration, @Date, @RoutePath, @Description, @Username, @RaceName, NULL, @Type);
+    IF EXISTS (SELECT 1 FROM Activity WHERE Username = @Username AND RaceName = @RaceName)
+        THROW 51000, 'The User already have an Activity linked to this Race', 1;   
+    ELSE
+        BEGIN TRY
+            INSERT INTO Activity (Kilometers, Duration, Date, RoutePath, Description, Username, RaceName, ChallengeName, Type)
+            VALUES (@Kilometers, @Duration, @Date, @RoutePath, @Description, @Username, @RaceName, NULL, @Type);
+            RETURN;
+        END TRY
+    BEGIN CATCH
+        THROW 51000, 'ERROR inserting Activity', 1; 
+    END CATCH;
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
@@ -746,8 +755,17 @@ CREATE PROCEDURE spInsertActivityChallengeAndRace
 	@Type tinyint
 AS
 BEGIN
-    INSERT INTO Activity (Kilometers, Duration, Date, RoutePath, Description, Username, RaceName, ChallengeName, Type)
-    VALUES (@Kilometers, @Duration, @Date, @RoutePath, @Description, @Username, @RaceName, @ChallengeName, @Type);
+    IF EXISTS (SELECT 1 FROM Activity WHERE Username = @Username AND RaceName = @RaceName)
+        THROW 51000, 'The User already have an Activity linked to this Race', 1;   
+    ELSE
+        BEGIN TRY
+            INSERT INTO Activity (Kilometers, Duration, Date, RoutePath, Description, Username, RaceName, ChallengeName, Type)
+            VALUES (@Kilometers, @Duration, @Date, @RoutePath, @Description, @Username, @RaceName, @ChallengeName, @Type);
+            RETURN;
+        END TRY
+        BEGIN CATCH
+            THROW 51000, 'ERROR inserting Activity', 1; 
+        END CATCH;
 END;
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 Go
@@ -1446,6 +1464,8 @@ CREATE PROCEDURE spInsertBill
     @CategoryId tinyint
 AS
 BEGIN
+    IF EXISTS (SELECT 1 FROM Bill WHERE Username = @Username AND RaceName = @RaceName)
+        THROW 51000, 'The User already have a Bill uploaded for this Race', 1; 
     BEGIN TRY
         INSERT INTO Bill (PhotoPath, Username, RaceName, CategoryId)
         VALUES (@PhotoPath, @Username, @RaceName, @CategoryId );
