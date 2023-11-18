@@ -502,11 +502,12 @@ CREATE PROCEDURE spGetSportmanChallenges
     @Username varchar(20)
 AS
 BEGIN
-    SELECT C.Name, C.Goal, C.Private, C.StartDate, C.EndDate, C.Deep, C.Type
-    FROM Challenge C INNER JOIN ChallengeSportmanParticipant CSP
-    ON C.Name = CSP.ChallengeName
+    SELECT C.Name, C.Goal, C.Private, C.StartDate, C.EndDate, C.Deep, C.Type, C.Manager, dbo.FGetProgress(@Username, C.Name) AS Progress
+    FROM vwChallenges C 
+    INNER JOIN ChallengeSportmanParticipant CSP ON C.Name = CSP.ChallengeName
     WHERE CSP.SportmanUsername = @Username;
 END;
+--WHERE GETDATE() < EndDate AND (Private = 0 OR SG.Username = @Username);
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 

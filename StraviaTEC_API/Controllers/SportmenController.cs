@@ -104,13 +104,13 @@ namespace StraviaTEC_API.Controllers
 
         // GET: api/Sportmen
         [HttpGet("participatingChallenges/{username}")]
-        public async Task<ActionResult<IEnumerable<Challenge>>> GetSportmanChallenges(string username)
+        public async Task<ActionResult<IEnumerable<VwChallenge>>> GetSportmanChallenges(string username)
         {
             if (_context.Sportmen == null)
             {
                 return NotFound();
             }
-            var result = await _context.Challenges.FromSqlRaw(
+            var result = await _context.VwChallenges.FromSqlRaw(
                     "EXEC spGetSportmanChallenges @Username",
                     new SqlParameter("@Username", username)
                     ).ToListAsync();
