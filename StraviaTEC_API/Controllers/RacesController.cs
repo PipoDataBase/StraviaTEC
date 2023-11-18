@@ -75,6 +75,19 @@ namespace StraviaTEC_API.Controllers
                     ).ToListAsync();
         }
 
+        [HttpGet("Groups/{raceName}")]
+        public async Task<ActionResult<IEnumerable<Group>>> GetRaceGroups(string raceName)
+        {
+            if (_context.Races == null)
+            {
+                return NotFound();
+            }
+            return await _context.Groups.FromSqlRaw(
+                    "EXEC spGetRaceGroups @RaceName",
+                    new SqlParameter("@RaceName", raceName)
+                    ).ToListAsync();
+        }
+
         // GET: api/Races
         [HttpGet("Sponsors/{raceName}")]
         public async Task<ActionResult<IEnumerable<Sponsor>>> GetRaceSponsors(string raceName)
@@ -308,6 +321,29 @@ namespace StraviaTEC_API.Controllers
             {
                 await _context.Database.ExecuteSqlRawAsync(
                    "EXEC spDeleteRaceCategories @RaceName",
+                   new SqlParameter("@RaceName", raceName)
+                   );
+
+                return Ok(true);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        [HttpDelete("DeleteGroups/{raceName}")]
+        public async Task<IActionResult> DeleteRaceGroups(string raceName)
+        {
+            if (_context.Races == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                   "EXEC spDeleteRaceGroups @RaceName",
                    new SqlParameter("@RaceName", raceName)
                    );
 

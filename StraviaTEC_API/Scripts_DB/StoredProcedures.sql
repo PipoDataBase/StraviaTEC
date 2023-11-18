@@ -1062,6 +1062,19 @@ END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
+Go
+CREATE PROCEDURE spGetRaceGroups
+    @RaceName varchar(20)
+AS
+BEGIN
+    SELECT G.Name
+    FROM Group_ G INNER JOIN RaceGroup RG
+    ON G.Name = RG.GroupName
+    WHERE RG.RaceName = @RaceName
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
 GO
 CREATE PROCEDURE spGetRaceSponsors
     @RaceName varchar(20)
@@ -1226,6 +1239,16 @@ CREATE PROCEDURE spDeleteRaceCategories
 AS
 BEGIN
 	DELETE FROM RaceCategory
+	WHERE RaceName = @RaceName;
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+Go
+CREATE PROCEDURE spDeleteRaceGroups
+    @RaceName varchar(20)
+AS
+BEGIN
+	DELETE FROM RaceGroup
 	WHERE RaceName = @RaceName;
 END;
 
