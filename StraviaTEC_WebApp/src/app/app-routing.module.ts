@@ -24,7 +24,7 @@ import { UserSignupComponent } from './user-signup/user-signup.component';
                     { path: 'search', loadChildren: () => import('./demo/components/search/search.module').then(m => m.SearchModule) },
                     { path: 'inscriptions', loadChildren: () => import('./demo/components/inscriptions/inscriptions.module').then(m => m.InscriptionsModule) },
                     { path: 'management', loadChildren: () => import('./demo/components/management/management.module').then(m => m.ManagementModule) },
-                    { path: 'reports', loadChildren: () => import('./demo/components/reports/reports.module').then(m => m.ReportsModule) },
+                    { path: 'reports-races', loadChildren: () => import('./demo/components/reports-races/reports-races.module').then(m => m.ReportsRacesModule) },
                     { path: 'blocks', loadChildren: () => import('./demo/components/primeblocks/primeblocks.module').then(m => m.PrimeBlocksModule) },
                     { path: 'pages', loadChildren: () => import('./demo/components/pages/pages.module').then(m => m.PagesModule) }
                 ]

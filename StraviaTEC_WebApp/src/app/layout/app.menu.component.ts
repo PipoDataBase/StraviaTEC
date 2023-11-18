@@ -58,22 +58,7 @@ export class AppMenuComponent implements OnInit {
                             }
                         ]
                     },
-                    {
-                        label: 'Reports',
-                        icon: 'pi pi-fw pi-copy',
-                        items: [
-                            {
-                                label: 'Races',
-                                icon: 'pi pi-fw pi-flag',
-                                routerLink: ['/dashboard/reports/reports-races']
-                            },
-                            {
-                                label: 'Challenges',
-                                icon: 'pi pi-fw pi-stopwatch',
-                                routerLink: ['/dashboard/reports/reports-challenges']
-                            }
-                        ]
-                    }
+                    { label: 'Race Reports', icon: 'pi pi-fw pi-copy', routerLink: ['/dashboard/reports-races'] }
                 ]
             },
 
