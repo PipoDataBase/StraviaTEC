@@ -28,6 +28,8 @@ export class HomeComponent {
   comment: _Comment = {};
   toComment: string;
 
+  isLoading: boolean = true;
+
   constructor(public sharedService: SharedService, private activityTypesService: ActivityTypesService, private activitiesService: ActivitiesService, private sportmenService: SportmenService, private commentsService: CommentsService) { }
 
   updateComments(activityId: number) {
@@ -109,6 +111,15 @@ export class HomeComponent {
     })
   }
 
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.isLoading = false;
+      for (const activity of this.activities) {
+        this.parseGpxToJson(activity.routePath, activity.id);
+      }
+    }, 2000);    
+  }
+
   parseGpxToJson(gpxString: string, id: number): void {
     const parser = new xml2js.Parser({ explicitArray: false });
     var cleanedString = gpxString.replace("\ufeff", "");
@@ -160,7 +171,6 @@ export class HomeComponent {
     });
 
     // Set the polyline on the map
-    console.log(map);
     polyline.setMap(map);
   }
 

@@ -1,140 +1,190 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div *ngFor="let activity of activities">
-                <div class="card mb-3">
-                    <div class="row mb-2">
-                        <div class="col-md-1 text-center">
-                            <div class="circle-avatar mb-2">
-                                <img *ngIf="activity.userInfo?.photoPath" src="{{ activity.userInfo.photoPath }}"
-                                    alt="Avatar" class="rounded-circle"
-                                    style="width: 50px; height: 50px; text-align: center;">
+            <div *ngIf="isLoading">
+                <div class="border-round border-1 surface-border p-4 surface-card mb-3">
+                    <div class="flex mb-3">
+                        <p-skeleton shape="circle" size="4rem" styleClass="mr-2"></p-skeleton>
+                        <div>
+                            <p-skeleton width="10rem" styleClass="mb-2"></p-skeleton>
+                            <p-skeleton width="5rem" styleClass="mb-2"></p-skeleton>
+                            <p-skeleton height=".5rem"></p-skeleton>
+                        </div>
+                    </div>
+                    <p-skeleton width="100%" height="150px"></p-skeleton>
+                    <div class="flex justify-content-between mt-3">
+                        <p-skeleton width="4rem" height="2rem"></p-skeleton>
+                        <p-skeleton width="4rem" height="2rem"></p-skeleton>
+                    </div>
+                </div>
+
+                <div class="border-round border-1 surface-border p-4 surface-card mb-3">
+                    <div class="flex mb-3">
+                        <p-skeleton shape="circle" size="4rem" styleClass="mr-2"></p-skeleton>
+                        <div>
+                            <p-skeleton width="10rem" styleClass="mb-2"></p-skeleton>
+                            <p-skeleton width="5rem" styleClass="mb-2"></p-skeleton>
+                            <p-skeleton height=".5rem"></p-skeleton>
+                        </div>
+                    </div>
+                    <p-skeleton width="100%" height="150px"></p-skeleton>
+                    <div class="flex justify-content-between mt-3">
+                        <p-skeleton width="4rem" height="2rem"></p-skeleton>
+                        <p-skeleton width="4rem" height="2rem"></p-skeleton>
+                    </div>
+                </div>
+
+                <div class="border-round border-1 surface-border p-4 surface-card mb-3">
+                    <div class="flex mb-3">
+                        <p-skeleton shape="circle" size="4rem" styleClass="mr-2"></p-skeleton>
+                        <div>
+                            <p-skeleton width="10rem" styleClass="mb-2"></p-skeleton>
+                            <p-skeleton width="5rem" styleClass="mb-2"></p-skeleton>
+                            <p-skeleton height=".5rem"></p-skeleton>
+                        </div>
+                    </div>
+                    <p-skeleton width="100%" height="150px"></p-skeleton>
+                    <div class="flex justify-content-between mt-3">
+                        <p-skeleton width="4rem" height="2rem"></p-skeleton>
+                        <p-skeleton width="4rem" height="2rem"></p-skeleton>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div *ngFor="let activity of activities">
+                    <div class="card mb-3">
+                        <div class="row mb-2">
+                            <div class="col-md-1 text-center">
+                                <div class="circle-avatar mb-2">
+                                    <img *ngIf="activity.userInfo?.photoPath" src="{{ activity.userInfo.photoPath }}"
+                                        alt="Avatar" class="rounded-circle"
+                                        style="width: 50px; height: 50px; text-align: center;">
+                                </div>
+                            </div>
+                            <div class="col-md-11 text-left">
+                                <h2 *ngIf="activity.userInfo?.name && activity.userInfo?.lastName1"
+                                    style="margin-bottom: 0; color: #fa4a01;">{{ activity.userInfo.name }} {{
+                                    activity.userInfo.lastName1 }}
+                                </h2>
+                                <p style="margin-top: 0;">{{ sharedService.formatDate3(activity.date) }}</p>
                             </div>
                         </div>
-                        <div class="col-md-11 text-left">
-                            <h2 *ngIf="activity.userInfo?.name && activity.userInfo?.lastName1"
-                                style="margin-bottom: 0; color: #fa4a01;">{{ activity.userInfo.name }} {{
-                                activity.userInfo.lastName1 }}
-                            </h2>
-                            <p style="margin-top: 0;">{{ sharedService.formatDate3(activity.date) }}</p>
-                        </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-md-1"></div>
-                        <div class="col-md-11 text-left">
-                            <h2 style="margin-bottom: 0;">{{ activity.description }}</h2>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3" style="text-align: left">
-                        <div class="col-md-1"></div>
-
-                        <div class="col-md-2 text-left">
-                            <p>Distance
-                                <br>
-                                <small>{{ activity.kilometers + ' km' }}</small>
-                            </p>
-                        </div>
-
-                        <div class="col-md-2 text-left">
-                            <p>Duration
-                                <br>
-                                <small>{{ activity.duration }}</small>
-                            </p>
-                        </div>
-
-                        <div class="col-md-2 text-left">
-                            <p>Activity Type
-                                <br>
-                                <small>{{ sharedService.getActivityType(activityTypes, activity.type) }}</small>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <div class="z-depth-1-half map-container">
-                            <button style="width: 100%; text-align: left; background-color: #F2F2F2; color: black;"
-                                pButton pRipple label="Map" class="mr-2"
-                                (click)="parseGpxToJson(activity.routePath, activity.id)"></button>
-
-                            <div *ngIf="id != 'map'" id="{{ 'map' + activity.id }}" style="width: 100%; height: 450px;">
+                        <div class="row">
+                            <div class="col-md-1"></div>
+                            <div class="col-md-11 text-left">
+                                <h2 style="margin-bottom: 0;">{{ activity.description }}</h2>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="extension-panel">
-                        <mat-accordion>
-                            <mat-expansion-panel hideToggle (click)="handlePanelClick(panel, activity.id)" #panel>
-                                <mat-expansion-panel-header style="background-color: #F2F2F2;">
-                                    <mat-panel-title>
-                                        Comments
-                                    </mat-panel-title>
-                                </mat-expansion-panel-header>
-                                <div>
-                                    <div class="row" style="margin-top: 2%;">
-                                        <div class="col-md-1 text-right">
-                                            <span style="margin-bottom: 0%;">
-                                                <img src="{{ sportman.photoPath }}" alt="Avatar" class="rounded-circle"
-                                                    style="width: 38px; height: 38px;">
-                                            </span>
-                                        </div>
-                                        <div class="flex col-md-10 text-left">
-                                            <textarea rows="1" cols="50" placeholder="Add a comment..." pInputTextarea
-                                                [autoResize]="false" [(ngModel)]="toComment"></textarea>
+                        <div class="row mb-3" style="text-align: left">
+                            <div class="col-md-1"></div>
 
-                                            <button style="margin-left: 1%;" pButton pRipple icon="pi pi-send"
-                                                class="p-button-secondary mr-2" [disabled]="toComment === ''"
-                                                (click)="addComment(activity.id)"></button>
-                                        </div>
-                                        <div class="col-md-1"></div>
-                                    </div>
+                            <div class="col-md-2 text-left">
+                                <p>Distance
+                                    <br>
+                                    <small>{{ activity.kilometers + ' km' }}</small>
+                                </p>
+                            </div>
+
+                            <div class="col-md-2 text-left">
+                                <p>Duration
+                                    <br>
+                                    <small>{{ activity.duration }}</small>
+                                </p>
+                            </div>
+
+                            <div class="col-md-2 text-left">
+                                <p>Activity Type
+                                    <br>
+                                    <small>{{ sharedService.getActivityType(activityTypes, activity.type) }}</small>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="z-depth-1-half map-container">
+                                <div id="{{ 'map' + activity.id }}" style="width: 100%; height: 450px;">
                                 </div>
+                            </div>
+                        </div>
 
-                                <p-divider></p-divider>
-
-                                <div style="margin-top: 1%;">
-                                    <div *ngIf="comments.length === 0">
-                                        <div class="col-md-1"></div>
-                                        <div class="col-md-10 text-left">
-                                            <p>No comment...</p>
-                                        </div>
-                                        <div class="col-md-1"></div>
-                                    </div>
-
-                                    <div *ngIf="comments.length !== 0"
-                                        style="max-height: 300px; overflow-y: auto; overflow-x: hidden;">
-                                        <div *ngFor="let c of comments" style="margin-top: 1%;">
-                                            <div class="row">
-                                                <div class="col-md-1 text-right">
-                                                    <span>
-                                                        <img src="{{ c.profilePhoto }}" alt="Avatar"
-                                                            class="rounded-circle" style="width: 30px; height: 30px;">
-                                                    </span>
-                                                </div>
-                                                <div class="col-md-10 text-left">
-                                                    <span style="color: #fa4a01;">
-                                                        {{ ' @' + c.name }}
-                                                    </span>
-                                                    <p> {{ sharedService.formatDate3(c.date) }} </p>
-                                                </div>
-                                                <div class="col-md-1"></div>
+                        <div class="extension-panel">
+                            <mat-accordion>
+                                <mat-expansion-panel hideToggle (click)="handlePanelClick(panel, activity.id)" #panel>
+                                    <mat-expansion-panel-header style="background-color: #F2F2F2;">
+                                        <mat-panel-title>
+                                            Comments
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div>
+                                        <div class="row" style="margin-top: 2%;">
+                                            <div class="col-md-1 text-right">
+                                                <span style="margin-bottom: 0%;">
+                                                    <img src="{{ sportman.photoPath }}" alt="Avatar"
+                                                        class="rounded-circle" style="width: 38px; height: 38px;">
+                                                </span>
                                             </div>
+                                            <div class="flex col-md-10 text-left">
+                                                <textarea rows="1" cols="50" placeholder="Add a comment..."
+                                                    pInputTextarea [autoResize]="false"
+                                                    [(ngModel)]="toComment"></textarea>
 
-                                            <div class="row">
-                                                <div class="col-md-1"></div>
-                                                <div class="col-md-10 text-left">
-                                                    <p>{{ c.text }}</p>
-                                                </div>
-                                                <div class="col-md-1"></div>
+                                                <button style="margin-left: 1%;" pButton pRipple icon="pi pi-send"
+                                                    class="p-button-secondary mr-2" [disabled]="toComment === ''"
+                                                    (click)="addComment(activity.id)"></button>
                                             </div>
-
-                                            <p-divider></p-divider>
+                                            <div class="col-md-1"></div>
                                         </div>
                                     </div>
-                                </div>
-                            </mat-expansion-panel>
-                        </mat-accordion>
+
+                                    <p-divider></p-divider>
+
+                                    <div style="margin-top: 1%;">
+                                        <div *ngIf="comments.length === 0">
+                                            <div class="col-md-1"></div>
+                                            <div class="col-md-10 text-left">
+                                                <p>No comment...</p>
+                                            </div>
+                                            <div class="col-md-1"></div>
+                                        </div>
+
+                                        <div *ngIf="comments.length !== 0"
+                                            style="max-height: 300px; overflow-y: auto; overflow-x: hidden;">
+                                            <div *ngFor="let c of comments" style="margin-top: 1%;">
+                                                <div class="row">
+                                                    <div class="col-md-1 text-right">
+                                                        <span>
+                                                            <img src="{{ c.profilePhoto }}" alt="Avatar"
+                                                                class="rounded-circle"
+                                                                style="width: 30px; height: 30px;">
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-md-10 text-left">
+                                                        <span style="color: #fa4a01;">
+                                                            {{ ' @' + c.name }}
+                                                        </span>
+                                                        <p> {{ sharedService.formatDate3(c.date) }} </p>
+                                                    </div>
+                                                    <div class="col-md-1"></div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-1"></div>
+                                                    <div class="col-md-10 text-left">
+                                                        <p>{{ c.text }}</p>
+                                                    </div>
+                                                    <div class="col-md-1"></div>
+                                                </div>
+
+                                                <p-divider></p-divider>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </div>
                     </div>
                 </div>
             </div>
