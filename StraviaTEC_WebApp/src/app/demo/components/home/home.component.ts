@@ -1,21 +1,12 @@
 import { Component } from '@angular/core';
+import { forkJoin } from 'rxjs';
 import { ActivityType } from 'src/app/models/activity-type.module';
+import { Activity } from 'src/app/models/activity.module';
 import { Sportman } from 'src/app/models/sportman.module';
+import { ActivitiesService } from 'src/app/services/activities.service';
 import { ActivityTypesService } from 'src/app/services/activity-types.service';
 import { SharedService } from 'src/app/services/shared.service';
-
-export interface Activity {
-  id: number;
-  kilometers: number;
-  duration: number;
-  date: string;
-  routePath: string;
-  description: string;
-  username: string;
-  raceName: string;
-  challengeName: string;
-  type: number;
-}
+import { SportmenService } from 'src/app/services/sportmen.service';
 
 @Component({
   selector: 'app-home',
@@ -42,12 +33,39 @@ export class HomeComponent {
     nationality: 18 // Costa Rican
   }
 
-  constructor(public sharedService: SharedService, private activityTypesService: ActivityTypesService) { }
+  constructor(public sharedService: SharedService, private activityTypesService: ActivityTypesService, private activitiesService: ActivitiesService, private sportmenService: SportmenService) { }
 
   ngOnInit() {
-    //setTimeout(() => {
-    //  this.hideContent();
-    //}, 3000);
+    this.activitiesService.getActivities().subscribe({
+      next: (activities) => {
+        this.activities = activities;
+
+        // We create an array of observables for the username of each activity
+        const usernameObservables = this.activities.map(activity =>
+          this.sportmenService.getSportman(activity.username)
+        );
+
+        // We use forkJoin to combine all observables into one
+        forkJoin(usernameObservables).subscribe({
+          next: (sportmenObject) => {
+            // We assign the sportmen to each activity in the same order as the activities
+            sportmenObject.forEach((sportmen, index) => {
+              this.activities[index].routePath = 'https://www.google.com/maps/d/embed?mid=1cQv-iSgDnNCLG_jrQyX5emwZZDzLbixd&hl=es-419';
+              this.activities[index].userInfo = sportmen;
+            });
+          },
+          error: (response) => {
+            console.log(response);
+          }
+        });
+
+        console.log(this.activities);
+      },
+      error: (response) => {
+        console.log(response);
+        return;
+      }
+    })
 
     this.activityTypesService.getActivityTypes().subscribe({
       next: (activityTypes) => {
@@ -57,50 +75,7 @@ export class HomeComponent {
         console.log(response);
       }
     })
-
-    this.activities = [
-      {
-        id: 1,
-        kilometers: 85.39,
-        duration: 300,
-        date: '2023-11-07T06:30',
-        routePath: 'https://www.google.com/maps/d/embed?mid=1cQv-iSgDnNCLG_jrQyX5emwZZDzLbixd&hl=es-419',
-        description: 'Cycling tour in the morning',
-        username: 'Emarin19',
-        raceName: '',
-        challengeName: '',
-        type: 2
-      },
-      {
-        id: 2,
-        kilometers: 5.12,
-        duration: 45,
-        date: '2023-11-06T08:00',
-        routePath: 'https://www.google.com/maps/d/embed?mid=18RcpszqRsKd-Gy4Q6N7PRl5eaPa1bzqL&hl=es-419',
-        description: 'Running around the TEC',
-        username: 'Emarin19',
-        raceName: '',
-        challengeName: '',
-        type: 0
-      },
-      {
-        id: 3,
-        kilometers: 6.86,
-        duration: 55,
-        date: '2023-11-05T16:30',
-        routePath: 'https://www.google.com/maps/d/embed?mid=18RcpszqRsKd-Gy4Q6N7PRl5eaPa1bzqL&hl=es-419',
-        description: 'Afternoon warm-up',
-        username: 'Emarin19',
-        raceName: '',
-        challengeName: '',
-        type: 0
-      }
-    ];
   }
-
-  //hideContent() {
-  //  this.showContent = false;
-  //}
 
   addComment() {
     if (this.newComment.trim() !== '') {

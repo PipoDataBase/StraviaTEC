@@ -1,3 +1,5 @@
+import { Sportman } from "./sportman.module";
+
 export interface Activity {
     id?: number;
     kilometers?: number;
@@ -9,4 +11,5 @@ export interface Activity {
     raceName?: string;
     challengeName?: string;
     type?: number;
+    userInfo?: Sportman;
 }

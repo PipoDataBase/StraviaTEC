@@ -14,25 +14,34 @@ import { SharedService } from 'src/app/services/shared.service';
 })
 export class AddActivityComponent {
   activityTypes: ActivityType[] = [];
-  activity: Activity = {
-    id: -1,
-    kilometers: 0,
-    duration: '',
-    date: '',
-    routePath: '',
-    description: '',
-    username: '',
-    raceName: '',
-    challengeName: '',
-    type: -1
-  }
+  activity: Activity = {}
 
   selectedActivityType: number;
   selectedRoute: any;
 
+  restartActivity() {
+    this.activity = {
+      id: -1,
+      kilometers: 0,
+      duration: '',
+      date: '',
+      routePath: '',
+      description: '',
+      username: '',
+      raceName: '',
+      challengeName: '',
+      type: -1
+    }
+
+    this.selectedActivityType = -1;
+    this.selectedRoute = '';
+  }
+
   constructor(private messageService: MessageService, private sharedService: SharedService, private activityTypesService: ActivityTypesService, private activitiesService: ActivitiesService) { }
 
   ngOnInit(): void {
+    this.restartActivity();
+
     this.activityTypesService.getActivityTypes().subscribe({
       next: (activityTypes) => {
         this.activityTypes = activityTypes;
@@ -50,8 +59,7 @@ export class AddActivityComponent {
       this.activitiesService.postActivity(this.activity).subscribe({
         next: (response) => {
           if (response) {
-            this.activity = {};
-            this.selectedActivityType = -1;
+            this.restartActivity();
             this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Activity Added.', life: 3000 });
           }
         },
@@ -98,7 +106,7 @@ export class AddActivityComponent {
       this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'You have not added the .gpx file.' });
       return false;
     }
-    this.activity.routePath = this.selectedRoute;
+    this.activity.routePath = '';
 
     return true;
   }
