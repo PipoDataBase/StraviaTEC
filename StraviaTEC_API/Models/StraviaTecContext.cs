@@ -45,6 +45,8 @@ public partial class StraviaTecContext : DbContext
 
     public virtual DbSet<VwRace> VwRaces { get; set; }
 
+    public virtual DbSet<VwRaceReportSportmanParticipant> VwRaceReportSportmanParticipants { get; set; }
+
     public virtual DbSet<VwSportmanNationality> VwSportmanNationalities { get; set; }
 
     public virtual DbSet<WvRaceReportSportmanLeaderboard> WvRaceReportSportmanLeaderboards { get; set; }
@@ -617,6 +619,33 @@ public partial class StraviaTecContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.RoutePath).IsUnicode(false);
             entity.Property(e => e.Type)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<VwRaceReportSportmanParticipant>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vwRaceReportSportmanParticipant");
+
+            entity.Property(e => e.Category)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.LastName1)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.LastName2)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.Name)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.Nationality)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.PhotoPath).IsUnicode(false);
+            entity.Property(e => e.Username)
                 .HasMaxLength(20)
                 .IsUnicode(false);
         });

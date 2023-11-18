@@ -17,7 +17,7 @@ INNER JOIN RaceSportmanManager RSM ON R.Name = RSM.RaceName;
 	CREATE VIEW wvRaceReportSportmanLeaderboard
 AS SELECT S.Username, S.Name, S.LastName1, S.LastName2, dbo.FGetAge(S.BirthDate) AS Age, S.PhotoPath, S.Nationality, C.Category, A.Duration
 FROM vwSportmanNationality S
-INNER JOIN Bill B ON S.Username = B.Username
+INNER JOIN Bill B ON S.Username = B.Username AND B.Accepted = 1
 INNER JOIN Category C ON B.CategoryId = C.Id
 INNER JOIN Activity A ON B.RaceName = A.RaceName AND S.Username = A.Username
 GROUP BY S.Username, S.Name, S.LastName1, S.LastName2, S.BirthDate, S.PhotoPath, S.Nationality, C.Category, A.Duration;
@@ -28,13 +28,36 @@ GO
 CREATE VIEW wvRaceReportSportmanLeaderboard
 AS SELECT S.Username, S.Name, S.LastName1, S.LastName2, dbo.FGetAge(S.BirthDate) AS Age, S.PhotoPath, S.Nationality, C.Category, A.Duration, A.RaceName
 FROM vwSportmanNationality S
-INNER JOIN Bill B ON S.Username = B.Username
+INNER JOIN Bill B ON S.Username = B.Username AND B.Accepted = 1
 INNER JOIN Category C ON B.CategoryId = C.Id
 INNER JOIN Activity A ON B.RaceName = A.RaceName AND S.Username = A.Username
 GROUP BY  A.RaceName, C.Category, S.Username, S.Name, S.LastName1, S.LastName2, S.BirthDate, S.PhotoPath, S.Nationality, A.Duration;
 
 -- Is not possible to order in views
 -- ORDER BY A.RaceName, A.Duration ASC;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+/*
+	vwRaceReportSportmanParticipant for sent model:
+
+CREATE VIEW vwRaceReportSportmanParticipant 
+AS SELECT S.Username, S.Name, S.LastName1, S.LastName2, dbo.FGetAge(S.BirthDate) AS Age, S.PhotoPath, S.Nationality, C.Category
+FROM vwSportmanNationality S
+INNER JOIN Bill B ON S.Username = B.Username AND B.Accepted = 1
+INNER JOIN Category C ON B.CategoryId = C.Id
+GROUP BY  C.Category, S.Username, S.Name, S.LastName1, S.LastName2, S.BirthDate, S.PhotoPath, S.Nationality;
+
+*/
+
+GO 
+CREATE VIEW vwRaceReportSportmanParticipant 
+AS SELECT S.Username, S.Name, S.LastName1, S.LastName2, dbo.FGetAge(S.BirthDate) AS Age, S.PhotoPath, S.Nationality, C.Category, B.RaceName
+FROM vwSportmanNationality S
+INNER JOIN Bill B ON S.Username = B.Username AND B.Accepted = 1
+INNER JOIN Category C ON B.CategoryId = C.Id
+GROUP BY  B.RaceName, C.Category, S.Username, S.Name, S.LastName1, S.LastName2, S.BirthDate, S.PhotoPath, S.Nationality;
+
 
 
 

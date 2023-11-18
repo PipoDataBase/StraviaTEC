@@ -549,6 +549,18 @@ BEGIN
     ORDER BY Category, Duration ASC
 END;
 
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spGetRaceReportSportmanParticipant
+    @RaceName varchar(20)
+AS
+BEGIN
+    SELECT Username, Name, LastName1, LastName2, Age, PhotoPath, Nationality, Category
+    FROM vwRaceReportSportmanParticipant
+    WHERE RaceName = @RaceName
+    ORDER BY Category ASC
+END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
