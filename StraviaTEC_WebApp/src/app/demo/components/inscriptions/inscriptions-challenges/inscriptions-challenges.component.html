@@ -47,27 +47,31 @@
 
             <ng-template let-challenge pTemplate="gridItem">
                 <div class="col-12 md:col-4">
-                    <div class="card m-3 border-1 surface-border">
-                        <div class="flex flex-column align-items-center text-center mb-3">
-                            <img [src]="'../../../../assets/straviatec/ChallengeDefaultImage.png'"
-                                [alt]="challenge.name" class="w-10 shadow-2 my-3 mx-0 mb-3" />
-                            <div class="text-2xl font-bold mb-3">{{challenge.name}}</div>
-                            <div class="h6 mb-3">Complete {{challenge.goal}} km</div>
-                            <div class="h6 mb-3">From {{ getDateOnFormat(challenge.startDate) }} to {{
-                                getDateOnFormat(challenge.endDate) }}</div>
-                            <div class="flex flex-wrap align-items-center mb-3">
-                                <p-chip label="{{ challenge.type }}" styleClass="m-1"></p-chip>
-                                <p-chip label="{{ challenge.deep ? 'Deep' : 'Height' }}" styleClass="m-1"></p-chip>
-                                <p-chip label="{{ challenge.private ? 'Private' : 'Public' }}"
-                                    styleClass="m-1"></p-chip>
+                    <div class="card m-3 border-1 surface-border p-0">
+                        <div class="p-3">
+                            <div class="flex flex-column align-items-center text-center mb-3">
+                                <img [src]="'../../../../assets/straviatec/ChallengeDefaultImage.png'"
+                                    [alt]="challenge.name" class="w-10 shadow-2 my-3 mx-0 mb-3" />
+                                <div class="text-2xl font-bold mb-3">{{challenge.name}}</div>
+                                <div class="h6 mb-3">Complete {{challenge.goal}} km</div>
+                                <div class="h6 mb-3">From {{ getDateOnFormat(challenge.startDate) }} to {{
+                                    getDateOnFormat(challenge.endDate) }}</div>
+                                <div class="flex flex-wrap align-items-center mb-3">
+                                    <p-chip label="{{ challenge.type }}" styleClass="m-1"></p-chip>
+                                    <p-chip label="{{ challenge.deep ? 'Deep' : 'Height' }}" styleClass="m-1"></p-chip>
+                                    <p-chip label="{{ challenge.private ? 'Private' : 'Public' }}"
+                                        styleClass="m-1"></p-chip>
+                                </div>
+                                <p-button class="mb-3" *ngIf="!isUserParticipatingOnChallenge(challenge.name)" label="Join Challenge"
+                                    (onClick)="joinChallengeButtonOnClick(challenge.name)"></p-button>
+                                <p-button class="mb-3" styleClass="p-button-danger"
+                                    *ngIf="isUserParticipatingOnChallenge(challenge.name)" label="Leave Challenge"
+                                    (onClick)="leaveChallengeButtonOnClick(challenge.name)"></p-button>
+                                <div class="h6 mb-1" style="font-size: x-small" *ngIf="isUserParticipatingOnChallenge(challenge.name)">Created by {{ challenge.manager }}</div>
+                                <div class="h6 mb-3" style="font-size: x-small" *ngIf="!isUserParticipatingOnChallenge(challenge.name)">Created by {{ challenge.manager }}</div>
                             </div>
-                            <p-button class="mb-3" *ngIf="!isUserParticipatingOnChallenge(challenge.name)" label="Join Challenge"
-                                (onClick)="joinChallengeButtonOnClick(challenge.name)"></p-button>
-                            <p-button class="mb-3" styleClass="p-button-danger"
-                                *ngIf="isUserParticipatingOnChallenge(challenge.name)" label="Leave Challenge"
-                                (onClick)="leaveChallengeButtonOnClick(challenge.name)"></p-button>
-                            <div class="h6 mb-3" style="font-size: x-small">Created by {{ challenge.manager }}</div>
                         </div>
+                        <p-progressBar [style]="{'height' : '10px'}" [value]="challenge.progress" [showValue]="false" *ngIf="isUserParticipatingOnChallenge(challenge.name)"></p-progressBar>
                     </div>
                 </div>
             </ng-template>

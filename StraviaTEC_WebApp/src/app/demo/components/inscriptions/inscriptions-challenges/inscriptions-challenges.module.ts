@@ -10,7 +10,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RatingModule } from 'primeng/rating';
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
-
+import { ProgressBarModule } from 'primeng/progressbar';
 
 @NgModule({
     imports: [
@@ -23,7 +23,8 @@ import { ChipModule } from 'primeng/chip';
         DropdownModule,
         RatingModule,
         ButtonModule,
-        ChipModule
+        ChipModule,
+        ProgressBarModule
     ],
     declarations: [InscriptionsChallengesComponent]
 })

@@ -130,5 +130,4 @@ export class InscriptionsChallengesComponent implements OnInit {
   isUserParticipatingOnChallenge(challengeName: string): boolean {
     return this.participatingChallenges.some(participatingChallenge => participatingChallenge.name === challengeName);
   }
-
 }

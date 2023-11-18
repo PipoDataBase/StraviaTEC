@@ -7,4 +7,5 @@ export interface AvailableChallenge {
     deep?: boolean;
     type?: string;
     manager?: string;
+    progress?: number;
 }
