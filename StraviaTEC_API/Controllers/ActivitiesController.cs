@@ -142,7 +142,7 @@ namespace StraviaTEC_API.Controllers
                 else if (activity.ChallengeName == "" && activity.RaceName != "")
                 {
                     await _context.Database.ExecuteSqlRawAsync(
-                        "EXEC spInsertActivityRace @Id @Kilometers, @Duration, @Date, @RoutePath, @Description, @Username, @RaceName, @Type",
+                        "EXEC spInsertActivityRace @Kilometers, @Duration, @Date, @RoutePath, @Description, @Username, @RaceName, @Type",
                         new SqlParameter("@Kilometers", activity.Kilometers),
                         new SqlParameter("@Duration", activity.Duration),
                         new SqlParameter("@Date", activity.Date),
@@ -157,7 +157,7 @@ namespace StraviaTEC_API.Controllers
                 else if (activity.ChallengeName != "" && activity.RaceName == "")
                 {
                     await _context.Database.ExecuteSqlRawAsync(
-                        "EXEC spInsertActivityChallenge @Id @Kilometers, @Duration, @Date, @RoutePath, @Description, @Username, @ChallengeName, @Type",
+                        "EXEC spInsertActivityChallenge @Kilometers, @Duration, @Date, @RoutePath, @Description, @Username, @ChallengeName, @Type",
                         new SqlParameter("@Kilometers", activity.Kilometers),
                         new SqlParameter("@Duration", activity.Duration),
                         new SqlParameter("@Date", activity.Date),

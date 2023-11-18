@@ -34,7 +34,7 @@ INNER JOIN ChallengeSportmanManager ON Challenge.Name = ChallengeSportmanManager
 
 GO
 CREATE VIEW vwChallenges
-AS SELECT C.Name, C.Goal, C.Private, C.StartDate, C.EndDate, C.Deep, AT.Type, CSM.SportmanUsername AS Manager
+AS SELECT C.Name, C.Goal, C.Private, C.StartDate, C.EndDate, C.Deep, AT.Type, CSM.SportmanUsername AS Manager, NULL AS Progress
 FROM Challenge C 
 INNER JOIN ActivityType AT ON C.Type = AT.Id
 INNER JOIN ChallengeSportmanManager CSM ON C.Name = CSM.ChallengeName;

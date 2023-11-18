@@ -20,4 +20,6 @@ public partial class VwChallenge
     public string Type { get; set; } = null!;
 
     public string Manager { get; set; } = null!;
+
+    public byte? Progress { get; set; }
 }

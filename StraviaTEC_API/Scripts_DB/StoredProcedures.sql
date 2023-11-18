@@ -74,7 +74,7 @@ CREATE PROCEDURE spGetAvailableVwChallenges
     @Username varchar(20)
 AS
 BEGIN
-    SELECT DISTINCT C.Name, C.Goal, C.Private, C.StartDate, C.EndDate, C.Deep, C.Type, C.Manager
+    SELECT DISTINCT C.Name, C.Goal, C.Private, C.StartDate, C.EndDate, C.Deep, C.Type, C.Manager, C.Progress
     FROM vwChallenges C
     LEFT JOIN ChallengeGroup CG ON C.Name = CG.ChallengeName
     LEFT JOIN SportmanGroup SG ON SG.GroupName = CG.GroupName
@@ -105,6 +105,54 @@ BEGIN
     ON S.TradeName = CS.SponsorTradeName
     WHERE ChallengeName = @ChallengeName
 END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spGetChallengeProgress
+    @Username varchar(20),
+    @ChallengeName varchar(20)
+AS
+BEGIN
+    DECLARE @CompletedKm numeric(12,3);
+    DECLARE @GoalKm numeric(12,3);
+    DECLARE @Progress tinyint;
+    -- Gets User Activities related to the 
+    -- challenge and sums its kilometers
+    SELECT @CompletedKm = SUM(Kilometers)
+    FROM (SELECT Kilometers 
+          FROM Activity 
+          WHERE Username = @Username 
+          AND ChallengeName = @ChallengeName) 
+          AS Activities;
+    -- Gets the Goal Kilometers from the challenge
+    SELECT @GoalKm = Goal
+    FROM (SELECT Goal
+          FROM Challenge
+          WHERE Name = @ChallengeName)
+          AS Challenge;
+    -- Validates data and calculates progress
+    IF (@CompletedKm = 0 OR @CompletedKm IS NULL OR @CompletedKm IS NULL)
+        BEGIN
+            SET @Progress = 0;
+        END
+    IF @GoalKm < @CompletedKm
+	    BEGIN
+		    SET @Progress = 100
+	    END
+    ELSE
+        BEGIN
+            SET @Progress = (@CompletedKm/@GoalKm * 100);
+		    IF @Progress IS NULL
+			    BEGIN 
+				    SET @Progress = 0
+			    END
+        END
+    SELECT C.Name, C.Goal, C.Private, C.StartDate, C.EndDate, C.Deep, C.Type, C.Manager, @Progress AS Progress
+    FROM vwChallenges C
+    WHERE C.Name = @ChallengeName;
+END;
+
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 Go
@@ -591,8 +639,8 @@ CREATE PROCEDURE spInsertActivityRace
 	@Type tinyint
 AS
 BEGIN
-    INSERT INTO Activity (Kilometers, Duration, Date, Description, Username, RaceName, ChallengeName, Type)
-    VALUES (@Kilometers, @Duration, @Date, @Description, @Username, @RaceName, NULL, @Type);
+    INSERT INTO Activity (Kilometers, Duration, Date, RoutePath, Description, Username, RaceName, ChallengeName, Type)
+    VALUES (@Kilometers, @Duration, @Date, @RoutePath, @Description, @Username, @RaceName, NULL, @Type);
 END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
@@ -608,8 +656,8 @@ CREATE PROCEDURE spInsertActivityChallenge
 	@Type tinyint
 AS
 BEGIN
-    INSERT INTO Activity (Kilometers, Duration, Date, Description, Username, RaceName, ChallengeName, Type)
-    VALUES (@Kilometers, @Duration, @Date, @Description, @Username, NULL, @ChallengeName, @Type);
+    INSERT INTO Activity (Kilometers, Duration, Date, RoutePath, Description, Username, RaceName, ChallengeName, Type)
+    VALUES (@Kilometers, @Duration, @Date, @RoutePath, @Description, @Username, NULL, @ChallengeName, @Type);
 END;
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 Go
@@ -625,8 +673,8 @@ CREATE PROCEDURE spInsertActivityChallengeAndRace
 	@Type tinyint
 AS
 BEGIN
-    INSERT INTO Activity (Kilometers, Duration, Date, Description, Username, RaceName, ChallengeName, Type)
-    VALUES (@Kilometers, @Duration, @Date, @Description, @Username, @RaceName, @ChallengeName, @Type);
+    INSERT INTO Activity (Kilometers, Duration, Date, RoutePath, Description, Username, RaceName, ChallengeName, Type)
+    VALUES (@Kilometers, @Duration, @Date, @RoutePath, @Description, @Username, @RaceName, @ChallengeName, @Type);
 END;
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 Go
