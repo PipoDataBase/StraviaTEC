@@ -74,7 +74,7 @@ CREATE PROCEDURE spGetAvailableVwChallenges
     @Username varchar(20)
 AS
 BEGIN
-    SELECT DISTINCT C.Name, C.Goal, C.Private, C.StartDate, C.EndDate, C.Deep, C.Type, C.Manager, C.Progress
+    SELECT C.Name, C.Goal, C.Private, C.StartDate, C.EndDate, C.Deep, C.Type, C.Manager, dbo.FGetProgress(@Username, C.Name) AS Progress
     FROM vwChallenges C
     LEFT JOIN ChallengeGroup CG ON C.Name = CG.ChallengeName
     LEFT JOIN SportmanGroup SG ON SG.GroupName = CG.GroupName
