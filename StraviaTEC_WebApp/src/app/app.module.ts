@@ -15,6 +15,7 @@ import { PhotoService } from './demo/service/photo.service';
 import { UserLoginComponent } from './user-login/user-login.component';
 import { UserSignupComponent } from './user-signup/user-signup.component';
 
+
 // FormsModule
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -38,12 +39,15 @@ import { ToastModule } from 'primeng/toast';
 
 import { DatePipe } from '@angular/common';
 import { environment } from 'src/environments/environment';
+//import { GoogleMap } from '@capacitor/google-maps'
+
 
 @NgModule({
     declarations: [
         AppComponent, NotfoundComponent, UserLoginComponent, UserSignupComponent
     ],
     imports: [
+        
         AppRoutingModule,
         AppLayoutModule,
         ButtonModule,
@@ -60,6 +64,8 @@ import { environment } from 'src/environments/environment';
         FormsModule,
         ReactiveFormsModule,
         AngularFireModule.initializeApp(environment.firebaseConfig)
+       
+        
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },

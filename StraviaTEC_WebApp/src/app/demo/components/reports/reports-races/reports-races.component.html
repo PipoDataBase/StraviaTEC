@@ -1,1 +1,106 @@
-<p>reports-races works!</p>
+<!--
+<!DOCTYPE html>
+  <html>
+  <head>
+    <title>Simple Map</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+    <link rel="stylesheet" type="text/css" href="./reports-races.component.scss" />
+    <script type="module" src="./index.js"></script>
+  </head>
+  <body>
+
+    <div>
+      <p>reports-races works!</p>
+      
+      <input type="file" (change)="onFileSelected($event)" />
+      </div>
+
+    <div id="map"></div>
+
+    
+    <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+        ({key: "AIzaSyDm9yZJ0zpehkPDg64lLJWcyuZg3kg4uLY", v: "weekly"});</script>
+  </body>
+</html>
+-->
+<!--
+<ion-header>
+
+  <div>
+    <div>
+      <p>reports-races works!</p>
+      
+      <input type="file" (change)="onFileSelected($event)" />
+      </div>
+    </div>
+  </ion-header>
+  
+    <ion-content>
+  <div class="Container" id="map">
+      <capacitor-google-map #map>
+  
+      </capacitor-google-map>
+    </div>
+    </ion-content>
+    -->
+
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capacitor Google Maps Example</title>
+
+  <!-- Include the Google Maps JavaScript API -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDm9yZJ0zpehkPDg64lLJWcyuZg3kg4uLY&libraries=places"></script>
+
+  <!-- Include the Capacitor scripts -->
+  <script src="capacitor.js"></script>
+</head>
+<body>
+
+  <!-- Container for the Google Map -->
+  <div id="map_canvas" style="height: 400px;"></div>
+
+  <!-- Labels and File Input Section -->
+  <div>
+    <label for="label1">Label 1:</label>
+    <input type="text" id="label1" name="label1">
+
+    <label for="label2">Label 2:</label>
+    <input type="text" id="label2" name="label2">
+
+    <!-- File Input for GPX file -->
+    <label for="fileInput">Upload GPX file:</label>
+    <input type="file" id="fileInput" name="fileInput" accept=".gpx">
+  </div>
+
+  <!-- JavaScript to Initialize Google Maps -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize the Google Map
+      const mapOptions = {
+        center: { lat: 40.748817, lng: -73.985428 },
+        zoom: 12
+      };
+
+      const map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+
+      // Handle map click event
+      map.addListener('click', function(event) {
+        console.log('Map clicked:', event.latLng);
+      });
+
+      // Handle file input change event
+      const fileInput = document.getElementById('fileInput');
+      fileInput.addEventListener('change', function() {
+        const selectedFile = fileInput.files[0];
+
+        // Add your logic to handle the selected GPX file
+        // For example, you can read the file content, parse the GPX data, and display it on the map.
+      });
+    });
+  </script>
+</body>
+</html>
