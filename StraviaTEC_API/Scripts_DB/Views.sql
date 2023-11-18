@@ -1,3 +1,15 @@
+CREATE FUNCTION FGetAge (@BirthDate DATE)
+RETURNS INT
+AS
+BEGIN
+    DECLARE @Age INT;
+
+    SET @Age = DATEDIFF(YEAR, @BirthDate, GETDATE()) - 
+        CASE WHEN FORMAT(GETDATE(), 'MMdd') < FORMAT(@BirthDate, 'MMdd') THEN 1 ELSE 0 END;
+
+    RETURN @Age;
+END;
+
 -- ===============================================
 --                    Sportmen
 -- ================================================
