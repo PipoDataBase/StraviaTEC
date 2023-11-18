@@ -1,3 +1,13 @@
+-- ===============================================
+--                    Sportmen
+-- ================================================
+
+Go
+CREATE VIEW vwSportmanNationality
+AS SELECT Sportman.Username, Sportman.Name, Sportman.LastName1, Sportman.LastName2, Sportman.BirthDate, Sportman.PhotoPath, Nationality.Nationality AS Nationality
+FROM Sportman INNER JOIN Nationality 
+ON Sportman.Nationality = Nationality.Id;
+
 -- ================================================
 --                      Race
 -- ================================================
@@ -90,14 +100,3 @@ FROM Challenge C
 INNER JOIN ActivityType AT ON C.Type = AT.Id
 INNER JOIN ChallengeSportmanManager CSM ON C.Name = CSM.ChallengeName;
 
--- <><><><><><><><><><><><><><><><><><><><><><><><>
-
--- ================================================
---                    Sportmen
--- ================================================
-
-Go
-CREATE VIEW vwSportmanNationality
-AS SELECT Sportman.Username, Sportman.Name, Sportman.LastName1, Sportman.LastName2, Sportman.BirthDate, Sportman.PhotoPath, Nationality.Nationality AS Nationality
-FROM Sportman INNER JOIN Nationality 
-ON Sportman.Nationality = Nationality.Id;
