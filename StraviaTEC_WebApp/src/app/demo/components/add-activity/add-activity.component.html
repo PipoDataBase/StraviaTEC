@@ -53,8 +53,7 @@
           <div class="col-md-6 pr-1">
             <div class="form-group">
               <label>Route (.gpx)</label>
-              <input type="file" accept=".gpx" class="form-control shadow-sm px-4" [(ngModel)]="selectedRoute"
-                name="route" />
+              <input type="file" accept=".gpx" class="form-control shadow-sm px-4" (change)="onFileSelected($event)">
             </div>
           </div>
         </div>

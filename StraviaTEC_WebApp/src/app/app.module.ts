@@ -21,7 +21,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // Firebase
 import { AngularFireModule } from '@angular/fire/compat';
 
-//Angular material
+// Google Maps
+import { GoogleMapsModule } from '@angular/google-maps'
+
+// Angular material
 import { AngularMaterialModule } from './angular-material.module';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
@@ -29,7 +32,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 
-//Primeng components
+// Primeng components
 import { ButtonModule } from 'primeng/button';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -77,6 +80,7 @@ import { environment } from 'src/environments/environment';
         MatDialogModule,
         FormsModule,
         ReactiveFormsModule,
+        GoogleMapsModule,
         AngularFireModule.initializeApp(environment.firebaseConfig)
     ],
     providers: [

@@ -10,6 +10,7 @@ import { SportmenService } from 'src/app/services/sportmen.service';
 import { MatAccordion, MatExpansionPanel } from '@angular/material/expansion';
 import { CommentsService } from 'src/app/services/comments.service';
 import { _Comment } from 'src/app/models/comment.module';
+import * as xml2js from 'xml2js';
 
 @Component({
   selector: 'app-home',
@@ -73,7 +74,6 @@ export class HomeComponent {
           next: (sportmenObject) => {
             // We assign the sportmen to each activity in the same order as the activities
             sportmenObject.forEach((sportmen, index) => {
-              this.activities[index].routePath = 'https://www.google.com/maps/d/embed?mid=1cQv-iSgDnNCLG_jrQyX5emwZZDzLbixd&hl=es-419';
               this.activities[index].userInfo = sportmen;
             });
           },
@@ -107,6 +107,61 @@ export class HomeComponent {
         console.log(response);
       }
     })
+  }
+
+  parseGpxToJson(gpxString: string, id: number): void {
+    const parser = new xml2js.Parser({ explicitArray: false });
+    var cleanedString = gpxString.replace("\ufeff", "");
+
+    parser.parseString(cleanedString, (error, result) => {
+      if (error) {
+        console.error('Error parsing GPX:', error);
+      } else {
+        // Your GPX data in JSON format
+        const jsonData = result;
+
+        this.createMap(jsonData, id);
+      }
+    })
+  }
+
+  createMap(jsonData: any, id: number) {
+    const centerValue = jsonData.gpx.trk.trkseg.trkpt.length / 2
+
+    const latCenter = jsonData.gpx.trk.trkseg.trkpt[centerValue.toFixed()].$.lat;
+    const lonCenter = jsonData.gpx.trk.trkseg.trkpt[centerValue.toFixed()].$.lon;
+
+    var mapValue = "map" + id;
+    const map = new google.maps.Map(document.getElementById(mapValue), {
+      center: { lat: Number(latCenter), lng: Number(lonCenter) }, // Set the initial center of the map
+      zoom: 18 // Set the initial zoom level
+    });
+
+    var pathCoordinates = [];
+
+    if (jsonData && jsonData.gpx.trk && jsonData.gpx.trk.trkseg && jsonData.gpx.trk.trkseg.trkpt) {
+      const trkptArray = jsonData.gpx.trk.trkseg.trkpt;
+
+      for (let index = 0; index < trkptArray.length; index++) {
+        const element = trkptArray[index];
+        const lat = element.$.lat;
+        const lon = element.$.lon;
+        const Latlng = new google.maps.LatLng(Number(lat), Number(lon));
+        pathCoordinates[index] = Latlng
+      }
+    }
+
+    const polyline = new google.maps.Polyline({
+      path: pathCoordinates,
+      geodesic: true,
+      strokeColor: '#000000',
+      strokeOpacity: 1.0,
+      strokeWeight: 2
+    });
+
+    // Set the polyline on the map
+    console.log(map);
+    polyline.setMap(map);
   }
 
   handlePanelClick(panel: MatExpansionPanel, activityId: number): void {

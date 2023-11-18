@@ -1,3 +1,4 @@
+
 import { Component } from '@angular/core';
 import { ActivityType } from 'src/app/models/activity-type.module';
 import { Activity } from 'src/app/models/activity.module';
@@ -52,10 +53,26 @@ export class AddActivityComponent {
     })
   }
 
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (eventReader) => {
+        const gpxString = eventReader.target?.result as string;
+        this.selectedRoute = gpxString;
+      };
+
+      reader.onerror = (error) => {
+        console.error('Error reading file:', error);
+      };
+
+      reader.readAsText(file);
+    }
+  }
+
   addActivity() {
     if (this.validateActivity()) {
       this.activity.username = this.sharedService.getUsername();
-      console.log(this.activity);
       this.activitiesService.postActivity(this.activity).subscribe({
         next: (response) => {
           if (response) {
@@ -102,11 +119,11 @@ export class AddActivityComponent {
       return false;
     }
 
-    if (!this.selectedRoute) {
+    if (this.selectedRoute == '') {
       this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'You have not added the .gpx file.' });
       return false;
     }
-    this.activity.routePath = '';
+    this.activity.routePath = this.selectedRoute;
 
     return true;
   }
