@@ -9,6 +9,7 @@ import { BankAccount } from '../models/bank-account.module';
 import { AvailableRace } from '../models/views-models/vw-available-race.module';
 import { RaceReportSportmanParticipant } from '../models/views-models/vw-sportman-race-report-participants.module';
 import { RaceReportSportmanLeaderboard } from '../models/views-models/vw-sportman-race-report-leaderboard.module';
+import { Group } from '../models/group.module';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,10 @@ export class RacesService {
 
   getRaceCategories(raceName: string): Observable<Category[]> {
     return this.http.get<Category[]>(this.baseApiUrl + '/api/Races/Categories/' + raceName);
+  }
+
+  getRaceGroups(raceName: string): Observable<Group[]> {
+    return this.http.get<Group[]>(this.baseApiUrl + '/api/Races/Groups/' + raceName);
   }
 
   getRaceBankAccounts(raceName: string): Observable<BankAccount[]> {
@@ -64,6 +69,10 @@ export class RacesService {
 
   deleteRaceCategories(raceName: string): Observable<boolean> {
     return this.http.delete<boolean>(this.baseApiUrl + '/api/Races/DeleteCategories/' + raceName);
+  }
+
+  deleteRaceGroups(raceName: string): Observable<boolean> {
+    return this.http.delete<boolean>(this.baseApiUrl + '/api/Races/DeleteGroups/' + raceName);
   }
 
   deleteRaceSponsors(raceName: string): Observable<boolean> {

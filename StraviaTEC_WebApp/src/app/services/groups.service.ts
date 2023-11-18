@@ -28,6 +28,14 @@ export class GroupsService {
     return this.http.post<boolean>(this.baseApiUrl + `/api/Groups/${groupName}/${username}`, null);
   }
 
+  postChallengeGroup(challengeName: string, groupName: string): Observable<boolean> {
+    return this.http.post<boolean>(this.baseApiUrl + `/api/Groups/AddToChallenge/${challengeName}/${groupName}`, null);
+  }
+
+  postRaceGroup(raceName: string, groupName: string): Observable<boolean> {
+    return this.http.post<boolean>(this.baseApiUrl + `/api/Groups/AddToRace/${raceName}/${groupName}`, null);
+  }
+
   deleteGroup(id: string): Observable<boolean> {
     return this.http.delete<boolean>(this.baseApiUrl + '/api/Groups/' + id);
   }
