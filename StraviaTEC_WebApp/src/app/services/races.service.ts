@@ -74,6 +74,10 @@ export class RacesService {
     return this.http.get<AvailableRace[]>(this.baseApiUrl + '/api/Races/GetAvailableVwRaces/' + username);
   }
 
+  getAllRacesVw(username: string): Observable<AvailableRace[]> {
+    return this.http.get<AvailableRace[]>(this.baseApiUrl + '/api/Races/GetAllRaces/' + username);
+  }
+
   getRaceLeaderboardReport(raceName: string): Observable<RaceReportSportmanLeaderboard[]> {
     return this.http.get<RaceReportSportmanLeaderboard[]>(this.baseApiUrl + '/api/Races/GetLeaderboardReport/' + raceName);
   }

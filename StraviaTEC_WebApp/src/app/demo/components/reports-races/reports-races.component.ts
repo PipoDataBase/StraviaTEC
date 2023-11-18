@@ -88,7 +88,7 @@ export class ReportsRacesComponent {
 
   ngOnInit() {
     // Requests database for all races
-    this.racesService.getAvailableRacesVw(this.sharedService.getUsername()).subscribe({
+    this.racesService.getAllRacesVw(this.sharedService.getUsername()).subscribe({
       next: (availableRaces) => {
         this.races = availableRaces;
 
