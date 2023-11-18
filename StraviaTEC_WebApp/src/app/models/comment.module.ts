@@ -5,4 +5,5 @@ export interface _Comment {
     activityId?: string;
     text?: string;
     date?: string;
+    profilePhoto?: string;
 }

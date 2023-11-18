@@ -21,7 +21,7 @@ export class CommentsService {
   }
 
   postComment(comment: _Comment): Observable<boolean> {
-    return this.http.post<boolean>(this.baseApiUrl + `/api/Comment/${comment.name}/${comment.activityId}/${comment.text}`, comment);
+    return this.http.post<boolean>(this.baseApiUrl + `/api/Comment/${comment.name}/${comment.activityId}/${comment.text}`, null);
   }
 
   putChallenge(id: string, comment: _Comment): Observable<boolean> {

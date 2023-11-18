@@ -19,20 +19,11 @@ import { _Comment } from 'src/app/models/comment.module';
 export class HomeComponent {
   @ViewChild(MatAccordion) accordion: MatAccordion;
 
-  sportman: Sportman = {
-    username: '',
-    name: '',
-    lastName1: '',
-    lastName2: '',
-    birthDate: '',
-    photoPath: '',
-    password: '',
-    nationality: -1
-  };
-
   activities: Activity[] = [];
-  activityTypes: ActivityType[] = [];
   comments: _Comment[] = [];
+  activityTypes: ActivityType[] = [];
+
+  sportman: Sportman = {};
   comment: _Comment = {};
   toComment: string;
 
@@ -42,7 +33,24 @@ export class HomeComponent {
     this.commentsService.GetCommentsByActivity(String(activityId)).subscribe({
       next: (comments) => {
         this.comments = comments;
-        console.log(this.comments);
+
+        // We create an array of observables for the profile Photo of each user who comment
+        const profilePhotoObservables = this.comments.map(comment =>
+          this.sportmenService.getSportman(comment.name)
+        );
+
+        // We use forkJoin to combine all observables into one
+        forkJoin(profilePhotoObservables).subscribe({
+          next: (sportmenObject) => {
+            // We assign the profilePhoto to each user who comment in the same order as the comments
+            sportmenObject.forEach((sportmen, index) => {
+              this.comments[index].profilePhoto = sportmen.photoPath ? sportmen.photoPath : '../../../../assets/straviatec/default-avatar.png';
+            });
+          },
+          error: (response) => {
+            console.log(response);
+          }
+        });
       },
       error: (response) => {
         console.log(response);
@@ -55,13 +63,13 @@ export class HomeComponent {
       next: (activities) => {
         this.activities = activities;
 
-        // We create an array of observables for the username of each activity
-        const usernameObservables = this.activities.map(activity =>
+        // We create an array of observables for the user of each activity
+        const userObservables = this.activities.map(activity =>
           this.sportmenService.getSportman(activity.username)
         );
 
         // We use forkJoin to combine all observables into one
-        forkJoin(usernameObservables).subscribe({
+        forkJoin(userObservables).subscribe({
           next: (sportmenObject) => {
             // We assign the sportmen to each activity in the same order as the activities
             sportmenObject.forEach((sportmen, index) => {
@@ -70,7 +78,7 @@ export class HomeComponent {
             });
           },
           error: (response) => {
-            //console.log(response);
+            console.log(response);
           }
         });
       },
