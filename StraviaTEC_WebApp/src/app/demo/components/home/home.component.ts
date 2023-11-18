@@ -38,6 +38,18 @@ export class HomeComponent {
 
   constructor(public sharedService: SharedService, private activityTypesService: ActivityTypesService, private activitiesService: ActivitiesService, private sportmenService: SportmenService, private commentsService: CommentsService) { }
 
+  updateComments(activityId: number) {
+    this.commentsService.GetCommentsByActivity(String(activityId)).subscribe({
+      next: (comments) => {
+        this.comments = comments;
+        console.log(this.comments);
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
+  }
+
   ngOnInit() {
     this.activitiesService.getActivities().subscribe({
       next: (activities) => {
@@ -92,21 +104,26 @@ export class HomeComponent {
   handlePanelClick(panel: MatExpansionPanel, activityId: number): void {
     this.toComment = '';
     if (panel.expanded) {
-      this.commentsService.GetCommentsByActivity(String(activityId)).subscribe({
-        next: (comments) => {
-          this.comments = comments;
-        },
-        error: (response) => {
-          console.log(response);
-        }
-      })
+      this.updateComments(activityId);
     }
   }
 
   addComment(activityId: number) {
-    if (this.toComment == '') {
+    this.comment.name = this.sportman.username;
+    this.comment.activityId = String(activityId);
+    this.comment.text = this.toComment;
 
-    }
-    console.log(this.toComment);
+    this.commentsService.postComment(this.comment).subscribe({
+      next: (response) => {
+        if (response) {
+          this.toComment = '';
+          this.comment = {};
+          this.updateComments(activityId);
+        }
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
   }
 }

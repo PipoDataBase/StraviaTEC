@@ -98,8 +98,36 @@
                                         <div class="col-md-1"></div>
                                     </div>
 
-                                    <div *ngIf="comments.length !== 0">
-                                        <p>Theres is comments</p>
+                                    <div *ngIf="comments.length !== 0"
+                                        style="max-height: 300px; overflow-y: auto; overflow-x: hidden;">
+                                        <div *ngFor="let c of comments" style="margin-top: 1%;">
+                                            <div class="row">
+                                                <div class="col-md-1 text-right">
+                                                    <span>
+                                                        <img src="../../../../assets/straviatec/default-avatar.png"
+                                                            alt="Avatar" class="rounded-circle"
+                                                            style="width: 30px; height: 30px;">
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-10 text-left">
+                                                    <span style="color: #fa4a01;">
+                                                        {{ ' @' + c.name }}
+                                                    </span>
+                                                    <p> {{ sharedService.formatDate3(c.date) }} </p>
+                                                </div>
+                                                <div class="col-md-1"></div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-1"></div>
+                                                <div class="col-md-10 text-left">
+                                                    <p>{{ c.text }}</p>
+                                                </div>
+                                                <div class="col-md-1"></div>
+                                            </div>
+
+                                            <p-divider></p-divider>
+                                        </div>
                                     </div>
                                 </div>
                             </mat-expansion-panel>

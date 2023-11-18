@@ -49,10 +49,31 @@ public class CommentController : Controller {
     [HttpPost]
     public async Task<IActionResult> PostComment([FromBody] Comment comment)
     {
-
         await _mongoDBService.CreateComment(comment);
         return CreatedAtAction(nameof(GetComments), new {id = comment._id }, comment);
+    }
 
+    [HttpPost("{name}/{activityId}/{text}")]
+    public async Task<ActionResult<Comment>> PostComment(string name, string activityId, string text)
+    {
+        Comment comment = new Comment();
+        comment._id = "";
+        comment.name = name;
+        comment.email = "";
+        comment.activityId = activityId;
+        comment.text = text;
+        TimeZoneInfo cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+        comment.date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone);
+
+        try
+        {
+            await _mongoDBService.CreateComment(comment);
+            return Ok(true);
+        }
+        catch
+        {
+            throw;
+        }
     }
 
     [HttpPut("{id}")]

@@ -14,11 +14,10 @@ namespace StraviaTEC_API.Models{
         public string _id { get; set; }
         public string name {  get; set; } 
         public string email {  get; set; }
-
         public string activityId { get; set; }
         public string text { get; set; }
         [BsonDateTimeOptions(Kind = DateTimeKind.Local, Representation =BsonType.Document)]
         public DateTime date { get; set;}
     }
-    }
+}
 
