@@ -121,8 +121,8 @@
                 <div class="formgrid grid">
                     <div class="field col">
                         <label>Route (.gpx)</label>
-                        <input type="file" [(ngModel)]="routePath" id="routePath" accept=".gpx"
-                            class="form-control shadow-sm px-4" />
+                        <input type="file" accept=".gpx" class="form-control shadow-sm px-4"
+                            (change)="onFileSelected($event)">
                     </div>
                     <div class="field col">
                         <label for="startDate">Date</label>
@@ -219,8 +219,6 @@
                                 </th>
                                 <th pSortableColumn="name" style="text-align: center;">Group Name <p-sortIcon
                                         field="name"></p-sortIcon></th>
-                                <th pSortableColumn="action" style="text-align: center;">Action</th>
-                                <th></th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-group>
@@ -228,12 +226,11 @@
                                 <td>
                                     <p-tableCheckbox [value]="group"></p-tableCheckbox>
                                 </td>
-                                <td style="width:85%; min-width:10rem; text-align: center;">
+                                <td style="width:100%; min-width:10rem; text-align: center;">
                                     <span class="p-column-title">Group Name</span>
                                     <span class="pi pi-users"></span>
                                     {{ group.name }}
                                 </td>
-                                <td></td>
                             </tr>
                         </ng-template>
                     </p-table>
@@ -251,7 +248,7 @@
         <p-dialog [(visible)]="raceRouteDialog" [style]="{width: '50%'}" header="Race Route" [modal]="true"
             class="p-fluid">
             <div class="z-depth-1-half map-container">
-                <iframe [src]="sharedService.getSafeResourceUrl(race.routePath)" width="100%" height="450px"></iframe>
+                <div id="map" style="width: 100%; height: 450px;"></div>
             </div>
 
             <ng-template pTemplate="footer">

@@ -9,6 +9,9 @@ import { ChallengesService } from 'src/app/services/challenges.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Sponsor } from 'src/app/models/sponsor.module';
 import { SponsorsService } from 'src/app/services/sponsors.service';
+import { Group } from 'src/app/models/group.module';
+import { GroupsService } from 'src/app/services/groups.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-management-challenges',
@@ -29,18 +32,21 @@ export class ManagementChallengesComponent {
 
   challenges: Challenge[] = [];
   sponsors: Sponsor[] = [];
+  groups: Group[] = [];
 
   selectedChallenges: Challenge[] = [];
   selectedSponsors: Sponsor[] = [];
+  selectedGroups: Group[] = [];
 
   challenge: Challenge = {};
   sponsor: Sponsor = {};
+  group: Group = {};
 
   activityTypes: ActivityType[] = [];
 
   submitted: boolean = false;
 
-  constructor(private messageService: MessageService, public sharedService: SharedService, private activityTypesService: ActivityTypesService, private challengesService: ChallengesService, private sponsorsService: SponsorsService, private storage: AngularFireStorage) { }
+  constructor(private messageService: MessageService, public sharedService: SharedService, private activityTypesService: ActivityTypesService, private challengesService: ChallengesService, private sponsorsService: SponsorsService, private storage: AngularFireStorage, private groupsService: GroupsService) { }
 
   updateChallenges() {
     this.challengesService.getChallengesByManager(this.sharedService.getUsername()).subscribe({
@@ -73,6 +79,15 @@ export class ManagementChallengesComponent {
         console.log(response);
       }
     })
+
+    this.groupsService.getGroups().subscribe({
+      next: (groups) => {
+        this.groups = groups;
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
   }
 
   openNew() {
@@ -83,6 +98,7 @@ export class ManagementChallengesComponent {
     this.selectedActivityType = -1;
     this.selectedPrivacy = false;
     this.selectedDeepHeight = false;
+    this.selectedGroups = [];
   }
 
   challengeSponsor(challenge: Challenge) {
@@ -108,6 +124,15 @@ export class ManagementChallengesComponent {
     this.selectedDeepHeight = challenge.deep;
     this.challenge.startDate = this.sharedService.formatDate(this.challenge.startDate);
     this.challenge.endDate = this.sharedService.formatDate(this.challenge.endDate);
+
+    this.challengesService.getChallengeGroups(this.challenge.name).subscribe({
+      next: (groups) => {
+        this.selectedGroups = groups;
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
   }
 
   deleteChallenge(challenge: Challenge) {
@@ -162,6 +187,7 @@ export class ManagementChallengesComponent {
   hideDialog() {
     this.challengeDialog = false;
     this.submitted = false;
+    this.selectedGroups = [];
   }
 
   hideChallengeSponsorDialog() {
@@ -184,11 +210,16 @@ export class ManagementChallengesComponent {
         type: this.selectedActivityType
       }
 
+      if (challengeUpdated.private && this.selectedGroups.length == 0) {
+        this.messageService.add({ key: 'tc', severity: 'warn', summary: 'Warn', detail: 'If the challenge is private, it is suggested to add which groups can see it.' });
+      }
+
       if (this.validateChallenge(challengeUpdated)) {
         // Put challenge
         this.challengesService.putChallenge(challengeUpdated.name, challengeUpdated).subscribe({
           next: (response) => {
             if (response) {
+              this.aboutGroups(challengeUpdated.name, challengeUpdated.private);
               this.updateChallenges();
               this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Challenge Updated.', life: 3000 });
             }
@@ -215,11 +246,16 @@ export class ManagementChallengesComponent {
         type: this.selectedActivityType
       }
 
+      if (newChallenge.private && this.selectedGroups.length == 0) {
+        this.messageService.add({ key: 'tc', severity: 'warn', summary: 'Warn', detail: 'If the challenge is private, it is suggested to add which groups can see it.' });
+      }
+
       if (this.validateChallenge(newChallenge)) {
         // Post challenge
         this.challengesService.postChallenge(this.sharedService.getUsername(), newChallenge).subscribe({
           next: (response) => {
             if (response) {
+              this.aboutGroups(newChallenge.name, newChallenge.private);
               this.updateChallenges();
               this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Challenge Created.', life: 3000 });
             }
@@ -325,5 +361,31 @@ export class ManagementChallengesComponent {
     }
 
     return true;
+  }
+
+  aboutGroups(name: string, isPrivate: boolean) {
+    this.challengesService.deleteChallengeGroups(name).subscribe({
+      next: (response) => {
+        if (response && isPrivate) {
+          const postGroupObservables = this.selectedGroups.map(group =>
+            this.groupsService.postChallengeGroup(name, group.name)
+          );
+
+          forkJoin(postGroupObservables).subscribe({
+            next: (response) => {
+            },
+            error: (response) => {
+              console.log(response);
+            }
+          });
+        }
+
+        this.selectedGroups = [];
+        this.challenge = {};
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    });
   }
 }

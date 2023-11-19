@@ -18,7 +18,7 @@ export class AddActivityComponent {
   activity: Activity = {}
 
   selectedActivityType: number;
-  selectedRoute: any;
+  selectedRoute: string;
 
   restartActivity() {
     this.activity = {
@@ -56,6 +56,14 @@ export class AddActivityComponent {
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
+      const fileName = file.name;
+      const fileExtension = fileName.split('.').pop()?.toLowerCase();
+
+      if (fileExtension !== 'gpx') {
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'You must select a file with a .gpx extension.' });
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = (eventReader) => {
         const gpxString = eventReader.target?.result as string;

@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { Challenge } from '../models/challenge.module';
 import { AvailableChallenge } from '../models/views-models/vw-available-challenge.module';
 import { Sponsor } from '../models/sponsor.module';
+import { Group } from '../models/group.module';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,10 @@ export class ChallengesService {
     return this.http.get<Challenge[]>(this.baseApiUrl + '/api/Challenges/ByManager/' + username);
   }
 
+  getChallengeGroups(challengeName: string): Observable<Group[]> {
+    return this.http.get<Group[]>(this.baseApiUrl + '/api/Challenges/Groups/' + challengeName);
+  }
+
   getChallengeSponsors(challengeName: string): Observable<Sponsor[]> {
     return this.http.get<Sponsor[]>(this.baseApiUrl + '/api/Challenges/Sponsors/' + challengeName);
   }
@@ -44,6 +49,10 @@ export class ChallengesService {
 
   deleteChallenge(id: string): Observable<boolean> {
     return this.http.delete<boolean>(this.baseApiUrl + '/api/Challenges/' + id);
+  }
+
+  deleteChallengeGroups(challengeName: string): Observable<boolean> {
+    return this.http.delete<boolean>(this.baseApiUrl + '/api/Challenges/DeleteGroups/' + challengeName);
   }
 
   deleteChallengeSponsors(challengeName: string): Observable<boolean> {

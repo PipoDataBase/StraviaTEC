@@ -93,6 +93,26 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
+        [HttpGet("Groups/{challengeName}")]
+        public async Task<ActionResult<IEnumerable<Group>>> GetChallengeGroups(string challengeName)
+        {
+            if (_context.Challenges == null)
+            {
+                return NotFound();
+            }
+            var result = await _context.Groups.FromSqlRaw(
+                "EXEC spGetChallengeGroups @ChallengeName",
+                new SqlParameter("@ChallengeName", challengeName)
+                ).ToListAsync();
+
+            if (result.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
         // GET: api/Challenges
         [HttpGet("Sponsors/{challengeName}")]
         public async Task<ActionResult<IEnumerable<Sponsor>>> GetChallengeSponsors(string challengeName)
@@ -251,6 +271,29 @@ namespace StraviaTEC_API.Controllers
                     );
 
             return Ok(true);
+        }
+
+        [HttpDelete("DeleteGroups/{challengeName}")]
+        public async Task<IActionResult> DeleteChallengeGroups(string challengeName)
+        {
+            if (_context.Challenges == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync(
+                   "EXEC spDeleteChallengeGroups @ChallengeName",
+                   new SqlParameter("@ChallengeName", challengeName)
+                   );
+
+                return Ok(true);
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         [HttpDelete("DeleteSponsors/{challengeName}")]

@@ -15,6 +15,7 @@ import { forkJoin } from 'rxjs';
 import { BankAccountsService } from 'src/app/services/bank-accounts.service';
 import { Group } from 'src/app/models/group.module';
 import { GroupsService } from 'src/app/services/groups.service';
+import * as xml2js from 'xml2js';
 
 @Component({
   selector: 'app-management-races',
@@ -62,9 +63,12 @@ export class ManagementRacesComponent {
 
   submitted: boolean = false;
 
+  selectedRoute: string;
+
   constructor(private messageService: MessageService, public sharedService: SharedService, private activityTypesService: ActivityTypesService, private racesService: RacesService, private categoriesService: CategoriesService, private sponsorsService: SponsorsService, private bankAccountsService: BankAccountsService, private groupsService: GroupsService) { }
 
   updateRaces() {
+    this.selectedRoute = '';
     this.racesService.getRacesByManager(this.sharedService.getUsername()).subscribe({
       next: (races) => {
         this.races = races;
@@ -163,6 +167,9 @@ export class ManagementRacesComponent {
   seeRoute(race: Race) {
     this.race = { ...race };
     this.raceRouteDialog = true;
+    setTimeout(() => {
+      this.parseGpxToJson(race.routePath);
+    }, 500);
   }
 
   seeBankAccounts(race: Race) {
@@ -345,8 +352,16 @@ export class ManagementRacesComponent {
         inscriptionPrice: this.race.inscriptionPrice,
         date: this.race.date,
         private: Boolean(String(this.selectedPrivacy) == "true"),
-        routePath: '',
+        routePath: this.race.routePath,
         type: this.selectedActivityType
+      }
+
+      if (raceUpdated.private && this.selectedGroups.length == 0) {
+        this.messageService.add({ key: 'tc', severity: 'warn', summary: 'Warn', detail: 'If the race is private, it is suggested to add which groups can see it.' });
+      }
+
+      if (this.selectedRoute != '') {
+        raceUpdated.routePath = this.selectedRoute;
       }
 
       if (this.validateRace(raceUpdated)) {
@@ -355,7 +370,7 @@ export class ManagementRacesComponent {
           next: (response) => {
             if (response) {
               this.aboutCategories(raceUpdated.name);
-              this.aboutGroups(raceUpdated.name);
+              this.aboutGroups(raceUpdated.name, raceUpdated.private);
               this.updateRaces();
               this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Race Updated.', life: 3000 });
             }
@@ -381,19 +396,30 @@ export class ManagementRacesComponent {
         type: this.selectedActivityType
       }
 
+      if (newRace.private && this.selectedGroups.length == 0) {
+        this.messageService.add({ key: 'tc', severity: 'warn', summary: 'Warn', detail: 'If the race is private, it is suggested to add which groups can see it.' });
+      }
+
+      if (this.selectedRoute == '') {
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'You have not added the .gpx file.' });
+        return;
+      }
+      newRace.routePath = this.selectedRoute;
+
       if (this.validateRace(newRace)) {
         // Post race
         this.racesService.postRace(this.sharedService.getUsername(), newRace).subscribe({
           next: (response) => {
             if (response) {
               this.aboutCategories(newRace.name);
-              this.aboutGroups(newRace.name);
+              this.aboutGroups(newRace.name, newRace.private);
               this.updateRaces();
               this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'Race Created.', life: 3000 });
             }
           },
           error: (response) => {
             console.log(response);
+            this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'The race may have already been created by another organizer.' });
             return;
           }
         })
@@ -481,6 +507,31 @@ export class ManagementRacesComponent {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
 
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      const fileName = file.name;
+      const fileExtension = fileName.split('.').pop()?.toLowerCase();
+
+      if (fileExtension !== 'gpx') {
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'You must select a file with a .gpx extension.' });
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (eventReader) => {
+        const gpxString = eventReader.target?.result as string;
+        this.selectedRoute = gpxString;
+      };
+
+      reader.onerror = (error) => {
+        console.error('Error reading file:', error);
+      };
+
+      reader.readAsText(file);
+    }
+  }
+
   validateRace(race: Race): boolean {
     if (!race.name) {
       this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'The race name must not be empty.' });
@@ -500,6 +551,13 @@ export class ManagementRacesComponent {
 
     if (!race.date) {
       this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Date not selected.' });
+      return false;
+    }
+
+    const raceDate = new Date(race.date);
+    const currentDate = new Date();
+    if (raceDate <= currentDate) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Incorrect date.' });
       return false;
     }
 
@@ -549,10 +607,10 @@ export class ManagementRacesComponent {
     });
   }
 
-  aboutGroups(name: string) {
+  aboutGroups(name: string, isPrivate: boolean) {
     this.racesService.deleteRaceGroups(name).subscribe({
       next: (response) => {
-        if (response) {
+        if (response && isPrivate) {
           const postGroupObservables = this.selectedGroups.map(group =>
             this.groupsService.postRaceGroup(name, group.name)
           );
@@ -581,5 +639,58 @@ export class ManagementRacesComponent {
       return this.sharedService.getCategories(raceFound.categories)
     }
     return "";
+  }
+
+  parseGpxToJson(gpxString: string): void {
+    const parser = new xml2js.Parser({ explicitArray: false });
+    var cleanedString = gpxString.replace("\ufeff", "");
+
+    parser.parseString(cleanedString, (error, result) => {
+      if (error) {
+        console.error('Error parsing GPX:', error);
+      } else {
+        // Your GPX data in JSON format
+        const jsonData = result;
+
+        this.createMap(jsonData);
+      }
+    })
+  }
+
+  createMap(jsonData: any) {
+    const centerValue = jsonData.gpx.trk.trkseg.trkpt.length / 2
+
+    const latCenter = jsonData.gpx.trk.trkseg.trkpt[centerValue.toFixed()].$.lat;
+    const lonCenter = jsonData.gpx.trk.trkseg.trkpt[centerValue.toFixed()].$.lon;
+
+    const map = new google.maps.Map(document.getElementById("map"), {
+      center: { lat: Number(latCenter), lng: Number(lonCenter) }, // Set the initial center of the map
+      zoom: 18 // Set the initial zoom level
+    });
+
+    var pathCoordinates = [];
+
+    if (jsonData && jsonData.gpx.trk && jsonData.gpx.trk.trkseg && jsonData.gpx.trk.trkseg.trkpt) {
+      const trkptArray = jsonData.gpx.trk.trkseg.trkpt;
+
+      for (let index = 0; index < trkptArray.length; index++) {
+        const element = trkptArray[index];
+        const lat = element.$.lat;
+        const lon = element.$.lon;
+        const Latlng = new google.maps.LatLng(Number(lat), Number(lon));
+        pathCoordinates[index] = Latlng
+      }
+    }
+
+    const polyline = new google.maps.Polyline({
+      path: pathCoordinates,
+      geodesic: true,
+      strokeColor: '#000000',
+      strokeOpacity: 1.0,
+      strokeWeight: 2
+    });
+
+    // Set the polyline on the map
+    polyline.setMap(map);
   }
 }

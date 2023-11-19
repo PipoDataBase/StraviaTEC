@@ -154,6 +154,19 @@ END;
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
 GO
+CREATE PROCEDURE spGetChallengeGroups
+    @ChallengeName varchar(20)
+AS
+BEGIN 
+    SELECT G.Name
+    FROM Group_ G INNER JOIN ChallengeGroup CG
+    ON G.Name = CG.GroupName
+    WHERE CG.ChallengeName = @ChallengeName
+END;
+
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
 CREATE PROCEDURE spGetChallengeProgress
     @Username varchar(20),
     @ChallengeName varchar(20)
