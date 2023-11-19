@@ -4,7 +4,6 @@ import { DataView } from 'primeng/dataview';
 
 // Models imports
 import { AvailableChallenge } from 'src/app/models/views-models/vw-available-challenge.module';
-import { Challenge } from 'src/app/models/challenge.module';
 
 // Services imports
 import { ChallengesService } from 'src/app/services/challenges.service';

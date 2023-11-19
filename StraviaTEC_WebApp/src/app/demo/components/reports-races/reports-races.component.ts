@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { DataView } from 'primeng/dataview';
 import { MessageService } from 'primeng/api';
@@ -10,8 +10,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { AvailableRace } from 'src/app/models/views-models/vw-available-race.module';
 import { Category } from 'src/app/models/category.module';
 import { Sponsor } from 'src/app/models/sponsor.module';
-import { Bill } from 'src/app/models/bill.module';
-
 
 // Services imports
 import { RacesService } from 'src/app/services/races.service';
@@ -245,6 +243,9 @@ export class ReportsRacesComponent {
   showRaceRouteDialogButtonOnClick(race: AvailableRace) {
     this.race = { ...race };
     this.raceRouteDialog = true;
+    setTimeout(() => {
+      this.sharedService.parseGpxToJson(race.routePath);
+    }, 500);
   }
 
   hideRaceRouteDialogButtonOnClick() {

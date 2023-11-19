@@ -117,7 +117,7 @@ export class HomeComponent {
       for (const activity of this.activities) {
         this.parseGpxToJson(activity.routePath, activity.id);
       }
-    }, 2000);    
+    }, 2000);
   }
 
   parseGpxToJson(gpxString: string, id: number): void {

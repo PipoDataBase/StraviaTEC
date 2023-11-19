@@ -438,18 +438,148 @@ Go
 --                    Races
 -- ================================================
 
-EXEC spInsertRace 'End of Semester Race', 500, '2019-12-04T10:00:00.000Z', false, 'GpxPath', 0, 'Seballoll';
+EXEC spInsertRace 'Race 1', 26, '2023-11-26T10:00:00.000Z', false, '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3" xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1" creator="mapstogpx.com" version="1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd">
+  <metadata>
+    <link href="http://www.mapstogpx.com">
+      <text>Sverrir Sigmundarson</text>
+    </link>
+    <!--desc>Map data ©2023</desc-->
+    <!--copyright author="Google Inc">
+    	<year>2023</year>
+    	<license>https://developers.google.com/maps/terms</license>
+    </copyright-->
+    <!--url>https://www.google.co.uk/maps/dir/9.8581921,-83.9133855/9.8598775,-83.9170816/@9.8598775,-83.9169696,20.08z?entry=ttu&hl=en</url-->
+    <time>2023-11-04T18:07:56Z</time>
+  </metadata>
+  <wpt lat="9.8581921" lon="-83.9133855">
+    <name>Cartago Province</name>
+    <desc>Avenida 14, Cartago Province, Cartago, Costa Rica</desc>
+  </wpt>
+  <wpt lat="9.8598775" lon="-83.9170816">
+    <name>Provincia de Cartago</name>
+    <desc>Av. 10, Provincia de Cartago, Cartago, Costa Rica</desc>
+  </wpt>
+<trk>
+  <name>Cartago Province to Provincia de Cartago</name>
+  <number>1</number>
+  <trkseg>
+  <trkpt lat="9.8581692" lon="-83.9133892">
+    <name>TP001</name>
+  </trkpt>
+  <trkpt lat="9.85825" lon="-83.91388">
+    <name>TP002</name>
+  </trkpt>
+  <trkpt lat="9.85833" lon="-83.91443">
+    <name>TP003</name>
+  </trkpt>
+  <trkpt lat="9.85836" lon="-83.91463">
+    <name>TP004</name>
+  </trkpt>
+  <trkpt lat="9.85841" lon="-83.91499">
+    <name>TP005</name>
+  </trkpt>
+  <trkpt lat="9.85854" lon="-83.9158">
+    <name>TP006</name>
+  </trkpt>
+  <trkpt lat="9.8585365" lon="-83.9157964">
+    <name>TP007</name>
+  </trkpt>
+  <trkpt lat="9.85917" lon="-83.91576">
+    <name>TP008</name>
+  </trkpt>
+  <trkpt lat="9.85967" lon="-83.91574">
+    <name>TP009</name>
+  </trkpt>
+  <trkpt lat="9.8596742" lon="-83.9157414">
+    <name>TP010</name>
+  </trkpt>
+  <trkpt lat="9.85975" lon="-83.91632">
+    <name>TP011</name>
+  </trkpt>
+  <trkpt lat="9.85985" lon="-83.91709">
+    <name>TP012</name>
+  </trkpt>
+  <trkpt lat="9.8598534" lon="-83.9170851">
+    <name>TP013</name>
+  </trkpt>
+  </trkseg>
+</trk>
+</gpx>', 0, 'Emarin19';
 Go
-EXEC spInsertRace 'Race 1', 26, '2023-11-26T10:00:00.000Z', false, '', 0, 'Emarin19';
-Go
-EXEC spInsertRace 'Race 2', 58, '2023-11-28T14:00:00.000Z', true, '', 2, 'Emarin19';
+EXEC spInsertRace 'Race 2', 58, '2023-11-28T14:00:00.000Z', false, '<?xml version="1.0" encoding="UTF-8" ?>
+<gpx version="1.1" xmlns="http://www.topografix.com/GPX/1/1">
+  <trk>
+    <name>GPX1</name>
+    <trkseg>
+      <trkpt lat="9.839134868094417" lon="-83.86559009308779">
+      </trkpt>
+      <trkpt lat="9.839969807655269" lon="-83.8655046147484">
+      </trkpt>
+      <trkpt lat="9.840153656078517" lon="-83.86658376260162">
+      </trkpt>
+      <trkpt lat="9.840219508752808" lon="-83.86716295120895">
+      </trkpt>
+      <trkpt lat="9.840334456387827" lon="-83.8680408007173">
+      </trkpt>
+      <trkpt lat="9.840464388285023" lon="-83.86900846143158">
+      </trkpt>
+      <trkpt lat="9.84056046201618" lon="-83.86988381838206">
+      </trkpt>
+      <trkpt lat="9.839713741625035" lon="-83.8700605819543">
+      </trkpt>
+      <trkpt lat="9.839821647942578" lon="-83.87101568454608">
+      </trkpt>
+      <trkpt lat="9.83978352761665" lon="-83.87322118574895">
+      </trkpt>
+      <trkpt lat="9.839822659972231" lon="-83.87413081116463">
+      </trkpt>
+      <trkpt lat="9.839881439544644" lon="-83.875035923091">
+      </trkpt>
+      <trkpt lat="9.840016105562853" lon="-83.87583036362714">
+      </trkpt>
+      <trkpt lat="9.841024398105773" lon="-83.8778714158275">
+      </trkpt>
+      <trkpt lat="9.842222016645659" lon="-83.87963852126539">
+      </trkpt>
+      <trkpt lat="9.84258033540587" lon="-83.88068110511519">
+      </trkpt>
+      <trkpt lat="9.84291573108862" lon="-83.88202543550776">
+      </trkpt>
+      <trkpt lat="9.843896636559624" lon="-83.88616539958032">
+      </trkpt>
+      <trkpt lat="9.84424634252128" lon="-83.88718622117399">
+      </trkpt>
+      <trkpt lat="9.845152333853381" lon="-83.88907905266191">
+      </trkpt>
+      <trkpt lat="9.846630739478291" lon="-83.89328397878097">
+      </trkpt>
+      <trkpt lat="9.847797031634684" lon="-83.89479148462868">
+      </trkpt>
+      <trkpt lat="9.848404142396765" lon="-83.89560858784355">
+      </trkpt>
+      <trkpt lat="9.849238624840032" lon="-83.89843547045285">
+      </trkpt>
+      <trkpt lat="9.852235463813615" lon="-83.9007609798365">
+      </trkpt>
+      <trkpt lat="9.853714643008793" lon="-83.90219775272155">
+      </trkpt>
+      <trkpt lat="9.854730549704778" lon="-83.90339021890038">
+      </trkpt>
+      <trkpt lat="9.8557473695779" lon="-83.90430856183262">
+      </trkpt>
+      <trkpt lat="9.861093276099199" lon="-83.90756665848726">
+      </trkpt>
+      <trkpt lat="9.86129438250024" lon="-83.90822950971176">
+      </trkpt>
+      <trkpt lat="9.863811885550247" lon="-83.91336488568591">
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>', 2, 'Emarin19';
 Go
 
 -- Add RaceCategory:
-EXEC spAddRaceCategory 'End of Semester Race', 0;
-GO
-EXEC spAddRaceCategory 'End of Semester Race', 1;
-Go
 EXEC spAddRaceCategory 'Race 1', 0;
 GO
 EXEC spAddRaceCategory 'Race 1', 1;
@@ -457,16 +587,6 @@ Go
 EXEC spAddRaceCategory 'Race 2', 2;
 GO
 EXEC spAddRaceCategory 'Race 2', 3;
-Go
-
--- ================================================
---                BankAccounts
--- ================================================
-
-GO
-EXEC spInsertBankAccount 'CR05015202001026284066', 'End of Semester Race';
-GO
-EXEC spInsertBankAccount 'CR05015202001026284067', 'End of Semester Race';
 Go
 
 -- ================================================

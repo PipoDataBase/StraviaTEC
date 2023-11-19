@@ -1,6 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { Challenge } from 'src/app/models/challenge.module';
 import { AvailableChallenge } from 'src/app/models/views-models/vw-available-challenge.module';
 import { Nationality } from 'src/app/models/nationality.module';
 import { Sportman } from 'src/app/models/sportman.module';
@@ -15,7 +14,6 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { AvailableRace } from 'src/app/models/views-models/vw-available-race.module';
 import { Sponsor } from 'src/app/models/sponsor.module';
 import { Category } from 'src/app/models/category.module';
-import { Bill } from 'src/app/models/bill.module';
 
 import { RacesService } from 'src/app/services/races.service';
 import { SponsorsService } from 'src/app/services/sponsors.service';
@@ -536,6 +534,9 @@ export class ProfileComponent {
   showRaceRouteDialogButtonOnClick(race: AvailableRace) {
     this.race = { ...race };
     this.raceRouteDialog = true;
+    setTimeout(() => {
+      this.sharedService.parseGpxToJson(race.routePath);
+    }, 500);
   }
 
   hideRaceRouteDialogButtonOnClick() {
@@ -563,6 +564,4 @@ export class ProfileComponent {
     }
     return false;
   }
-
-  // Races Ends
 }

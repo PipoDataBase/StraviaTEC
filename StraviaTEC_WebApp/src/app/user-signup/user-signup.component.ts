@@ -80,7 +80,7 @@ export class UserSignupComponent {
     // Post sportman
     this.sportmenService.postSportman(this.sportman).subscribe({
       next: (response) => {
-        this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'You have been successfully registered!'});
+        this.messageService.add({ key: 'tc', severity: 'success', summary: 'Success', detail: 'You have been successfully registered!' });
         // Add a 3 second delay before navigation
         setTimeout(() => {
           this.router.navigate(["user-login"]);
@@ -88,7 +88,7 @@ export class UserSignupComponent {
       },
       error: (response) => {
         console.log(response);
-        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Username: ' + this.sportman.username + ' already used.'});
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Username: ' + this.sportman.username + ' already used.' });
         return;
       }
     })

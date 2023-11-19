@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { DataView } from 'primeng/dataview';
 import { MessageService } from 'primeng/api';
@@ -35,32 +35,6 @@ export interface RaceSponsor {
   sponsorTradeName: string
 }
 
-/*
-export interface Race {
-  name?: string,
-  inscriptionPrice?: number,
-  date?: string,
-  private?: boolean,
-  routePath?: string,
-  typeId?: number
-}
-
-export interface ActivityType {
-  id: number;
-  type: string;
-}
-
-
-
-export interface Sponsor {
-  tradeName: string,
-  legalRepresentant: string,
-  phone: number,
-  logoPath: string
-}
-
-*/
-
 @Component({
   selector: 'app-inscriptions-races',
   templateUrl: './inscriptions-races.component.html',
@@ -88,15 +62,6 @@ export class InscriptionsRacesComponent {
   raceCategory: RaceCategory[] = []
   raceSponsor: RaceSponsor[] = []
   raceBankAccount: RaceBankAccount[] = [];
-  /*
-    category: Category[] = []
-  
-    raceSponsor: RaceSponsor[] = []
-  
-    sponsors: Sponsor[] = []
-  
-    bankAccounts: RaceBankAccount[] = [];
-    */
 
   sortOptions: SelectItem[] = [];
 
@@ -203,182 +168,6 @@ export class InscriptionsRacesComponent {
       }
     })
 
-    /*
-    this.races = [
-      {
-        name: 'Race1',
-        inscriptionPrice: 20,
-        date: '11/30/2023',
-        private: false,
-        routePath: 'https://www.google.com/maps/d/embed?mid=18RcpszqRsKd-Gy4Q6N7PRl5eaPa1bzqL&hl=es-419',
-        typeId: 1
-      },
-      {
-        name: 'Race2',
-        inscriptionPrice: 25,
-        date: '12/30/2023',
-        private: false,
-        routePath: 'https://www.google.com/maps/d/embed?mid=18RcpszqRsKd-Gy4Q6N7PRl5eaPa1bzqL&hl=es-419',
-        typeId: 1
-      },
-      {
-        name: 'Race3',
-        inscriptionPrice: 35,
-        date: '01/30/2024',
-        private: false,
-        routePath: 'https://www.google.com/maps/d/embed?mid=18RcpszqRsKd-Gy4Q6N7PRl5eaPa1bzqL&hl=es-419',
-        typeId: 2
-      }
-    ];
-
-    this.activities = [
-      {
-        id: 1,
-        type: 'Runnig'
-      },
-      {
-        id: 2,
-        type: 'Cycling'
-      }
-    ];
-
-    this.category = [
-      {
-        id: 1,
-        minimunAge: 0,
-        maximumAge: 15,
-        category: "Junior"
-      },
-      {
-        id: 2,
-        minimunAge: 16,
-        maximumAge: 23,
-        category: "Sub-23"
-      },
-      {
-        id: 3,
-        minimunAge: 24,
-        maximumAge: 30,
-        category: "Open"
-      },
-      {
-        id: 4,
-        minimunAge: 0,
-        maximumAge: 100,
-        category: "Elite"
-      },
-      {
-        id: 5,
-        minimunAge: 31,
-        maximumAge: 40,
-        category: "Master A"
-      },
-      {
-        id: 6,
-        minimunAge: 41,
-        maximumAge: 50,
-        category: "Master B"
-      },
-      {
-        id: 7,
-        minimunAge: 51,
-        maximumAge: 100,
-        category: "Master C"
-      }
-    ]
-
-    this.raceCategory = [
-      {
-        raceName: "Race1",
-        categoryId: 1
-      },
-      {
-        raceName: "Race1",
-        categoryId: 2
-      },
-      {
-        raceName: "Race1",
-        categoryId: 3
-      },
-      {
-        raceName: "Race1",
-        categoryId: 4
-      },
-      {
-        raceName: "Race2",
-        categoryId: 4
-      },
-      {
-        raceName: "Race2",
-        categoryId: 5
-      },
-      {
-        raceName: "Race2",
-        categoryId: 6
-      },
-      {
-        raceName: "Race2",
-        categoryId: 7
-      },
-      {
-        raceName: "Race3",
-        categoryId: 4
-      }
-    ]
-
-    this.sponsors = [
-      {
-        tradeName: 'Red Bull',
-        legalRepresentant: 'Kimberly Brooks',
-        phone: 22186442,
-        logoPath: '../../../../../assets/straviatec/red-bull-logo.png'
-      },
-      {
-        tradeName: 'The North Face',
-        legalRepresentant: 'Bracken Darrell',
-        phone: 22245312,
-        logoPath: '../../../../../assets/straviatec/the-north-face-logo.png'
-      }
-    ]
-
-    this.raceSponsor = [
-      {
-        sponsorTradeName: 'Red Bull',
-        raceName: "Race1"
-      },
-      {
-        sponsorTradeName: 'The North Face',
-        raceName: "Race1"
-      },
-      {
-        sponsorTradeName: 'Red Bull',
-        raceName: "Race2"
-      },
-      {
-        sponsorTradeName: 'The North Face',
-        raceName: "Race3"
-      }
-    ]
-
-    this.bankAccounts = [
-      {
-        raceName: 'Race1',
-        bankAccount: 'CR05 0152 0200 1026 2840 66'
-      },
-      {
-        raceName: 'Race1',
-        bankAccount: 'CR05 0152 0200 1026 2840 88'
-      },
-      {
-        raceName: 'Race2',
-        bankAccount: 'CR05 0152 0200 1026 2840 88'
-      },
-      {
-        raceName: 'Race3',
-        bankAccount: 'CR05 0152 0200 1026 2840 88'
-      }
-    ]*/
-
     this.sortOptions = [
       { label: 'Name descending', value: 'name' },
       { label: 'Name ascending', value: '!name' },
@@ -483,6 +272,9 @@ export class InscriptionsRacesComponent {
   showRaceRouteDialogButtonOnClick(race: AvailableRace) {
     this.race = { ...race };
     this.raceRouteDialog = true;
+    setTimeout(() => {
+      this.sharedService.parseGpxToJson(race.routePath);
+    }, 500);
   }
 
   hideRaceRouteDialogButtonOnClick() {
