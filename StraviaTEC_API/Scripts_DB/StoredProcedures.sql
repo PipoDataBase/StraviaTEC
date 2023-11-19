@@ -654,6 +654,17 @@ BEGIN
     ORDER BY Category ASC
 END;
 
+-- <><><><><><><><><><><><><><><><><><><><><><><><>
+
+GO
+CREATE PROCEDURE spGetRaceBills
+    @RaceName varchar(20)
+AS
+BEGIN 
+    SELECT * 
+    FROM Bill 
+    WHERE RaceName = @RaceName;
+END;
 
 -- <><><><><><><><><><><><><><><><><><><><><><><><>
 
