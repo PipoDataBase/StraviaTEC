@@ -83,7 +83,6 @@ export class AddActivityComponent {
     this.sportmanService.getSportmanParticipatingChallenges(this.sharedService.getUsername()).subscribe({
       next: (challenges) => {
         this.myChallenges = challenges;
-        console.log(this.myChallenges);
       },
       error: (response) => {
         console.log(response);
@@ -94,7 +93,6 @@ export class AddActivityComponent {
     this.sportmanService.getSportmanJoinedRaces(this.sharedService.getUsername()).subscribe({
       next: (races) => {
         this.myRaces = races;
-        console.log(this.myRaces);
       },
       error: (response) => {
         console.log(response);
