@@ -18,6 +18,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { ImageModule } from 'primeng/image';
 
 @NgModule({
     imports: [
@@ -38,7 +39,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
         InputNumberModule,
         DialogModule,
         CalendarModule,
-        MultiSelectModule
+        MultiSelectModule,
+        ImageModule
     ],
     declarations: [ManagementRacesComponent]
 })

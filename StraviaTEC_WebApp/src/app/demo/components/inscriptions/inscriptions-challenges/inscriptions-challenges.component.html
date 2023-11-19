@@ -1,6 +1,7 @@
 <div class="col-md-12">
     <div class="card">
         <h1>Challenges</h1>
+        <p-toast position="top-center" key="tc"></p-toast>
         <p-dataView #dv [value]="challenges" [paginator]="true" [rows]="12" filterBy="name" [sortField]="sortField"
             [sortOrder]="sortOrder" layout="grid">
             <ng-template pTemplate="header">

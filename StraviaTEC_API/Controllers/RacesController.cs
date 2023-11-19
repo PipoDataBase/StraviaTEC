@@ -130,6 +130,20 @@ namespace StraviaTEC_API.Controllers
                     ).ToListAsync();
         }
 
+        // GET: api/Races
+        [HttpGet("Bills/{raceName}")]
+        public async Task<ActionResult<IEnumerable<Bill>>> GetRaceBills(string raceName)
+        {
+            if (_context.Races == null)
+            {
+                return NotFound();
+            }
+            return await _context.Bills.FromSqlRaw(
+                    "EXEC spGetRaceBills @RaceName",
+                    new SqlParameter("@RaceName", raceName)
+                    ).ToListAsync();
+        }
+
         // GET: api/Races/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Race>> GetRace(string id)
@@ -187,21 +201,6 @@ namespace StraviaTEC_API.Controllers
                     new SqlParameter("@RaceName", raceName)
                     ).ToListAsync();
         }
-
-        // GET: api/Races
-        [HttpGet("GetBills/{raceName}")]
-        public async Task<ActionResult<IEnumerable<Bill>>> GetBills(string raceName)
-        {
-            if (_context.Races == null)
-            {
-                return NotFound();
-            }
-            return await _context.Bills.FromSqlRaw(
-                    "EXEC spGetRaceBills @RaceName",
-                    new SqlParameter("@RaceName", raceName)
-                    ).ToListAsync();
-        }
-
 
         // PUT: api/Races/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

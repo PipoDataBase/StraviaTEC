@@ -1,7 +1,8 @@
 export interface Bill{
-    photoPath?: string,
-    accepted?: boolean,
-    username?: string,
-    raceName?: string,
-    categoryId?: number
+    id?: string;
+    photoPath?: string;
+    accepted?: boolean;
+    username?: string;
+    raceName?: string;
+    categoryId?: number;
 }

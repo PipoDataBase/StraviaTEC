@@ -15,4 +15,8 @@ export class BillService {
   postBill(bill: Bill): Observable<boolean> {
     return this.http.post<boolean>(this.baseApiUrl + '/api/Bills', bill);
   }
+
+  putAcceptBill(id: number): Observable<boolean> {
+    return this.http.put<boolean>(this.baseApiUrl + '/api/Bills/AcceptBill/' + id, null);
+  }
 }

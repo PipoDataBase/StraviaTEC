@@ -10,6 +10,7 @@ import { AvailableRace } from '../models/views-models/vw-available-race.module';
 import { RaceReportSportmanParticipant } from '../models/views-models/vw-sportman-race-report-participants.module';
 import { RaceReportSportmanLeaderboard } from '../models/views-models/vw-sportman-race-report-leaderboard.module';
 import { Group } from '../models/group.module';
+import { Bill } from '../models/bill.module';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,10 @@ export class RacesService {
 
   getRaceBankAccounts(raceName: string): Observable<BankAccount[]> {
     return this.http.get<BankAccount[]>(this.baseApiUrl + '/api/Races/BankAccounts/' + raceName);
+  }
+
+  getRaceBills(raceName: string): Observable<Bill[]> {
+    return this.http.get<Bill[]>(this.baseApiUrl + '/api/Races/Bills/' + raceName);
   }
 
   getRaceSponsors(raceName: string): Observable<Sponsor[]> {

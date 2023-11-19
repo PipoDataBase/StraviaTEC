@@ -63,6 +63,14 @@ export class SharedService {
     return result;
   }
 
+  getCategory(categories: Category[], id: number): string {
+    const categoryFound = categories.find((category) => category.id == id);
+    if (categoryFound) {
+      return categoryFound.category1;
+    }
+    return "";
+  }
+
   getSafeResourceUrl(route: string) {
     return this.sanitizer.bypassSecurityTrustResourceUrl(route);
   }

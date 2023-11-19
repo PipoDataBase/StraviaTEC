@@ -1,7 +1,7 @@
 <div class="col-md-12">
     <div class="card">
         <h1>Races</h1>
-        <p-toast key="tst"></p-toast>
+        <p-toast position="top-center" key="tc"></p-toast>
         <p-dataView #dv [value]="races" [paginator]="true" [rows]="12" filterBy="name" [sortField]="sortField"
             [sortOrder]="sortOrder" layout="grid">
             <ng-template pTemplate="header">
@@ -31,7 +31,7 @@
                                 <p-chip label="{{ race.private ? 'Private' : 'Public' }}" styleClass="m-1"></p-chip>
                             </div>
                             <div class="flex flex-wrap align-items-center mb-2">
-                                <div *ngFor="let category of raceCategory"
+                                <div *ngFor="let category of raceCategories"
                                     class="flex flex-wrap align-items-center mb-3">
                                     <p-tag class=" ml-1 mr-1 mt-1 mb-1" *ngIf="race.name === category.raceName"
                                         value="{{ category.category }}"></p-tag>
@@ -73,7 +73,7 @@
                                 <p-chip label="{{ race.private ? 'Private' : 'Public' }}" styleClass="m-1"></p-chip>
                             </div>
                             <div class="flex flex-wrap align-items-center mb-2">
-                                <div *ngFor="let category of raceCategory" class="flex flex-wrap align-items-center">
+                                <div *ngFor="let category of raceCategories" class="flex flex-wrap align-items-center">
                                     <p-tag class="ml-1 mr-1 mt-1 mb-1" *ngIf="race.name === category.raceName"
                                         value="{{ category.category }}"></p-tag>
                                 </div>
@@ -114,7 +114,6 @@
         class="p-fluid">
         <div class="mb-5">
             <h3>Bank Accounts</h3>
-            <p-toast></p-toast>
             <p-table [value]="raceBankAccount" dataKey="bankAccount" editMode="row"
                 [tableStyle]="{'min-width': '50rem'}">
                 <ng-template pTemplate="header">
@@ -142,7 +141,6 @@
 
         <div>
             <h3>Sponsors</h3>
-            <p-toast></p-toast>
             <p-table [value]="sponsors" dataKey="tradeName" editMode="row" [tableStyle]="{'min-width': '50rem'}">
                 <ng-template pTemplate="header">
                     <tr>
@@ -203,7 +201,6 @@
         class="p-fluid">
         <div class="mb-5">
             <h3>Bank Accounts</h3>
-            <p-toast></p-toast>
             <p-table [value]="raceBankAccount" dataKey="bankAccount" editMode="row"
                 [tableStyle]="{'min-width': '50rem'}">
                 <ng-template pTemplate="header">
@@ -231,7 +228,6 @@
 
         <div>
             <h3>Inscription Details</h3>
-            <p-toast></p-toast>
             <div class="card">
                 <h5 class="mb-1">Inscription Category</h5>
                 <select [(ngModel)]="selectedInscriptionCategory" name="inscriptionCategory" required

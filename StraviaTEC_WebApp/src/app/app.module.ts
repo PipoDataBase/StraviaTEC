@@ -47,6 +47,7 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { ImageModule } from 'primeng/image';
 
 import { DatePipe } from '@angular/common';
 import { environment } from 'src/environments/environment';
@@ -72,6 +73,7 @@ import { environment } from 'src/environments/environment';
         InputTextModule,
         InputNumberModule,
         ProgressBarModule,
+        ImageModule,
         BrowserAnimationsModule,
         AngularMaterialModule,
         MatInputModule,

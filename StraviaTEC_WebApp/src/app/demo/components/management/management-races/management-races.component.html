@@ -257,9 +257,10 @@
             </ng-template>
         </p-dialog>
 
-        <p-dialog [(visible)]="raceBankAccountDialog" [style]="{width: '50%'}" header="Bank Accounts" [modal]="true"
-            class="p-fluid">
-            <p-table #dt3 [value]="bankAccounts" responsiveLayout="scroll" [rows]="5"
+        <p-dialog [(visible)]="raceBankAccountDialog" [style]="{width: '50%'}" header="Bank Accounts / Bills"
+            [modal]="true" class="p-fluid">
+            <h3 style="margin-bottom: 0%;">Bank Accounts</h3>
+            <p-table #dt4 [value]="bankAccounts" responsiveLayout="scroll" [rows]="5"
                 [globalFilterFields]="['bankAccount1']" [paginator]="false" [rowsPerPageOptions]="[5,10,20]"
                 [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
@@ -268,7 +269,7 @@
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
                         <span class="block mt-2 md:mt-0 p-input-icon-left" style="width: 100%;">
                             <i class="pi pi-search"></i>
-                            <input pInputText type="text" (input)="onGlobalFilter(dt3, $event)" placeholder="Search..."
+                            <input pInputText type="text" (input)="onGlobalFilter(dt4, $event)" placeholder="Search..."
                                 class="w-full" />
                         </span>
                         <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success ml-2"
@@ -308,6 +309,55 @@
                 </ng-template>
             </p-table>
 
+            <h3 style="margin-top: 3%; margin-bottom: 0%;">Bills</h3>
+            <p-table #dt5 [value]="bills" responsiveLayout="scroll" [rows]="5"
+                [globalFilterFields]="['username', 'categoryId']" [paginator]="true" [rowsPerPageOptions]="[5,10,20]"
+                [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [(selection)]="selectedBills" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <span class="block mt-2 md:mt-0 p-input-icon-left" style="width: 100%;">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt5, $event)" placeholder="Search..."
+                                class="w-full" />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="photo" style="text-align: center;">Photo</th>
+                        <th pSortableColumn="username" style="text-align: center;">User<p-sortIcon
+                                field="username"></p-sortIcon></th>
+                        <th pSortableColumn="categoryId" style="text-align: center;">Category<p-sortIcon
+                                field="categoryId"></p-sortIcon></th>
+                        <th pSortableColumn="action" style="text-align: center;">Action</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-bill>
+                    <tr>
+                        <td style="width:25%; min-width:10rem; text-align: center;">
+                            <p-image src="{{ bill.photoPath }}" alt="Image" width="150" [preview]="true"></p-image>
+                        </td>
+                        <td style="width:25%; min-width:10rem; text-align: center;">
+                            <span class="p-column-title">User</span>
+                            {{ '@' + bill.username }}
+                        </td>
+                        <td style="width:25%; min-width:10rem; text-align: center;">
+                            <span class="p-column-title">Category</span>
+                            {{ sharedService.getCategory(categories, bill.categoryId) }}
+                        </td>
+                        <td style="width:25%; min-width:10rem; text-align: center;">
+                            <p-button class="mb-3" *ngIf="bill.accepted" [disabled]="bill.accepted" label="Accepted"
+                                (onClick)="joinRaceButtonOnClick(bill.id)"></p-button>
+
+                            <p-button class="mb-3" *ngIf="!bill.accepted" [disabled]="bill.accepted" label="Accept"
+                                (onClick)="joinRaceButtonOnClick(bill.id)"></p-button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
             <ng-template pTemplate="footer">
                 <button pButton pRipple label="Close" icon="pi pi-times" class="p-button-text"
                     (click)="hideRaceBankAccountDialog()"></button>
@@ -335,7 +385,7 @@
 
         <p-dialog [(visible)]="raceMoreInfoDialog" [style]="{width: '50%'}" header="Sponsors" [modal]="true"
             class="p-fluid">
-            <p-table #dt2 [value]="sponsors" responsiveLayout="scroll" [rows]="5"
+            <p-table #dt6 [value]="sponsors" responsiveLayout="scroll" [rows]="5"
                 [globalFilterFields]="['tradeName', 'legalRepresentant', 'phone']" [paginator]="true"
                 [rowsPerPageOptions]="[5,10,20]" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
@@ -344,7 +394,7 @@
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
                         <span class="block mt-2 md:mt-0 p-input-icon-left" style="width: 100%;">
                             <i class="pi pi-search"></i>
-                            <input pInputText type="text" (input)="onGlobalFilter(dt2, $event)" placeholder="Search..."
+                            <input pInputText type="text" (input)="onGlobalFilter(dt6, $event)" placeholder="Search..."
                                 class="w-full" />
                         </span>
                     </div>

@@ -15,6 +15,8 @@ import { forkJoin } from 'rxjs';
 import { BankAccountsService } from 'src/app/services/bank-accounts.service';
 import { Group } from 'src/app/models/group.module';
 import { GroupsService } from 'src/app/services/groups.service';
+import { Bill } from 'src/app/models/bill.module';
+import { BillService } from 'src/app/services/bill.service';
 
 @Component({
   selector: 'app-management-races',
@@ -45,18 +47,21 @@ export class ManagementRacesComponent {
   sponsors: Sponsor[] = [];
   categories: Category[] = [];
   bankAccounts: BankAccount[] = [];
+  bills: Bill[] = [];
 
   selectedRaces: Race[] = [];
   selectedGroups: Group[] = [];
   selectedSponsors: Sponsor[] = [];
   selectedCategories: Category[] = [];
   selectedBankAccounts: BankAccount[] = [];
+  selectedBills: Bill[] = [];
 
   race: Race = {};
   group: Group = {};
   sponsor: Sponsor = {};
   category: Category = {};
   bankAccount: BankAccount = {};
+  bill: Bill = {};
 
   activityTypes: ActivityType[] = [];
 
@@ -64,7 +69,7 @@ export class ManagementRacesComponent {
 
   selectedRoute: string;
 
-  constructor(private messageService: MessageService, public sharedService: SharedService, private activityTypesService: ActivityTypesService, private racesService: RacesService, private categoriesService: CategoriesService, private sponsorsService: SponsorsService, private bankAccountsService: BankAccountsService, private groupsService: GroupsService) { }
+  constructor(private messageService: MessageService, public sharedService: SharedService, private activityTypesService: ActivityTypesService, private racesService: RacesService, private categoriesService: CategoriesService, private sponsorsService: SponsorsService, private bankAccountsService: BankAccountsService, private groupsService: GroupsService, private billService: BillService) { }
 
   updateRaces() {
     this.selectedRoute = '';
@@ -100,6 +105,17 @@ export class ManagementRacesComponent {
     this.racesService.getRaceBankAccounts(this.race.name).subscribe({
       next: (bankAccounts) => {
         this.bankAccounts = bankAccounts;
+      },
+      error: (response) => {
+        console.log(response);
+      }
+    })
+  }
+
+  updateBills() {
+    this.racesService.getRaceBills(this.race.name).subscribe({
+      next: (bills) => {
+        this.bills = bills;
       },
       error: (response) => {
         console.log(response);
@@ -175,6 +191,7 @@ export class ManagementRacesComponent {
     this.race = { ...race };
     this.raceBankAccountDialog = true;
     this.updateBankAccounts();
+    this.updateBills();
   }
 
   seeMoreInfo(race: Race) {
@@ -330,6 +347,7 @@ export class ManagementRacesComponent {
     this.raceBankAccountDialog = false;
     this.bankAccounts = [];
     this.selectedBankAccounts = [];
+    this.selectedBills = [];
   }
 
   hideRaceRouteDialog() {
@@ -638,5 +656,20 @@ export class ManagementRacesComponent {
       return this.sharedService.getCategories(raceFound.categories)
     }
     return "";
+  }
+
+  joinRaceButtonOnClick(billId: number) {
+    this.billService.putAcceptBill(billId).subscribe({
+      next: (response) => {
+        if (response) {
+          this.updateBills();
+        }
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'There was an error.' });
+        return;
+      }
+    })
   }
 }

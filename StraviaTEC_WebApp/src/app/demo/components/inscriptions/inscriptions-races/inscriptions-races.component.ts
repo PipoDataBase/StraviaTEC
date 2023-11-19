@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { DataView } from 'primeng/dataview';
 import { MessageService } from 'primeng/api';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 
 import { SharedService } from 'src/app/services/shared.service';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -59,8 +60,9 @@ export class InscriptionsRacesComponent {
   sponsors: Sponsor[] = [];
   categories: Category[] = [];
 
-  raceCategory: RaceCategory[] = []
-  raceSponsor: RaceSponsor[] = []
+  raceCategories: RaceCategory[] = [];
+  raceCategory: RaceCategory[] = [];
+  raceSponsor: RaceSponsor[] = [];
   raceBankAccount: RaceBankAccount[] = [];
 
   sortOptions: SelectItem[] = [];
@@ -71,7 +73,9 @@ export class InscriptionsRacesComponent {
 
   selectedInscriptionCategory: string = '';
 
-  constructor(private racesService: RacesService, private sportmanService: SportmenService, private sponsorsService: SponsorsService, private categoriesService: CategoriesService, private billsService: BillService, public sharedService: SharedService, private sanitizer: DomSanitizer, private messageService: MessageService) { }
+  billPhotoPath: string = '';
+
+  constructor(private racesService: RacesService, private storage: AngularFireStorage, private sportmanService: SportmenService, private sponsorsService: SponsorsService, private categoriesService: CategoriesService, private billsService: BillService, public sharedService: SharedService, private sanitizer: DomSanitizer, private messageService: MessageService) { }
 
   ngOnInit() {
     // Requests database for all races
@@ -86,7 +90,7 @@ export class InscriptionsRacesComponent {
               var raceCategoryToInsert: RaceCategory;
               for (let j = 0; j < raceCategories.length; j++) {
                 raceCategoryToInsert = { raceName: this.races[i].name, category: raceCategories[j].category1 }
-                this.raceCategory.push(raceCategoryToInsert);
+                this.raceCategories.push(raceCategoryToInsert);
               }
             },
             error: (response) => {
@@ -193,9 +197,23 @@ export class InscriptionsRacesComponent {
   }
 
   onReceiptChanged(event: any) {
+    this.billPhotoPath = '';
+
     const selectedFiles: FileList = event.target.files;
     if (selectedFiles.length > 0) {
       this.raceReceiptUploaded = selectedFiles[0];
+    }
+
+    const inputElement = event.target as HTMLInputElement;
+    const file = inputElement.files?.[0];
+    if (file) {
+      const filePath = `bills/${new Date().getTime()}_${file.name}`;
+      const task = this.storage.upload(filePath, file);
+      task.then(uploadTask => {
+        uploadTask.ref.getDownloadURL().then(downloadURL => {
+          this.billPhotoPath = downloadURL;
+        });
+      });
     }
   }
 
@@ -204,7 +222,7 @@ export class InscriptionsRacesComponent {
   }
 
   submitRaceButtonOnClick() {
-    var selectedInscriptionCategoryId: number;
+    var selectedInscriptionCategoryId: number = -1;
 
     for (let i = 0; i < this.categories.length; i++) {
       if (this.categories[i].category1 == this.selectedInscriptionCategory) {
@@ -212,7 +230,17 @@ export class InscriptionsRacesComponent {
       }
     }
 
-    var billToPost: Bill = { photoPath: '', accepted: false, username: this.sharedService.getUsername(), raceName: this.race.name, categoryId: selectedInscriptionCategoryId }
+    if (selectedInscriptionCategoryId == -1) {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'You must select the category to which you are going to register.' });
+      return;
+    }
+
+    if (this.billPhotoPath == '') {
+      this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'There is no receipt.' });
+      return;
+    }
+
+    var billToPost: Bill = { photoPath: this.billPhotoPath, accepted: false, username: this.sharedService.getUsername(), raceName: this.race.name, categoryId: selectedInscriptionCategoryId }
 
     this.billsService.postBill(billToPost).subscribe({
       next: (categories) => {
@@ -227,8 +255,7 @@ export class InscriptionsRacesComponent {
           }
         })
         this.hideSubmitRaceDailogButtonOnClick()
-        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Race Submitted!', detail: 'Race and inscription receipt submitted succesfuly!' });
-
+        this.messageService.add({ key: 'tc', severity: 'success', summary: 'Race Submitted!', detail: 'Race and inscription receipt submitted succesfully!' });
       },
       error: (response) => {
         console.log(response);
@@ -287,10 +314,25 @@ export class InscriptionsRacesComponent {
     this.selectedInscriptionCategory = '';
     this.race = { ...race };
     this.submitRaceDialog = true;
+
+    this.racesService.getRaceCategories(this.race.name).subscribe({
+      next: (raceCategories) => {
+        var raceCategoryToInsert: RaceCategory;
+        for (let j = 0; j < raceCategories.length; j++) {
+          raceCategoryToInsert = { raceName: this.race.name, category: raceCategories[j].category1 }
+          this.raceCategory.push(raceCategoryToInsert);
+        }
+      },
+      error: (response) => {
+        console.log(response);
+        this.messageService.add({ key: 'tc', severity: 'error', summary: 'Error', detail: 'Races loaded wrong.' });
+      }
+    })
   }
 
   hideSubmitRaceDailogButtonOnClick() {
     this.submitRaceDialog = false;
+    this.raceCategory = [];
     this.race = {};
   }
 

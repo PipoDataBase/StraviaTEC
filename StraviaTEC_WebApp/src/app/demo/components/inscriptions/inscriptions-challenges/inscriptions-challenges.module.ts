@@ -10,6 +10,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RatingModule } from 'primeng/rating';
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
+import { ToastModule } from 'primeng/toast';
 import { ProgressBarModule } from 'primeng/progressbar';
 
 @NgModule({
@@ -24,6 +25,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
         RatingModule,
         ButtonModule,
         ChipModule,
+        ToastModule,
         ProgressBarModule
     ],
     declarations: [InscriptionsChallengesComponent]
