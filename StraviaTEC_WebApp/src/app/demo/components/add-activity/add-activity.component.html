@@ -56,6 +56,143 @@
               <input type="file" accept=".gpx" class="form-control shadow-sm px-4" (change)="onFileSelected($event)">
             </div>
           </div>
+
+          <div class="col-md-6 pl-1">
+            <div class="form-group">
+              <label>Belonging to</label>
+              <select [(ngModel)]="selectedActivityOption" name="activityOption" required
+                class="form-control shadow-sm px-4">
+                <option *ngFor="let activityOption of activityOptions" [value]="activityOption.id">{{
+                  activityOption.type }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="selectedActivityOption == 'Challenge'">
+          <h2 style="margin-bottom: 0%;">Challenges</h2>
+          <p-table #dt [value]="myChallenges" responsiveLayout="scroll" [rows]="5"
+            [globalFilterFields]="['name', 'type', 'goal', 'startDate', 'endDate']" [paginator]="true"
+            [rowsPerPageOptions]="[5,10,20]" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [(selection)]="selectedChallenge" selectionMode="single" [rowHover]="true" dataKey="name">
+            <ng-template pTemplate="caption">
+              <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                <span class="block mt-2 md:mt-0 p-input-icon-left" style="width: 100%;">
+                  <i class="pi pi-search"></i>
+                  <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."
+                    class="w-full" />
+                </span>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 3rem"></th>
+                <th pSortableColumn="name" style="text-align: center;">Name <p-sortIcon field="name"></p-sortIcon></th>
+                <th pSortableColumn="type" style="text-align: center;">Type <p-sortIcon field="type"></p-sortIcon></th>
+                <th pSortableColumn="goal" style="text-align: center;">Goal <p-sortIcon field="goal"></p-sortIcon></th>
+                <th pSortableColumn="startDate" style="text-align: center;">Start Date <p-sortIcon
+                    field="startDate"></p-sortIcon></th>
+                <th pSortableColumn="endDate" style="text-align: center;">End Date <p-sortIcon
+                    field="endDate"></p-sortIcon></th>
+                <th pSortableColumn="deep" style="text-align: center;">Deep/Height <p-sortIcon
+                    field="deep"></p-sortIcon></th>
+                <th pSortableColumn="private" style="text-align: center;">Privacy <p-sortIcon
+                    field="private"></p-sortIcon></th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-challenge>
+              <tr>
+                <td>
+                  <p-tableRadioButton [value]="challenge"></p-tableRadioButton>
+                </td>
+                <td style="width:14%; min-width:10rem; text-align: center;"><span class="p-column-title">Name</span>
+                  {{ challenge.name }}
+                </td>
+                <td style="width:14%; min-width:10rem; text-align: center;">
+                  <span class="p-column-title">Type</span>
+                  {{ challenge.type }}
+                </td>
+                <td style="width:14%; min-width:10rem; text-align: center;">
+                  <span class="p-column-title">Goal</span>
+                  {{ challenge.goal + ' km' }}
+                </td>
+                <td style="width:14%; min-width:10rem; text-align: center;">
+                  <span class="p-column-title">Start Date</span>
+                  {{ sharedService.formatDate2(challenge.startDate) }}
+                </td>
+                <td style="width:14%; min-width:10rem; text-align: center;">
+                  <span class="p-column-title">End Date</span>
+                  {{ sharedService.formatDate2(challenge.endDate) }}
+                </td>
+                <td style="width:14%; min-width:10rem; text-align: center;">
+                  <span class="p-column-title">Deep/Height</span>
+                  {{ challenge.deep ? 'Deep' : 'Height' }}
+                </td>
+                <td style="width:14%; min-width:10rem; text-align: center;">
+                  <span class="p-column-title">Privacy</span>
+                  {{ challenge.private ? 'Private' : 'Public' }}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+
+        <div *ngIf="selectedActivityOption == 'Race'">
+          <h2 style="margin-bottom: 0%;">Races</h2>
+          <p-table #dt2 [value]="myRaces" responsiveLayout="scroll" [rows]="5"
+            [globalFilterFields]="['name', 'date', 'inscriptionPrice']" [paginator]="true"
+            [rowsPerPageOptions]="[5,10,20]" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedRace"
+            selectionMode="single" [rowHover]="true" dataKey="name">
+            <ng-template pTemplate="caption">
+              <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                <span class="block mt-2 md:mt-0 p-input-icon-left" style="width: 100%;">
+                  <i class="pi pi-search"></i>
+                  <input pInputText type="text" (input)="onGlobalFilter(dt2, $event)" placeholder="Search..."
+                    class="w-full" />
+                </span>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 3rem"></th>
+                <th pSortableColumn="name" style="text-align: center;">Name <p-sortIcon field="name"></p-sortIcon></th>
+                <th pSortableColumn="type" style="text-align: center;">Type <p-sortIcon field="type"></p-sortIcon></th>
+                <th pSortableColumn="date" style="text-align: center;">Date <p-sortIcon field="date"></p-sortIcon></th>
+                <th pSortableColumn="inscriptionPrice" style="text-align: center;">Price <p-sortIcon
+                    field="inscriptionPrice"></p-sortIcon></th>
+                <th pSortableColumn="private" style="text-align: center;">Privacy <p-sortIcon
+                    field="private"></p-sortIcon></th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-race>
+              <tr>
+                <td>
+                  <p-tableRadioButton [value]="race"></p-tableRadioButton>
+                </td>
+                <td style="width:20%; min-width:10rem; text-align: center;"><span class="p-column-title">Name</span>
+                  {{ race.name }}
+                </td>
+                <td style="width:20%; min-width:9rem; text-align: center;">
+                  <span class="p-column-title">Type</span>
+                  {{ race.type }}
+                </td>
+                <td style="width:20%; min-width:13rem; text-align: center;">
+                  <span class="p-column-title">Date</span>
+                  {{ sharedService.formatDate3(race.date) }}
+                </td>
+                <td style="width:20%; min-width:9rem; text-align: center;">
+                  <span class="p-column-title">Price</span>
+                  {{ race.inscriptionPrice + ' $'}}
+                </td>
+                <td style="width:20%; min-width:9rem; text-align: center;">
+                  <span class="p-column-title">Privacy</span>
+                  {{ race.private ? 'Private' : 'Public' }}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
         </div>
 
         <p-toast position="top-center" key="tc"></p-toast>

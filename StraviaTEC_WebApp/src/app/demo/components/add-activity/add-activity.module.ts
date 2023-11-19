@@ -9,6 +9,16 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { RippleModule } from 'primeng/ripple';
 import { ToastModule } from 'primeng/toast';
+import { TableModule } from 'primeng/table';
+import { FileUploadModule } from 'primeng/fileupload';
+import { ButtonModule } from 'primeng/button';
+import { ToolbarModule } from 'primeng/toolbar';
+import { RatingModule } from 'primeng/rating';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { DropdownModule } from 'primeng/dropdown';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { DialogModule } from 'primeng/dialog';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
     imports: [
@@ -20,7 +30,17 @@ import { ToastModule } from 'primeng/toast';
         InputTextModule,
         InputNumberModule,
         RippleModule,
-        ToastModule
+        ToastModule,
+        TableModule,
+        FileUploadModule,
+        ButtonModule,
+        ToolbarModule,
+        RatingModule,
+        InputTextareaModule,
+        DropdownModule,
+        RadioButtonModule,
+        DialogModule,
+        CalendarModule
     ],
     declarations: [AddActivityComponent]
 })
