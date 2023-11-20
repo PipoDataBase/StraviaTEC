@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing.Printing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Driver.Core.Configuration;
 using StraviaTEC_API.Models;
 
 namespace StraviaTEC_API.Controllers
@@ -17,10 +19,13 @@ namespace StraviaTEC_API.Controllers
     public class NationalitiesController : ControllerBase
     {
         private readonly StraviaTecContext _context;
+        private readonly string _connectionString;
+
 
         public NationalitiesController(StraviaTecContext context)
         {
             _context = context;
+            _connectionString = "server=DESKTOP-VEB3CKO; database=StraviaTEC; integrated security=true; Encrypt=False;";
         }
 
         /**
@@ -31,11 +36,29 @@ namespace StraviaTEC_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Nationality>>> GetNationalities()
         {
+            /*
           if (_context.Nationalities == null)
           {
               return NotFound();
           }
             return await _context.Nationalities.FromSqlRaw("spGetNationalities").ToListAsync();
+            */
+
+            List<Nationality> lst = new List<Nationality>();
+            SqlConnection con = new SqlConnection(_connectionString);
+            SqlCommand cmd = new SqlCommand("spGetNationalities", con);
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                Nationality obj = new Nationality();
+                obj.Id = byte.Parse(dt.Rows[i]["Id"].ToString());
+                obj.Nationality1 = dt.Rows[i]["Nationality"].ToString();
+                lst.Add(obj);
+            }
+            return lst;
+
         }
 
         /**
