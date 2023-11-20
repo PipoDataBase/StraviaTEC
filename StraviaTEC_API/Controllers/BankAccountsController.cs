@@ -22,6 +22,10 @@ namespace StraviaTEC_API.Controllers
             _context = context;
         }
 
+        /**
+        * Retuns all the existing BankAccounts from the database
+        * @return BankAccount[] list of BankAccount 
+        */
         // GET: api/BankAccounts
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BankAccount>>> GetBankAccounts()
@@ -33,7 +37,12 @@ namespace StraviaTEC_API.Controllers
             return await _context.BankAccounts.FromSqlRaw("spGetBankAccounts").ToListAsync();
         }
 
-        // GET: api/BankAccounts/5
+        /**
+        * Return the BankAccount object that have the provided id
+        * @param  id it is the primary key ok the bankAccount you want to get
+        * @return BankAccount object
+        */
+        // GET: api/BankAccounts/
         [HttpGet("{id}")]
         public async Task<ActionResult<BankAccount>> GetBankAccount(string id)
         {
@@ -55,8 +64,12 @@ namespace StraviaTEC_API.Controllers
             return Ok(result[0]);
         }
 
+        /**
+        * Insert the provided BankAccount to the database
+        * @param  bankAccount it the bankAccount that you want to insert in the database
+        * @return true if the insert was successful or raise an error if it failed
+        */
         // POST: api/BankAccounts
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<BankAccount>> PostBankAccount(BankAccount bankAccount)
         {
@@ -86,8 +99,15 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
+
+        /**
+        * Updated the provided BankAccount
+        * @param  bankAccount it is the primary key ok the bankAccount you want to update
+        * @param raceName it is the primary and foreign key of the bankAccount you want to update
+        * @param newBankAccount it is the new data you want to upload
+        * @return true if the update was successful
+        */
         // PUT: api/BankAccounts
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{bankAccount}/{raceName}/{newBankAccount}")]
         public async Task<ActionResult<BankAccount>> PutBankAccount(string bankAccount, string raceName, string newBankAccount)
         {
@@ -111,7 +131,12 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
-        // DELETE: api/BankAccounts/5
+        /**
+        * Deletes the provided bankAccount
+        * @param  bankAccount it is the primary key ok the bankAccount you want to delete
+        * @return true if the deletion was successful
+        */
+        // DELETE: api/BankAccounts/
         [HttpDelete]
         public async Task<IActionResult> DeleteBankAccount(BankAccount bankAccount)
         {
@@ -127,6 +152,12 @@ namespace StraviaTEC_API.Controllers
             return Ok(true);
         }
 
+        /**
+        * Deletes the provided bankAccount
+        * @param  bankAccount it is the primary key ok the bankAccount you want to delete
+        * @param raceName it is the primary and foreign key of the bankAccount you want to delete
+        * @return true if the deletion was successful
+        */
         // DELETE: api/BankAccounts/5
         [HttpDelete("{bankAccount}/{raceName}")]
         public async Task<IActionResult> DeleteBankAccount(string bankAccount, string raceName)

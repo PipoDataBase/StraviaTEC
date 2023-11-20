@@ -22,6 +22,10 @@ namespace StraviaTEC_API.Controllers
             _context = context;
         }
 
+        /**
+        * Retuns all the Sportmen in the database
+        * @return Sportman[] list of Sportman
+        */
         // GET: api/Sportmen
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Sportman>>> GetSportmen()
@@ -33,7 +37,12 @@ namespace StraviaTEC_API.Controllers
             return await _context.Sportmen.FromSqlRaw("spGetSportmen").ToListAsync();
         }
 
-        // GET: api/Sportmen/5
+        /**
+        * Return the Sportman with the given id
+        * @param id Sportman you want to get
+        * @return Sportman 
+        */
+        // GET: api/Sportmen/
         [HttpGet("{id}")]
         public async Task<ActionResult<Sportman>> GetSportman(string id)
         {
@@ -55,6 +64,10 @@ namespace StraviaTEC_API.Controllers
             return Ok(result[0]);
         }
 
+        /**
+        * Return all the sportmen in the database with its nationality as string instad of id
+        * @return VwSportmanNationality[] 
+        */
         // GET: api/Sportmen
         [HttpGet("SportmenNationView")]
         public async Task<ActionResult<IEnumerable<VwSportmanNationality>>> GetSportmenNationView()
@@ -66,6 +79,11 @@ namespace StraviaTEC_API.Controllers
             return await _context.VwSportmanNationalities.FromSqlRaw("spGetSportmenNationView").ToListAsync();
         }
 
+
+        /**
+        * Return all the sportmen conicidences with the given username
+        * @return VwSportmanNationality[] 
+        */
         // GET: api/Sportmen
         [HttpGet("Search/{username}")]
         public async Task<ActionResult<IEnumerable<VwSportmanNationality>>> GetSportmenNationViewByName(string username)
@@ -86,6 +104,10 @@ namespace StraviaTEC_API.Controllers
             return result;
         }
 
+        /**
+        * Return the view of the sportmen with the given username with its nationality as string instead of id
+        * @return VwSportmanNationality[] 
+        */
         // GET: api/Sportmen
         [HttpGet("SportmanNationView/{username}")]
         public async Task<ActionResult<VwSportmanNationality>> GetSportmanNationView(string username)
@@ -102,6 +124,10 @@ namespace StraviaTEC_API.Controllers
             return result.ElementAt(0);
         }
 
+        /**
+        * Return all the challenges where the given user is participating
+        * @return VwChallenge[] 
+        */
         // GET: api/Sportmen
         [HttpGet("participatingChallenges/{username}")]
         public async Task<ActionResult<IEnumerable<VwChallenge>>> GetSportmanChallenges(string username)

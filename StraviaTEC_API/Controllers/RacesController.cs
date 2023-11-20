@@ -22,6 +22,10 @@ namespace StraviaTEC_API.Controllers
             _context = context;
         }
 
+        /**
+        * Retuns all the races in the database
+        * @return Race[] list of Race
+        */
         // GET: api/Races
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Race>>> GetRaces()
@@ -33,6 +37,11 @@ namespace StraviaTEC_API.Controllers
             return await _context.Races.FromSqlRaw("EXEC spGetRaces").ToListAsync();
         }
 
+        /**
+        * Returns all the visible and joinable races for the user with the given username
+        * @param  username name user you want to get the visible races
+        * @return VwRace[] list of VwRace
+        */
         // GET: api/Races
         [HttpGet("GetAvailableVwRaces/{username}")]
         public async Task<ActionResult<IEnumerable<VwRace>>> GetAvailableVwRaces(string username)
@@ -47,6 +56,13 @@ namespace StraviaTEC_API.Controllers
                     ).ToListAsync();
         }
 
+
+        /**
+        * Returns all the visible races for the user with the given username. Even if the 
+        * have already happened
+        * @param  username name user you want to get the visible races
+        * @return VRace[] list of VwRace
+        */
         // GET: api/Races
         [HttpGet("GetAllRaces/{username}")]
         public async Task<ActionResult<IEnumerable<VwRace>>> GetAllRaces(string username)
@@ -61,6 +77,11 @@ namespace StraviaTEC_API.Controllers
                     ).ToListAsync();
         }
 
+        /**
+        * Returns all races that the given user manages
+        * @param  username name user you want to get the managing races
+        * @return Race[] list of Race
+        */
         // GET: api/Races
         [HttpGet("ByManager/{username}")]
         public async Task<ActionResult<IEnumerable<Race>>> GetRacesByManager(string username)
@@ -75,6 +96,11 @@ namespace StraviaTEC_API.Controllers
                     ).ToListAsync();
         }
 
+        /**
+        * Get all the categories of a given race
+        * @param  raceName name race you want to get the categories
+        * @return Category[] list of Category
+        */
         // GET: api/Races
         [HttpGet("Categories/{raceName}")]
         public async Task<ActionResult<IEnumerable<Category>>> GetRaceCategories(string raceName)
@@ -89,6 +115,12 @@ namespace StraviaTEC_API.Controllers
                     ).ToListAsync();
         }
 
+
+        /**
+        * Returns all the groups that have access to the race with the given raceName
+        * @param  raceName name of the race you want to get all the groups related to
+        * @return Group[] list of Group
+        */
         [HttpGet("Groups/{raceName}")]
         public async Task<ActionResult<IEnumerable<Group>>> GetRaceGroups(string raceName)
         {
@@ -102,6 +134,11 @@ namespace StraviaTEC_API.Controllers
                     ).ToListAsync();
         }
 
+        /**
+        * Returns all the sponsors of the given raceName
+        * @param  raceName name of the race you want to get all the sponsors
+        * @return Sponsor[] list of Sponsor
+        */
         // GET: api/Races
         [HttpGet("Sponsors/{raceName}")]
         public async Task<ActionResult<IEnumerable<Sponsor>>> GetRaceSponsors(string raceName)
@@ -116,6 +153,12 @@ namespace StraviaTEC_API.Controllers
                     ).ToListAsync();
         }
 
+
+        /**
+        * Returns all the BankAccounts of the race with the given raceName
+        * @param  raceName name of the race you want to get all the BankAccounts associated
+        * @return BankAccount[] list of BankAccount
+        */
         // GET: api/Races
         [HttpGet("BankAccounts/{raceName}")]
         public async Task<ActionResult<IEnumerable<BankAccount>>> GetRaceBankAccounts(string raceName)
@@ -130,6 +173,11 @@ namespace StraviaTEC_API.Controllers
                     ).ToListAsync();
         }
 
+        /**
+        * Returns all the Bills associated with the Race with the given raceName
+        * @param  raceName name of the race you want to get all the Bills related
+        * @return Bill[] list of Bill
+        */
         // GET: api/Races
         [HttpGet("Bills/{raceName}")]
         public async Task<ActionResult<IEnumerable<Bill>>> GetRaceBills(string raceName)
@@ -144,6 +192,12 @@ namespace StraviaTEC_API.Controllers
                     ).ToListAsync();
         }
 
+
+        /**
+        * Returns the race with the given raceName
+        * @param  id primary key of the race you want to get 
+        * @return Race
+        */
         // GET: api/Races/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Race>> GetRace(string id)
@@ -173,7 +227,11 @@ namespace StraviaTEC_API.Controllers
             return Ok(result[0]);
         }
 
-
+        /**
+        * Returns the leaderboard of the race with the given raceName
+        * @param  raceName name of the race you want to get its leaderboard
+        * @return WvRaceReportSportmanLeaderboard[] list of WvRaceReportSportmanLeaderboard
+        */
         // GET: api/Races
         [HttpGet("GetLeaderboardReport/{raceName}")]
         public async Task<ActionResult<IEnumerable<WvRaceReportSportmanLeaderboard>>> GetLeaderboardReport(string raceName)
@@ -188,6 +246,11 @@ namespace StraviaTEC_API.Controllers
                     ).ToListAsync();
         }
 
+        /**
+        * Returns the participants of the race with the given raceName
+        * @param  raceName name of the race you want to get its participants
+        * @return VwRaceReportSportmanParticipant[] list of VwRaceReportSportmanParticipant
+        */
         // GET: api/Races
         [HttpGet("GetParticipantReport/{raceName}")]
         public async Task<ActionResult<IEnumerable<VwRaceReportSportmanParticipant>>> GetParticipantReport(string raceName)
@@ -202,8 +265,14 @@ namespace StraviaTEC_API.Controllers
                     ).ToListAsync();
         }
 
-        // PUT: api/Races/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
+        /**
+        * Update the data of the the race with the given raceName with the given data
+        * @param  id name of the race you want to update
+        * @param race Race with the data you want to update
+        * @return true if the update was successful
+        */
+        // PUT: api/Races/
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRace(string id, Race race)
         {
@@ -238,8 +307,14 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
+
+        /**
+        * Insert the given Race to the database and inserts the given user as its manager
+        * @param  race Race you wanto insert
+        * @param username of the user that is creating the race
+        * @return true in the creation was successful
+        */
         // POST: api/Races
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{username}")]
         public async Task<ActionResult<Race>> PostRace(Race race, string username)
         {
@@ -267,8 +342,14 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
+
+        /**
+        * Add the givent Category to the given Race
+        * @param  raceName name of the race you want to add the category
+        * @param categoryId is the primary key of the category you wanto to add to the race
+        * @return true if the query was successful
+        */
         // POST: api/Races
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("AddCategory/{raceName}/{categoryId}")]
         public async Task<ActionResult<Race>> PostRaceCategory(string raceName, int categoryId)
         {
@@ -291,8 +372,14 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
+
+        /**
+        * Add a given sponsor to a given race
+        * @param  raceName name of the race you want to add the sponsor
+        * @param sponsorTradeName is the name of the sponsor to add
+        * @return true if the query was successful
+        */
         // POST: api/Races
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("AddSponsor/{sponsorTradeName}/{raceName}")]
         public async Task<ActionResult<Race>> PostRaceSponsor(string sponsorTradeName, string raceName)
         {
@@ -315,6 +402,11 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
+        /**
+        * Deletes the race with the given id
+        * @param  id name of the race you want to delete
+        * @return true if the deletion was successful
+        */
         // DELETE: api/Races/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRace(string id)
@@ -336,6 +428,11 @@ namespace StraviaTEC_API.Controllers
             return Ok(true);
         }
 
+        /**
+        * Deletes all the categories of a given race
+        * @param  raceName is the name of the race you want to delete all its categories
+        * @return true if the deletion was successful
+        */
         [HttpDelete("DeleteCategories/{raceName}")]
         public async Task<IActionResult> DeleteRaceCategories(string raceName)
         {
@@ -359,6 +456,11 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
+        /**
+        * Deletes all the groups of a given race
+        * @param  raceName is the name of the race you want to delete all its groups 
+        * @return true if the deletion was successful
+        */
         [HttpDelete("DeleteGroups/{raceName}")]
         public async Task<IActionResult> DeleteRaceGroups(string raceName)
         {
@@ -382,6 +484,11 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
+        /**
+        * Deletes all the sponsors of a given race
+        * @param  raceName is the name of the race you want to delete all its sponsors 
+        * @return true if the deletion was successful
+        */
         [HttpDelete("DeleteSponsors/{raceName}")]
         public async Task<IActionResult> DeleteRaceSponsors(string raceName)
         {

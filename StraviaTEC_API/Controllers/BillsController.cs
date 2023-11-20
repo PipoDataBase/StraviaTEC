@@ -23,6 +23,10 @@ namespace StraviaTEC_API.Controllers
             _context = context;
         }
 
+        /**
+        * Returns all the Bills in the database
+        * @return Bill[] list of Bill
+        */
         // GET: api/Bills
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Bill>>> GetBills()
@@ -34,7 +38,12 @@ namespace StraviaTEC_API.Controllers
             return await _context.Bills.FromSqlRaw("spGetBills").ToListAsync();
         }
 
-        // GET: api/Bills/5
+        /**
+        * Return the Bill according to the given id
+        * @param  id it is the primary key ok the Bill you want to get
+        * @return Bill
+        */
+        // GET: api/Bills/
         [HttpGet("{id}")]
         public async Task<ActionResult<Bill>> GetBill(int id)
         {
@@ -56,8 +65,13 @@ namespace StraviaTEC_API.Controllers
             return Ok(result[0]);
         }
 
-        // PUT: api/Bills/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
+        /**
+        * Updates the Bill according to the given id
+        * @param  id it is the primary key ok the Bill you want to update
+        * @return true if the update was successful
+        */
+        // PUT: api/Bills/
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBill(int id, Bill bill)
         {
@@ -92,8 +106,14 @@ namespace StraviaTEC_API.Controllers
         }
 
 
-        // PUT: api/Bills/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /**
+        * Turns true the Accepted parameter of the given Bill. 
+        * That sets the User owner of the bill as a participant of the
+        * respective race
+        * @param  id it is the primary key ok the Bill you want to Accept
+        * @return true if the update was successful
+        */
+        // PUT: api/Bills/
         [HttpPut("AcceptBill/{id}")]
         public async Task<IActionResult> PutAcceptBill(int id)
         {
@@ -111,8 +131,12 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
+        /**
+        * Return the Bill according to the given id
+        * @param  Bill it is the Bill you want to insert into the database
+        * @return true if the insert was successful
+        */
         // POST: api/Bills
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Bill>> PostBill(Bill bill)
         {
@@ -137,7 +161,12 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
-        // DELETE: api/Bills/5
+        /**
+        * Deletes the Bill withe given id
+        * @param  id it is the primary key ok the Bill you want to delete
+        * @return true if the deletion was successful
+        */
+        // DELETE: api/Bills/
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBill(int id)
         {

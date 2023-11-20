@@ -22,6 +22,10 @@ namespace StraviaTEC_API.Controllers
             _context = context;
         }
 
+        /**
+        * Returns all the sponsors in the database
+        * @return Sponsor[] list of Sponsor
+        */
         // GET: api/Sponsors
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Sponsor>>> GetSponsors()
@@ -34,7 +38,12 @@ namespace StraviaTEC_API.Controllers
 
         }
 
-        // GET: api/Sponsors/5
+        /**
+        * Return the Sponsor with the given id
+        * @param  id  is the primary key of the sponsor you want
+        * @return  Sponsor
+        */
+        // GET: api/Sponsors/
         [HttpGet("{id}")]
         public async Task<ActionResult<Sponsor>> GetSponsor(string id)
         {
@@ -56,8 +65,13 @@ namespace StraviaTEC_API.Controllers
             return Ok(result[0]);
         }
 
-        // PUT: api/Sponsors/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /**
+        * Update the data of a given sponsor
+        * @param  id  is the primary key of the sponsor you want to update 
+        * @param sponsor Sponsor with the data you want to update
+        * @return true if the update was successful
+        */
+        // PUT: api/Sponsors/
         // In swagger add "" in the Id, otherwise throws error for not recognizing as string
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSponsor(string id, Sponsor sponsor)
@@ -92,8 +106,12 @@ namespace StraviaTEC_API.Controllers
 
         }
 
+        /**
+        * Insert the given Sponsor into the database
+        * @param sponsor Sponsor you want to insert into the database
+        * @return true is the insertion was successful 
+        */
         // POST: api/Sponsors
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Sponsor>> PostSponsor(Sponsor sponsor)
         {
@@ -126,7 +144,12 @@ namespace StraviaTEC_API.Controllers
 
         }
 
-        // DELETE: api/Sponsors/5
+        /**
+        * Deletes the given Sponsor from the database
+        * @param id primary key of the sponsor you want to delete from the database
+        * @return true is the deletion was successful 
+        */
+        // DELETE: api/Sponsors/
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSponsor(string id)
         {

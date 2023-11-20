@@ -23,6 +23,10 @@ namespace StraviaTEC_API.Controllers
             _context = context;
         }
 
+        /**
+        * Returns all the nationalities from the databases
+        * @return Nationality[] list of Nationality
+        */
         // GET: api/Nationalities
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Nationality>>> GetNationalities()
@@ -34,7 +38,12 @@ namespace StraviaTEC_API.Controllers
             return await _context.Nationalities.FromSqlRaw("spGetNationalities").ToListAsync();
         }
 
-        // GET: api/Nationalities/5
+        /**
+        * Return the Nationality with the given id
+        * @param  id  primary key of the nationality you want to get
+        * @return Nationality
+        */
+        // GET: api/Nationalities/
         [HttpGet("{id}")]
         public async Task<ActionResult<Nationality>> GetNationality(byte id)
         {
@@ -56,8 +65,13 @@ namespace StraviaTEC_API.Controllers
             return Ok(result[0]);
         }
 
-        // PUT: api/Nationalities/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /**
+        * Updates the data of the given Nationality
+        * @param  id primary key of the nationality you want to update
+        * @param nationality natinality with the data you want to update
+        * @return true if the update was successful
+        */
+        // PUT: api/Nationalities/
         [HttpPut("{id}")]
         public async Task<IActionResult> PutNationality(byte id, Nationality nationality)
         {
@@ -89,8 +103,12 @@ namespace StraviaTEC_API.Controllers
 
         }
 
+        /**
+        * Insert the given Nationality into the database
+        * @param  nationality it is the nationality you want to insert into the database
+        * @return true if the insert was successful
+        */
         // POST: api/Nationalities
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Nationality>> PostNationality(string nationality)
         {
@@ -105,7 +123,13 @@ namespace StraviaTEC_API.Controllers
             return Ok("Nationality Created");
         }
 
-        // DELETE: api/Nationalities/5
+
+        /**
+        * Deletes the nationality with the given id
+        * @param  id primary key of the nationality you want to delete
+        * @return true if the deletion was successful
+        */
+        // DELETE: api/Nationalities/
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteNationality(byte id)
         {

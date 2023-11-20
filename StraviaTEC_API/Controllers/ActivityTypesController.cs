@@ -22,6 +22,11 @@ namespace StraviaTEC_API.Controllers
             _context = context;
         }
 
+        /**
+        * Returns a list of ActivityTypes containing all the ActivityTypes in the 
+        * database
+        * @return ActivityType[] It returns a list containting ActivityTypes objects
+        */
         // GET: api/ActivityTypes
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ActivityType>>> GetActivityTypes()
@@ -33,7 +38,7 @@ namespace StraviaTEC_API.Controllers
             return await _context.ActivityTypes.FromSqlRaw("spGetActivityTypes").ToListAsync();
         }
 
-        // GET: api/ActivityTypes/5
+        // GET: api/ActivityTypes/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<ActivityType>> GetActivityType(byte id)
         {
@@ -55,8 +60,14 @@ namespace StraviaTEC_API.Controllers
             return Ok(result[0]);
         }
 
-        // PUT: api/ActivityTypes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /**
+        * Updates and ActivityType with the provided data
+        * @param  id its an integer containing the primary key of the ActivityType you
+        *         want to update
+        * @param activityType its an ActivityType containing the data you want to update
+        * @return true if the update was successful or raises an error if it failed
+        */
+        // PUT: api/ActivityTypes/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> PutActivityType(byte id, ActivityType activityType)
         {
@@ -88,8 +99,12 @@ namespace StraviaTEC_API.Controllers
 
         }
 
+        /**
+        * Inserts the provided ActivityType into the database
+        * @param  activityType it is the object you want to insert into the database
+        * @return true if the insert was successful or it raises an error if it failed
+        */
         // POST: api/ActivityTypes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<ActivityType>> PostActivityType(string activityType)
         {
@@ -113,7 +128,14 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
-        // DELETE: api/ActivityTypes/5
+        /**
+        * Deletes the indicated ActivityType from the database
+        * @param  id  its a byte containing the primary key of the ActivityType
+        *         you want to delete
+        * @return Activity It true if the deletion was successful or raises an error
+        *         if it failed
+        */
+        // DELETE: api/ActivityTypes/
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteActivityType(byte id)
         {

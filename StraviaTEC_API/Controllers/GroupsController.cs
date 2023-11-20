@@ -22,6 +22,10 @@ namespace StraviaTEC_API.Controllers
             _context = context;
         }
 
+        /**
+        * Returns all the Groups of the database
+        * @return Group[] list of groups
+        */
         // GET: api/Groups
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Group>>> GetGroups()
@@ -33,7 +37,10 @@ namespace StraviaTEC_API.Controllers
           return await _context.Groups.FromSqlRaw("EXEC spGetGroups").ToListAsync();
         }
 
-        // GET: api/Groups/5
+        /**
+        * Return the Group with the given id
+        */
+        // GET: api/Groups/
         [HttpGet("{id}")]
         public async Task<ActionResult<Group>> GetGroup(string id)
         {
@@ -55,6 +62,11 @@ namespace StraviaTEC_API.Controllers
             return Ok(result[0]);
         }
 
+        /**
+        * Returns all the groups managed by the user with the given username
+        * @param  username it is the id of the user you want to get the managed groups
+        * @return Group[]
+        */
         [HttpGet("ByManager/{username}")]
         public async Task<dynamic> GetGroupsByManager(string username)
         {
@@ -79,7 +91,12 @@ namespace StraviaTEC_API.Controllers
         }
 
 
-        // GET: api/Groups/5
+        /**
+        * Returns all the groups with a coindidences in the name of the given id
+        * @param  id name of challenge you want to search for coincidences
+        * @return Group[] list of groups
+        */
+        // GET: api/Groups/
         [HttpGet("Search/{id}")]
         public async Task<ActionResult<IEnumerable<Group>>> GetGroupSearch(string id)
         {
@@ -96,6 +113,11 @@ namespace StraviaTEC_API.Controllers
             return result;
         }
 
+        /**
+        * Returns all the members of the group with the given id
+        * @param  groupName name of group which you want to get its members
+        * @return Sportman[] list of Sportman
+        */
         [HttpGet("GetMembers/{groupName}")]
         public async Task<ActionResult<IEnumerable<Group>>> GetMembers(string groupName)
         {
@@ -114,8 +136,12 @@ namespace StraviaTEC_API.Controllers
 
 
 
+        /**
+        * Creates a new group with the given name and sets its manager with the given username
+        * @param  groupName name of Group you want to create
+        * @return true if the creation successfull
+        */
         // POST: api/Groups
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{groupName}/{username}")]
         public async Task<ActionResult<Group>> PostGroup(string groupName, string username)
         {
@@ -139,8 +165,13 @@ namespace StraviaTEC_API.Controllers
         }
 
 
+        /**
+        * Give access to the given Group to participate and see the given Challenge
+        * @param  challengeName name of challenge you want to give access to the group
+        * @param groupName name of the group you want to give accesss to the callenge
+        * @return true if the query was successful
+        */
         // POST: api/Groups
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("AddToChallenge/{challengeName}/{groupName}")]
         public async Task<ActionResult<Group>> PostChallengeGroup(string challengeName, string groupName)
         {
@@ -163,8 +194,13 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
+        /**
+        * Give access to the given Group to participate and see the given Race
+        * @param  RaceName name of race you want to give access to the group
+        * @param groupName name of the group you want to give accesss to the race
+        * @return true if the query was successful
+        */
         // POST: api/Groups
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("AddToRace/{raceName}/{groupName}")]
         public async Task<ActionResult<Group>> PostRaceGroup(string raceName, string groupName)
         {
@@ -187,7 +223,12 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
-        // DELETE: api/Groups/5
+        /**
+        * Deletes the group with the given id
+        * @param  id name of group you want to delete
+        * @return true if the deletion was successful
+        */
+        // DELETE: api/Groups/
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGroup(string id)
         {
@@ -208,7 +249,13 @@ namespace StraviaTEC_API.Controllers
             return Ok(true);
         }
 
-        // DELETE: api/Groups/5
+        /**
+        * Removes the access to a given Challenge from a given Group
+        * @param  challengeName name of challenge you want to remove access from group
+        * @param groupName name of the group you want to remove accesss to the callenge
+        * @return true if the query was successful
+        */
+        // DELETE: api/Groups/
         [HttpDelete("LeaveChallenge/{challengeName}/{groupName}")]
         public async Task<IActionResult> DeleteChallengeGroup(string challengeName, string groupName)
         {
@@ -232,7 +279,13 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
-        // DELETE: api/Groups/5
+        /**
+        * Removes the access to a given Race from a given Group
+        * @param  RaceName name of Race you want to remove access from group
+        * @param groupName name of the group you want to remove accesss to the race
+        * @return true if the query was successful
+        */
+        // DELETE: api/Groups/
         [HttpDelete("LeaveRace/{RaceName}/{groupName}")]
         public async Task<IActionResult> DeleteRaceGroup(string RaceName, string groupName)
         {

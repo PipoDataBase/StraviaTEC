@@ -22,6 +22,10 @@ namespace StraviaTEC_API.Controllers
             _context = context;
         }
 
+        /**
+        * Return the all Categories in the database
+        * @return Category[] list of Category
+        */
         // GET: api/Categories
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
@@ -33,7 +37,12 @@ namespace StraviaTEC_API.Controllers
             return await _context.Categories.FromSqlRaw("spGetCategories").ToListAsync();
         }
 
-        // GET: api/Categories/5
+        /**
+        * Return the Category according to the given id
+        * @param  id it is the primary key ok the Category you want to get
+        * @return Category
+        */
+        // GET: api/Categories/
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(byte id)
         {
@@ -61,8 +70,12 @@ namespace StraviaTEC_API.Controllers
             return Ok(result[0]);
         }
 
-        // PUT: api/Categories/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /**
+        * Updates the Category according to the given id and data 
+        * @param  id it is the primary key ok the Category you want to update
+        * @return true if the update was successful
+        */
+        // PUT: api/Categories/
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCategory(byte id, Category category)
         {
@@ -95,8 +108,12 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
+        /**
+        * Inserts the given Category into the database
+        * @param  Category it is the category you wanto to inser into the database
+        * @return true if the insert was successful
+        */
         // POST: api/Categories
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
@@ -127,7 +144,12 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
-        // DELETE: api/Categories/5
+        /**
+        * Deletes the Category according to the given id
+        * @param  id it is the primary key ok the Category you want to delete
+        * @return true if the deletion was successful
+        */
+        // DELETE: api/Categories/
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(byte id)
         {

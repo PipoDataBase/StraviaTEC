@@ -22,6 +22,11 @@ namespace StraviaTEC_API.Controllers
             _context = context;
         }
 
+        /**
+        * Returns a list of Activity object model with all the activities in the 
+        * database
+        * @return Activity[] It returns a list of activities
+        */
         // GET: api/Activities
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Activity>>> GetActivities()
@@ -33,7 +38,13 @@ namespace StraviaTEC_API.Controllers
             return await _context.Activities.FromSqlRaw("spGetActivities").ToListAsync();
         }
 
-        // GET: api/Activities/5
+        /**
+        * Returns an Activity object model within the information of the Activity
+        * requested according to the provided id
+        * @param  id  its an integer containing the primary key of an Activity
+        * @return Activity It returns an Activity
+        */
+        // GET: api/Activities/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<Activity>> GetActivity(int id)
         {
@@ -55,9 +66,18 @@ namespace StraviaTEC_API.Controllers
             return Ok(result[0]);
         }
 
-        // PUT: api/Activities/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        // @brief 
+        /**
+        * Returns It updates and Activity object with the data of the provided
+        * activity and returns true if the update was successful or and error
+        * if it failed
+        * @param  id it is the primary key of the existing Activity you want
+        *         to modify
+        * @param  activity its an activity model with the data that you want
+        *         to update
+        * @return true if the update was successful or raises and error if it
+        *         failed
+        */
+        // PUT: api/Activities/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> PutActivity(int id, Activity activity)
         {
@@ -98,10 +118,11 @@ namespace StraviaTEC_API.Controllers
         }
 
         // POST: api/Activities
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         /*
-            @brief This method creates and activity related to a Challenge, Race or none of them 
+            Creates an activity related to a Challenge, Race or none of them 
                     depending if the ChallengeName and RaceName are empty or not.
+            @param activity it is the Activity you want to insert in the database
+            @return true if the insert was successful or raises an error if it failed
             @Use example in swagger (Activity not related to any Race or Challenge neither):
                                     {
                                       "id": 0,
@@ -110,7 +131,7 @@ namespace StraviaTEC_API.Controllers
                                       "date": "2023-11-03T08:52:15.694Z",
                                       "routePath": "string",
                                       "description": "Esta actividad fue de calentamiento",
-                                      "username": "ElAlzaVacas17",
+                                      "username": "Camanem",
                                       "raceName": "",
                                       "challengeName": "",
                                       "type": 0
@@ -200,7 +221,12 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
-        // DELETE: api/Activities/5
+        /**
+        * Deletes the indicated Activity from the database
+        * @param  id it is the primary key of the Activity you want to delete
+        * @return true if the deletion was successful or raises an error if it failed
+        */
+        // DELETE: api/Activities/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteActivity(int id)
         {

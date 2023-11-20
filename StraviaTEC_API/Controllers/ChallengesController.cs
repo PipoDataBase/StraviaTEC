@@ -23,6 +23,10 @@ namespace StraviaTEC_API.Controllers
             _context = context;
         }
 
+        /**
+        * Return the all the Challenges in the database
+        * @return Category[] list of categories
+        */
         // GET: api/Challenges
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Challenge>>> GetChallenges()
@@ -34,6 +38,11 @@ namespace StraviaTEC_API.Controllers
             return await _context.Challenges.FromSqlRaw("spGetChallenges").ToListAsync();
         }
 
+        /**
+        * Return the visible/available challenges for the user according to the given username
+        * @param  username it is the username of the user you want to get the available challenges
+        * @return VwChallenge[] list of VwChallenge
+        */
         // GET: api/Challenges
         [HttpGet("GetAvailableVwChallenges/{username}")]
         public async Task<ActionResult<IEnumerable<VwChallenge>>> GetAvailableVwChallenges (string username)
@@ -49,7 +58,12 @@ namespace StraviaTEC_API.Controllers
             return result;
         }
 
-        // GET: api/Challenges/5
+        /**
+        * Returns a Challenge according to the given id
+        * @param  id is the of the primary key of the Challenge you want to get
+        * @return Challenge 
+        */
+        // GET: api/Challenges/
         [HttpGet("{id}")]
         public async Task<ActionResult<Challenge>> GetChallenge(string id)
         {
@@ -71,6 +85,11 @@ namespace StraviaTEC_API.Controllers
             return Ok(result[0]);
         }
 
+        /**
+        * Returns the challenges created/managed by the user with the given username
+        * @param  username it is the username of the user you want to get the managed challenges
+        * @return Challenge[] list of Challenge
+        */
         [HttpGet("ByManager/{username}")]
         public async Task<dynamic> GetChallengesByManager(string username)
         {
@@ -93,6 +112,11 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
+        /**
+        * Returns the groups that have access to the Challenge with the given challengeName
+        * @param  challengeName it is the id of the challenge you want to get the related groups
+        * @return Group[] list of groups
+        */
         [HttpGet("Groups/{challengeName}")]
         public async Task<ActionResult<IEnumerable<Group>>> GetChallengeGroups(string challengeName)
         {
@@ -113,6 +137,11 @@ namespace StraviaTEC_API.Controllers
             return Ok(result);
         }
 
+        /**
+        * Returns the sponsors of the Challenge with the given challengeName
+        * @param  challengeName it is the id of the challenge you want to get the related sponsors
+        * @return Sponsor[] list of sponsors
+        */
         // GET: api/Challenges
         [HttpGet("Sponsors/{challengeName}")]
         public async Task<ActionResult<IEnumerable<Sponsor>>> GetChallengeSponsors(string challengeName)
@@ -134,6 +163,11 @@ namespace StraviaTEC_API.Controllers
             return Ok(result);
         }
 
+        /**
+        * Returns the Sportmen that have access to the Challenge with the given challengeName
+        * @param  challengeName it is the id of the challenge you want to get the related incribed Sportmen
+        * @return Sportman[] list of Sportman
+        */
         // GET: api/Challenges
         [HttpGet("Participants/{challengeName}")]
         public async Task<ActionResult<IEnumerable<VwSportmanNationality>>> GetChallengeParticipants(string challengeName)
@@ -155,8 +189,13 @@ namespace StraviaTEC_API.Controllers
             return Ok(result);
         }
 
-        // PUT: api/Challenges/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /**
+        * Updates the Challenge with the given challengeName
+        * @param id is the primary key of the Chellenge you want to update
+        * @param  challenge contains the data you want to update
+        * @return true if the update was successful
+        */
+        // PUT: api/Challenges/
         [HttpPut("{id}")]
         public async Task<IActionResult> PutChallenge(string id, Challenge challenge)
         {
@@ -194,8 +233,13 @@ namespace StraviaTEC_API.Controllers
 
         }
 
+        /**
+        * Insert the given Challenge into the database and Inserts the given username as the manager of the creted Challenge
+        * @param  challenge is the Challenge you want to insert into the database
+        * @param username is the username of user who created the Challenge
+        * @return true if the inserts was successful
+        */
         // POST: api/Challenges
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{username}")]
         public async Task<ActionResult<Challenge>> PostChallenge(Challenge challenge, string username)
         {
@@ -226,8 +270,13 @@ namespace StraviaTEC_API.Controllers
         }
 
 
+        /**
+        * Add a sponsor given sponsor to the given challenge
+        * @param sponsorTradeName it is the id of the Sponsor you want to add to the Challenge
+        * @param challengeName is the id of the Challenge you want to add the sponsor
+        * @return true if the sponsor was added to the Challenge successfully
+        */
         // POST: api/Challenges
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("AddSponsor/{sponsorTradeName}/{challengeName}")]
         public async Task<ActionResult<Challenge>> PostChallengeSponsor(string sponsorTradeName, string challengeName)
         {
@@ -251,7 +300,12 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
-        // DELETE: api/Challenges/5
+        /**
+        * Deletes the Challenge with the given id
+        * @param  id is the primary key of the Challenge you want to Delete
+        * @return true if the deletion was successful
+        */
+        // DELETE: api/Challenges/
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteChallenge(string id)
         {
@@ -273,6 +327,11 @@ namespace StraviaTEC_API.Controllers
             return Ok(true);
         }
 
+        /**
+        * Removes the access of all the grops to the given Challenge
+        * @param  challengeName it is the id of the challenge you want to delete the groups
+        * @return true if the deletion was successful
+        */
         [HttpDelete("DeleteGroups/{challengeName}")]
         public async Task<IActionResult> DeleteChallengeGroups(string challengeName)
         {
@@ -296,6 +355,11 @@ namespace StraviaTEC_API.Controllers
             }
         }
 
+        /**
+        * Deletes all the sponsors of the given Challenge
+        * @param  challengeName it is the id of the challenge you want to delete the sponsors
+        * @return true if the deletion was successful
+        */
         [HttpDelete("DeleteSponsors/{challengeName}")]
         public async Task<IActionResult> DeleteChallengeSponsors(string challengeName)
         {
